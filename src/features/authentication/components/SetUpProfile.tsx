@@ -23,7 +23,7 @@ function SetUpProfile() {
       })
         .then((res) => {
           console.log(res);
-          navigate("/");
+          navigate("/dashboard");
         })
         .catch((err) => {
           console.log(err);

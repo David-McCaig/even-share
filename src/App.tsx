@@ -2,7 +2,7 @@ import "./App.css";
 import { useState } from "react";
 import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
 import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx"
-import Home from "./Pages/Home";
+import Dashboard from "./Pages/Dashboard.tsx";
 import Login from "./features/authentication/components/Login";
 import SignUp from "./features/authentication/components/SignUp";
 
@@ -21,7 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
       </div>
     </div>

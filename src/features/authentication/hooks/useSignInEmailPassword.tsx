@@ -28,7 +28,7 @@ export const useSignInEmailPassword = (
         email: user?.email,
         displayName: user?.displayName
       }));
-      navigate("/home")
+      navigate("/dashboard")
     } catch (error) {
       const errorCode = (error as { code?: string })?.code;
       const errorMessage = (error as { message?: string })?.message;

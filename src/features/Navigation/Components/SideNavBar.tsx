@@ -13,7 +13,7 @@ type NavBarProps = {
 function NavBar({ showNavBar }: NavBarProps) {
   return (
     <nav className="">
-      <div className="sticky top-24 sm:top-16 xl:w-[265px]">
+      <div className="sticky top-24 sm:top-16 ">
         <aside
           className={
             showNavBar
@@ -21,7 +21,7 @@ function NavBar({ showNavBar }: NavBarProps) {
               : "fixed top-0 left-0 sm:static z-40 w-64 h-screen transition-transform  sm:translate-x-0"
           }
         >
-          <div className="h-screen py-12 w-64 overflow-y-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg sm:pt-0 sm:ml-6 md:ml-8 xl:ml-0 ">
+          <div className="h-screen py-12 overflow-y-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg sm:pt-0 ">
             <ul className="space-y-2 font-medium">
               <li></li>
               <li>
