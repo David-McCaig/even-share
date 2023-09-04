@@ -27,7 +27,7 @@ function NavBar({ showNavBar }: NavBarProps) {
               <li>
                 <Link
                   className="flex items-center p-2 text-gray-800 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                  to={"/home"}
+                  to={"/dashboard"}
                 >
                   <span className="ml-3 mt-2 text-2xl">Dashboard</span>
                 </Link>
