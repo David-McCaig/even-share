@@ -3,6 +3,7 @@ import { useState } from "react";
 import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
 import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx"
 import Dashboard from "./Pages/Dashboard.tsx";
+import BalanceSummaryColumn from "./features/balancesummary/Component/BalanceSummaryColumn.tsx";
 import Login from "./features/authentication/components/Login";
 import SignUp from "./features/authentication/components/SignUp";
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
+      <BalanceSummaryColumn/>
       </div>
     </div>
   );
