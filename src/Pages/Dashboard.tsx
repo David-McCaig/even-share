@@ -1,5 +1,6 @@
 import TopBar from "../Components/TopBar";
 import BalanceSummaryCard from "../features/balancesummary/Component/BalanceSummaryCard";
+import ExpenseTable from "../features/expensetable"
 
 function Dashboard() {
   const AddExpenseClick = () => {};
@@ -16,6 +17,7 @@ function Dashboard() {
       <div className="lg:hidden" >
         <BalanceSummaryCard />
       </div>
+      <ExpenseTable/>
     </div>
   );
 }
