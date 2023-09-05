@@ -1,14 +1,16 @@
+
 import BalanceSummaryColumn from "./Component/BalanceSummaryColumn";
 import BalanceSummaryCard from "./Component/BalanceSummaryCard";
 
-function index() {
+function Index() {
+
   return (
-    <>
-      <BalanceSummaryColumn>
-        <BalanceSummaryCard />
-      </BalanceSummaryColumn>
-    </>
+    <div> 
+        <BalanceSummaryColumn>
+          <BalanceSummaryCard />
+        </BalanceSummaryColumn>
+    </div>
   );
 }
 
-export default index;
+export default Index;

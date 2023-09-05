@@ -1,4 +1,7 @@
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../../utils/firebaseconfig";
+import { useAppDispatch } from "../../../hooks/reduxTypeScriptHooks";
+import { logout } from "../../authentication/userSlice";
 import {
   Avatar,
   AvatarFallback,
@@ -22,8 +25,19 @@ type NavBarProps = {
 export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
   const navigate = useNavigate();
 
+  const dispatch = useAppDispatch();
+
   const handleLogout = () => {
-    navigate("/");
+    auth
+    .signOut()
+    .then(() => {
+      console.log("Successfully signed out.");
+      dispatch(logout());
+      navigate('/')
+    })
+    .catch((error) => {
+      console.error("Error signing out:", error);
+    });
   };
 
   const openNavClick = () => {

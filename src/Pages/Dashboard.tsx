@@ -1,6 +1,6 @@
 import TopBar from "../Components/TopBar";
 import BalanceSummaryCard from "../features/balancesummary/Component/BalanceSummaryCard";
-import ExpenseTable from "../features/expensetable"
+import ExpenseTable from "../features/expensetable/Index"
 
 function Dashboard() {
   const AddExpenseClick = () => {};
