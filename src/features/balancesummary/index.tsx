@@ -5,11 +5,11 @@ import BalanceSummaryCard from "./Component/BalanceSummaryCard";
 function Index() {
 
   return (
-    <div> 
+    <> 
         <BalanceSummaryColumn>
           <BalanceSummaryCard />
         </BalanceSummaryColumn>
-    </div>
+    </>
   );
 }
 

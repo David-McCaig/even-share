@@ -1,15 +1,36 @@
-import { configureStore } from '@reduxjs/toolkit'
-import userReducer from '../src/features/authentication/userSlice'
+import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "../src/features/authentication/userSlice";
+import { firestoreApi } from "./firestoreApi";
 
-const store = configureStore({
+// const store = configureStore({
+//     reducer: {
+//         user: userReducer,
+//         [firestoreApi.reducerPath]: firestoreApi.reducer,
+//     },
+//         middleware: (getDefaultMiddleware) => {
+//       return getDefaultMiddleware().concat(firestoreApi.middleware);
+//     },
+// });
+
+export const setupStore = () =>
+  configureStore({
     reducer: {
-        user: userReducer,
+      user: userReducer,
+      [firestoreApi.reducerPath]: firestoreApi.reducer,
     },
-});
+    middleware: (getDefaultMiddleware) => {
+      return getDefaultMiddleware().concat(firestoreApi.middleware);
+    },
+  });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch
+export const store = setupStore();
 
-export default store;
+export type AppStore = ReturnType<typeof setupStore>;
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
+
+// export default store
+
+// export type RootState = ReturnType<typeof store.getState>
+// export type AppDispatch = typeof store.dispatch
+// export default store;

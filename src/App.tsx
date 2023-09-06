@@ -6,7 +6,7 @@ import { selectUser } from "./features/authentication/userSlice.tsx";
 import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
 import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx"
 import Dashboard from "./Pages/Dashboard.tsx";
-import BalanceSummary from "./features/balancesummary/index.tsx";
+import BalanceSummary from "./features/balancesummary/Index.tsx";
 import Login from "./features/authentication/components/Login";
 import SignUp from "./features/authentication/components/SignUp";
 
@@ -17,7 +17,7 @@ function App() {
   const [showNavBar, setShowNavBar] = useState<boolean>(true);
 
   const userInfo = useAppSelector(selectUser)
-
+  console.log(userInfo)
   return (
     <div className="w-full h-full">
       { userInfo && <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />}

@@ -5,12 +5,22 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../../Components/ui/accordion";
+import { useFetchHighScoresTablesQuery } from '../../expensetable/expenseTableSlice';
 
 type NavBarProps = {
   showNavBar: boolean;
 };
 
 function NavBar({ showNavBar }: NavBarProps) {
+
+  const {
+    data,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useFetchHighScoresTablesQuery();
+console.log(data)
   return (
     <nav className="">
       <div className="sticky top-24 sm:top-16 ">
