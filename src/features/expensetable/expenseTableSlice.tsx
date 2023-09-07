@@ -8,10 +8,12 @@ import {
   doc
 } from "firebase/firestore";
 import { db } from "../../utils/firebaseconfig";
+import { query,where } from "firebase/firestore";
 
 interface ScoresTable {
   id: string;
-  levelId: string;
+  user_group_id: string;
+  user_group_name: string
 }
 
 type ScoresTables = ScoresTable[];
@@ -19,10 +21,13 @@ type ScoresTables = ScoresTable[];
 export const scoresApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
     fetchHighScoresTables: builder.query<ScoresTables, void>({
-      async queryFn() {
+      
+      async queryFn(userEmail) {
         try {
-          const ref = collection(db, 'UserGroup');
-          const querySnapshot = await getDocs(ref);
+          const userGroupRef = collection(db, "userGroups");
+          const q = query(userGroupRef, where("user_group_email", "array-contains", userEmail));
+          // const ref = collection(db, 'userGroups');
+          const querySnapshot = await getDocs(q);
           const scoresTables: ScoresTables = [];
           querySnapshot?.forEach((doc) => {
             scoresTables.push({ id: doc.id, ...doc.data() } as ScoresTable);

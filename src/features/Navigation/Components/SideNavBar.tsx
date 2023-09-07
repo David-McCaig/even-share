@@ -5,22 +5,20 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../../Components/ui/accordion";
-import { useFetchHighScoresTablesQuery } from '../../expensetable/expenseTableSlice';
+import { useFetchHighScoresTablesQuery } from "../../expensetable/expenseTableSlice";
+import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
+import { selectUser } from "../../authentication/userSlice";
 
 type NavBarProps = {
   showNavBar: boolean;
 };
 
 function NavBar({ showNavBar }: NavBarProps) {
+  
+  const userInfo = useAppSelector(selectUser);
+  const userEmail = userInfo?.email;
+  const { data } = useFetchHighScoresTablesQuery(userEmail);
 
-  const {
-    data,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useFetchHighScoresTablesQuery();
-console.log(data)
   return (
     <nav className="">
       <div className="sticky top-24 sm:top-16 ">
@@ -57,7 +55,11 @@ console.log(data)
                   <AccordionItem value="item-1">
                     <AccordionTrigger>Group</AccordionTrigger>
                     <AccordionContent>
-                      Yes. It adheres to the WAI-ARIA design pattern.
+                      {data?.map((group) => (
+                        <div key={group.id}>
+                          <Link to={"/"}>{group.user_group_name}</Link>
+                        </div>
+                      ))}
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>

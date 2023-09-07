@@ -17,7 +17,7 @@ function App() {
   const [showNavBar, setShowNavBar] = useState<boolean>(true);
 
   const userInfo = useAppSelector(selectUser)
-  console.log(userInfo)
+
   return (
     <div className="w-full h-full">
       { userInfo && <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />}
