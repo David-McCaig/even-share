@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../../Components/ui/accordion";
-import { useFetchHighScoresTablesQuery } from "../../expensetable/expenseTableSlice";
+import { useFetchUserGroupsQuery } from "../../expensetable/expenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 
@@ -17,7 +17,7 @@ function NavBar({ showNavBar }: NavBarProps) {
   
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
-  const { data } = useFetchHighScoresTablesQuery(userEmail);
+  const { data } = useFetchUserGroupsQuery(userEmail);
 
   return (
     <nav className="">
@@ -57,7 +57,7 @@ function NavBar({ showNavBar }: NavBarProps) {
                     <AccordionContent>
                       {data?.map((group) => (
                         <div key={group.id}>
-                          <Link to={"/"}>{group.user_group_name}</Link>
+                          <Link to={"/group/" + group.id}>{group.user_group_name}</Link>
                         </div>
                       ))}
                     </AccordionContent>

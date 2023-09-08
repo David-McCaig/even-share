@@ -7,6 +7,7 @@ import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
 import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx"
 import Dashboard from "./Pages/Dashboard.tsx";
 import BalanceSummary from "./features/balancesummary/Index.tsx";
+import GroupExpense from "./Pages/GroupExpense.tsx";
 import Login from "./features/authentication/components/Login";
 import SignUp from "./features/authentication/components/SignUp";
 
@@ -28,6 +29,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/dashboard" element={userInfo ? <Dashboard /> : <Navigate to="/"/>} />
+        <Route path="/group/:id" element={userInfo ? <GroupExpense/> : <Navigate to="/"/>} />
       </Routes>
       {userInfo && <BalanceSummary/>}
       </div>

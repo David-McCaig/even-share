@@ -1,85 +1,64 @@
 // src/features/scores/scoresSlice.ts
 import { firestoreApi } from "../../firestoreApi";
-import {
-  arrayUnion,
-  collection,
-  getDocs,
-  updateDoc,
-  doc
-} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../utils/firebaseconfig";
-import { query,where } from "firebase/firestore";
+import { query, where } from "firebase/firestore";
 
-interface ScoresTable {
-  id: string;
+interface UserGroup {
+  id: string | undefined;
   user_group_id: string;
-  user_group_name: string
+  user_group_name: string;
+  user_expense_description: string;
+  user_expense_amount: string;
 }
 
-type ScoresTables = ScoresTable[];
+type UserGroups = UserGroup[];
 
 export const scoresApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
-    fetchHighScoresTables: builder.query<ScoresTables, void>({
-      
+    fetchUserGroups: builder.query<UserGroups, void>({
       async queryFn(userEmail) {
         try {
           const userGroupRef = collection(db, "userGroups");
-          const q = query(userGroupRef, where("user_group_email", "array-contains", userEmail));
-          // const ref = collection(db, 'userGroups');
-          const querySnapshot = await getDocs(q);
-          const scoresTables: ScoresTables = [];
-          querySnapshot?.forEach((doc) => {
-            scoresTables.push({ id: doc.id, ...doc.data() } as ScoresTable);
-          });
-          return { data: scoresTables };
-        } catch (error: any) {
-          console.error(error.message);
-          return { error: error.message };
-        }
-      },
-      providesTags: ['Score'],
-    }),
-    fetchHighScoresTableByLevelId: builder.query<ScoresTable, string>({
-      async queryFn(levelId) {
-        try {
-          const querySnapshot = await getDocs(
-            collection(db, 'scoresTables')
+          const queryGroupByEmail = query(
+            userGroupRef,
+            where("user_group_email", "array-contains", userEmail)
           );
-          const scoresTables: ScoresTables = [];
+          const querySnapshot = await getDocs(queryGroupByEmail);
+          const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
-            scoresTables.push({ id: doc.id, ...doc.data() } as ScoresTable);
+            userGroups.push({ id: doc.id, ...doc.data() } as UserGroup);
           });
-          const scoreTable = scoresTables.find(
-            (table) => table.levelId === levelId
-          );
-          return { data: scoreTable };
+          return { data: userGroups };
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error(error.message);
           return { error: error.message };
         }
       },
-      providesTags: ['Score'],
+      providesTags: ["Score"],
     }),
-    setNewHighScore: builder.mutation({
-      async queryFn({ scoresTableId, newHighScore }) {
+    fetchUserGroup: builder.query<UserGroups, void>({
+      async queryFn(urlId) {
         try {
-          await updateDoc(doc(db, 'scoresTables', scoresTableId), {
-            scores: arrayUnion(newHighScore),
+          const billQuery = query(
+            collection(db, `userGroups/${urlId}/expenses`)
+          );
+          const querySnapshot = await getDocs(billQuery);
+          const userGroups: UserGroups = [];
+          querySnapshot?.forEach((doc) => {
+            userGroups.push({ id: doc.id, ...doc.data() } as UserGroup);
           });
-          return { data: null };
+          return { data: userGroups };
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error(error.message);
           return { error: error.message };
         }
       },
-      invalidatesTags: ['Score'],
+      providesTags: ["Score"],
     }),
   }),
 });
 
-export const {
-  useFetchHighScoresTablesQuery,
-  useFetchHighScoresTableByLevelIdQuery,
-  useSetNewHighScoreMutation,
-} = scoresApi;
+export const { useFetchUserGroupsQuery, useFetchUserGroupQuery } = scoresApi;
