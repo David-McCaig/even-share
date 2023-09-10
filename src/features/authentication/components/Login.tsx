@@ -36,7 +36,7 @@ function LoginPage() {
 
   if (authenticating) {
     return (
-      <div className="h-screen bg-white">
+      <div className="h-screen bg-white w-full">
         <div className="flex justify-center items-center h-full">
           <img
             className="h-16 w-16"
