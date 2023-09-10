@@ -20,6 +20,7 @@ module.exports = {
         transparent: 'transparent',
         current: 'currentColor',
         'primary-bg-color': '#fafafa',
+        'secondary-bg-color': '#f5f5f4',
       },
       keyframes: {
         "accordion-down": {
