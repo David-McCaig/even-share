@@ -19,8 +19,10 @@ module.exports = {
       colors: {
         transparent: 'transparent',
         current: 'currentColor',
-        'primary-bg-color': '#fafafa',
-        'secondary-bg-color': '#f5f5f4',
+        "primary-bg-color": "#fafafa",
+        "secondary-bg-color": "#f5f5f4",
+        "primary-font-color": "#262626",
+        "secondary-font-color": "#a3a3a3"
       },
       keyframes: {
         "accordion-down": {

@@ -19,7 +19,7 @@ interface ExpenseTableRowProps {
 function ExpenseTableRow({ billDescription,billDate,billAmount }: ExpenseTableRowProps) {
   return (
     <div className="">
-      <div className="pr-4 bg-primary-bg-color border shadow-md dark:bg-gray-800 dark:border-gray-700 ">
+      <div className="pr-4 bg-primary-bg-color text-primary-font-color border shadow-md dark:bg-gray-800 dark:border-gray-700 ">
         <div className="flow-root">
           <ul
             role="list"
@@ -30,15 +30,15 @@ function ExpenseTableRow({ billDescription,billDate,billAmount }: ExpenseTableRo
                 <div className="flex-shrink-0"></div>
                 <PoweroffOutlined className="text-xl" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                  <p className="text-sm font-medium truncate dark:text-white">
                     {billDescription}
                   </p>
-                  <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                  <p className="text-sm text-secondary-font-color truncate dark:text-gray-400">
                     {billDate}
                   </p>
                 </div>
-                <div className="flex flex-col text-base font-semibold text-gray-900 dark:text-white">
-                  <p className="text-slate-500">You paid</p>
+                <div className="flex flex-col text-base font-semibold dark:text-white">
+                  <p className="text-secondary-font-color">You paid</p>
                   <p>{billAmount}</p>
                 </div>
                 <DropdownMenu>

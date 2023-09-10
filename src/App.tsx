@@ -20,7 +20,7 @@ function App() {
   const userInfo = useAppSelector(selectUser)
 
   return (
-    <div className="w-full h-full bg-primary-bg-color ">
+    <div className="w-full h-full bg-primary-bg-color text-primary-font-color">
       { userInfo && <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />}
       <div className="border-b-[.5px]"></div>
       <div className="flex m-auto h-screen max-w-5xl">
