@@ -6,7 +6,7 @@ import { selectUser } from "./features/authentication/userSlice.tsx";
 import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
 import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx"
 import Dashboard from "./Pages/Dashboard.tsx";
-import BalanceSummary from "./features/balancesummary/Index.tsx";
+import BalanceSummary from "./features/balancesummary/index.tsx";
 import GroupExpense from "./Pages/GroupExpense.tsx";
 import Login from "./features/authentication/components/Login";
 import SignUp from "./features/authentication/components/SignUp";
@@ -20,9 +20,9 @@ function App() {
   const userInfo = useAppSelector(selectUser)
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full bg-primary-bg-color ">
       { userInfo && <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />}
-      <div className="border-b-[.5px] border-slate-300"></div>
+      <div className="border-b-[.5px]"></div>
       <div className="flex m-auto h-screen max-w-5xl">
       {userInfo && <SideNavBar showNavBar={showNavBar} />}
       <Routes>

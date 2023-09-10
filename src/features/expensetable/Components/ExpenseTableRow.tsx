@@ -19,7 +19,7 @@ interface ExpenseTableRowProps {
 function ExpenseTableRow({ billDescription,billDate,billAmount }: ExpenseTableRowProps) {
   return (
     <div className="">
-      <div className="pr-4 bg-white border shadow-md dark:bg-gray-800 dark:border-gray-700 ">
+      <div className="pr-4 bg-primary-bg-color border shadow-md dark:bg-gray-800 dark:border-gray-700 ">
         <div className="flow-root">
           <ul
             role="list"

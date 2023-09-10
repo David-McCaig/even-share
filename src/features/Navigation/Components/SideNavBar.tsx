@@ -20,7 +20,7 @@ function NavBar({ showNavBar }: NavBarProps) {
   const { data } = useFetchUserGroupsQuery(userEmail);
 
   return (
-    <nav className="">
+    <nav>
       <div className="sticky top-24 sm:top-16 ">
         <aside
           className={
@@ -29,7 +29,7 @@ function NavBar({ showNavBar }: NavBarProps) {
               : "fixed top-0 left-0 sm:static z-40 w-64 h-screen transition-transform  sm:translate-x-0"
           }
         >
-          <div className="h-screen py-12 overflow-y-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg sm:pt-0 ">
+          <div className="bg-primary-bg-color h-screen py-12 overflow-y-auto dark:bg-gray-800 rounded-xl shadow-lg sm:pt-0 ">
             <ul className="space-y-2 font-medium">
               <li></li>
               <li>
