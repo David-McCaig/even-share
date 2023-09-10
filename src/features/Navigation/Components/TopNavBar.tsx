@@ -33,7 +33,7 @@ export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
     .then(() => {
       console.log("Successfully signed out.");
       dispatch(logout());
-      navigate('/')
+      navigate('/login')
     })
     .catch((error) => {
       console.error("Error signing out:", error);

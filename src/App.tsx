@@ -26,10 +26,10 @@ function App() {
       <div className="flex m-auto h-screen max-w-5xl">
       {userInfo && <SideNavBar showNavBar={showNavBar} />}
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/dashboard" element={userInfo ? <Dashboard /> : <Navigate to="/"/>} />
-        <Route path="/group/:id" element={userInfo ? <GroupExpense/> : <Navigate to="/"/>} />
+        <Route path="/" element={userInfo ? <Dashboard /> : <Navigate to="/login"/>} />
+        <Route path="/group/:id" element={userInfo ? <GroupExpense/> : <Navigate to="/login"/>} />
       </Routes>
       {userInfo && <BalanceSummary/>}
       </div>
