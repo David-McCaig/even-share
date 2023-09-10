@@ -20,9 +20,12 @@ module.exports = {
         transparent: 'transparent',
         current: 'currentColor',
         "primary-bg-color": "#fafafa",
-        "secondary-bg-color": "#f5f5f4",
         "primary-font-color": "#262626",
-        "secondary-font-color": "#a3a3a3"
+        "primary-button-color": "#0d9488",
+        
+        "secondary-bg-color": "#f5f5f4",
+        "secondary-font-color": "#a3a3a3",
+        "secondary-button-color": "#14b8a6"
       },
       keyframes: {
         "accordion-down": {
