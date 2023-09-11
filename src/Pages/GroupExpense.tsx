@@ -14,8 +14,6 @@ function GroupExpense() {
 
   const { data } = useFetchUserGroupQuery(id);
 
-  console.log(data);
-
   const AddExpenseClick = () => {};
 
   const AddSettleUpClick = () => {};
