@@ -1,6 +1,6 @@
 // src/features/scores/scoresSlice.ts
 import { firestoreApi } from "../../firestoreApi";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../utils/firebaseconfig";
 import { query, where } from "firebase/firestore";
 
@@ -59,24 +59,49 @@ export const scoresApi = firestoreApi.injectEndpoints({
       providesTags: ["Score"],
     }),
     setAddExpenseToGroup: builder.mutation({
-      async queryFn({groupId,userExpenseAmount,userExpenseDescription,userExpenseName}) {
+      async queryFn({
+        groupId,
+        userExpenseAmount,
+        userExpenseDescription,
+        userExpenseName,
+      }) {
         try {
-          
           await addDoc(collection(db, `userGroups/${groupId}/expenses`), {
-            user_expense_amount:userExpenseAmount,
-            user_expense_description:userExpenseDescription,
-            user_expense_name:userExpenseName,
+            user_expense_amount: userExpenseAmount,
+            user_expense_description: userExpenseDescription,
+            user_expense_name: userExpenseName,
           });
           return { data: null };
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error(error.message);
           return { error: error.message };
         }
       },
-      invalidatesTags: ['Score'],
+      invalidatesTags: ["Score"],
+    }),
+    deleteExpenseGroup: builder.mutation({
+      async queryFn({
+        groupId,
+        expenseId
+      }) {
+        try {
+          await deleteDoc(doc(db, `userGroups/${groupId}/expenses/${expenseId}`));
+          return { data: null };
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          console.error(error.message);
+          return { error: error.message };
+        }
+      },
+      invalidatesTags: ["Score"],
     }),
   }),
 });
 
-export const { useFetchUserGroupsQuery, useFetchUserGroupQuery, useSetAddExpenseToGroupMutation } = scoresApi;
+export const {
+  useFetchUserGroupsQuery,
+  useFetchUserGroupQuery,
+  useSetAddExpenseToGroupMutation,
+  useDeleteExpenseGroupMutation,
+} = scoresApi;

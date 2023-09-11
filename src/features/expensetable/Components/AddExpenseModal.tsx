@@ -10,43 +10,26 @@ import {
   DialogTrigger,
   DialogClose,
 } from "../../../Components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../Components/ui/select";
 import { Input } from "../../../Components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
+import DropDownMenu from "../../../Components/DropDownMenu";
 import { useFetchUserGroupsQuery } from "../expenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { useSetAddExpenseToGroupMutation } from "../expenseTableSlice";
 
+
 function AddExpenseModal() {
-  
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
-  const { data } = useFetchUserGroupsQuery(userEmail);
+  useFetchUserGroupsQuery(userEmail);
 
   const [groupId, setGroupId] = useState("");
   const [userExpenseAmount, setUserExpenseAmount] = useState("");
   const [userExpenseDescription, setUserExpenseDescription] = useState("");
   const [userExpenseName] = useState(userInfo.displayName);
 
-  const groupIdClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    id: string | undefined
-  ) => {
-    e.preventDefault();
-    setGroupId(id || "");
-  };
-
-  const [setAddExpenseToGroup] = useSetAddExpenseToGroupMutation({
-    fixedCacheKey: "shared-update-post",
-  });
+  const [setAddExpenseToGroup] = useSetAddExpenseToGroupMutation();
 
   const addExpenseSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,6 +39,10 @@ function AddExpenseModal() {
       userExpenseDescription,
       userExpenseName,
     });
+  };
+
+  const handleGroupChange = (selectedData: { id: string }) => {
+    setGroupId(selectedData.id);
   };
 
   return (
@@ -92,18 +79,7 @@ function AddExpenseModal() {
                 className="col-span-3"
               />
             </div>
-              <Select>
-                <SelectTrigger className="">
-                  <SelectValue placeholder="Select a Group" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {data?.map((group) => (
-                      <SelectItem key={group.id} onClick={(e) => groupIdClick(e, group.id)} value={group.user_group_name}>{group.user_group_name}</SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <DropDownMenu groupOnChange={handleGroupChange} />
           </div>
           <DialogFooter>
             <DialogClose asChild>

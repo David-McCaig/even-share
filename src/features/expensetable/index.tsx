@@ -4,7 +4,7 @@ function Index() {
 
   return (
     <>
-    <ExpenseTableRow billDescription={"Power Bill"} billDate={"March 28th 2023"} billAmount={"$200"}/>
+    <ExpenseTableRow expenseDescription={"Power Bill"} expenseDate={"March 28th 2023"} expenseAmount={"$200"} expenseId={'iffe'}/>
     </>
   )
 }

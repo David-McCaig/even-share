@@ -1,6 +1,6 @@
 import { PoweroffOutlined } from "@ant-design/icons";
-import { Button } from "../../../Components/ui/button"
-import { MoreHorizontal } from "lucide-react"
+import { Button } from "../../../Components/ui/button";
+import { MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,14 +9,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../../Components/ui/dropdown-menu";
+import { useParams } from "react-router";
+import { useDeleteExpenseGroupMutation } from "../expenseTableSlice";
 
 interface ExpenseTableRowProps {
-    billDescription: string
-    billDate: string
-    billAmount: string
+  expenseDescription: string;
+  expenseDate: string;
+  expenseAmount: string;
+  expenseId: string | undefined;
 }
 
-function ExpenseTableRow({ billDescription,billDate,billAmount }: ExpenseTableRowProps) {
+function ExpenseTableRow({
+  expenseDescription,
+  expenseDate,
+  expenseAmount,
+  expenseId,
+}: ExpenseTableRowProps) {
+  
+  const groupId = useParams()?.id;
+
+const [deleteExpense] = useDeleteExpenseGroupMutation(); 
+
+  const deleteExpenseClick = async () => {
+    deleteExpense({groupId, expenseId});
+  };
+
   return (
     <div className="">
       <div className="pr-4 bg-primary-bg-color text-primary-font-color border shadow-md dark:bg-gray-800 dark:border-gray-700 ">
@@ -31,15 +48,15 @@ function ExpenseTableRow({ billDescription,billDate,billAmount }: ExpenseTableRo
                 <PoweroffOutlined className="text-xl" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate dark:text-white">
-                    {billDescription}
+                    {expenseDescription}
                   </p>
                   <p className="text-sm text-secondary-font-color truncate dark:text-gray-400">
-                    {billDate}
+                    {expenseDate}
                   </p>
                 </div>
                 <div className="flex flex-col text-base font-semibold dark:text-white">
                   <p className="text-secondary-font-color">You paid</p>
-                  <p>{billAmount}</p>
+                  <p>{expenseAmount}</p>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -51,7 +68,9 @@ function ExpenseTableRow({ billDescription,billDate,billAmount }: ExpenseTableRo
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                    <DropdownMenuItem onClick={deleteExpenseClick}>
+                      Delete
+                    </DropdownMenuItem>
                     <DropdownMenuItem>Update</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

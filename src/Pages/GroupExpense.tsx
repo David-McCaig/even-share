@@ -31,9 +31,10 @@ function GroupExpense() {
       {data?.map((expense) => (
         <div key={expense.id}>
           <ExpenseTableRow
-            billDescription={expense?.user_expense_description}
-            billDate={"March 28th 2023"}
-            billAmount={expense.user_expense_amount}
+            expenseDescription={expense?.user_expense_description}
+            expenseDate={"March 28th 2023"}
+            expenseAmount={expense.user_expense_amount}
+            expenseId={expense.id}
           />
         </div>
       ))}
