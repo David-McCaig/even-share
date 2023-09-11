@@ -10,7 +10,6 @@ import BalanceSummary from "./features/balancesummary/index.tsx";
 import GroupExpense from "./Pages/GroupExpense.tsx";
 import Login from "./features/authentication/components/Login";
 import SignUp from "./features/authentication/components/SignUp";
-
 import { Routes, Route } from "react-router";
 
 function App() {
