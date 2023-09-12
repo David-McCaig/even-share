@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { useFetchUserGroupsQuery } from "../../expensetable/expenseTableSlice";
 import { selectUser } from "../../authentication/userSlice";
+import CreateGroupModal from "./CreateGroupModal";
 import {
   Accordion,
   AccordionContent,
@@ -53,8 +54,10 @@ function NavBar({ showNavBar }: NavBarProps) {
               <li>
                 <Accordion type="single" collapsible>
                   <AccordionItem value="item-1">
-                    <AccordionTrigger>Group</AccordionTrigger>
+                    <AccordionTrigger>Group  </AccordionTrigger>
+                    
                     <AccordionContent>
+                    <div className="text-lg"><CreateGroupModal/></div>
                       {data?.map((group) => (
                         <div key={group.id}>
                           <Link to={"/group/" + group.id}>{group.user_group_name}</Link>
