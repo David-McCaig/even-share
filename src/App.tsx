@@ -6,11 +6,11 @@ import { useAppSelector } from "./hooks/reduxTypeScriptHooks.tsx";
 import { selectUser } from "./features/authentication/userSlice.tsx";
 import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
 import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx"
-import Dashboard from "./Pages/Dashboard.tsx";
+import Dashboard from "./Pages/DashboardPage.tsx";
 import BalanceSummary from "./features/balancesummary/index.tsx";
-import GroupExpense from "./Pages/GroupExpense.tsx";
+import GroupExpense from "./Pages/GroupExpensePage.tsx";
 import Login from "./Pages/LoginPage.tsx";
-import SignUp from "./features/authentication/components/SignUp";
+import SignUp from "./Pages/SignUpPage.tsx";
 
 function App() {
 
