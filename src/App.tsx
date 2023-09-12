@@ -25,8 +25,8 @@ function App() {
       <div className="flex m-auto h-screen max-w-5xl">
       {userInfo && <SideNavBar showNavBar={showNavBar} />}
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={userInfo? <Navigate to="/"/> : <Login />} />
+        <Route path="/signup" element={userInfo? <Navigate to="/"/> :<SignUp />} />
         <Route path="/" element={userInfo ? <Dashboard /> : <Navigate to="/login"/>} />
         <Route path="/group/:id" element={userInfo ? <GroupExpense/> : <Navigate to="/login"/>} />
       </Routes>
