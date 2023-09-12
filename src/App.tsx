@@ -9,7 +9,7 @@ import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx"
 import Dashboard from "./Pages/Dashboard.tsx";
 import BalanceSummary from "./features/balancesummary/index.tsx";
 import GroupExpense from "./Pages/GroupExpense.tsx";
-import Login from "./features/authentication/components/Login";
+import Login from "./Pages/LoginPage.tsx";
 import SignUp from "./features/authentication/components/SignUp";
 
 function App() {
