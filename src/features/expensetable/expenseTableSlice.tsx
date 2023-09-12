@@ -1,6 +1,11 @@
-// src/features/scores/scoresSlice.ts
 import { firestoreApi } from "../../firestoreApi";
-import { addDoc, collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { db } from "../../utils/firebaseconfig";
 import { query, where } from "firebase/firestore";
 
@@ -81,12 +86,11 @@ export const scoresApi = firestoreApi.injectEndpoints({
       invalidatesTags: ["Score"],
     }),
     deleteExpenseGroup: builder.mutation({
-      async queryFn({
-        groupId,
-        expenseId
-      }) {
+      async queryFn({ groupId, expenseId }) {
         try {
-          await deleteDoc(doc(db, `userGroups/${groupId}/expenses/${expenseId}`));
+          await deleteDoc(
+            doc(db, `userGroups/${groupId}/expenses/${expenseId}`)
+          );
           return { data: null };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {

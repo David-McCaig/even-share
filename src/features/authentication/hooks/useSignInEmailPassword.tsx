@@ -1,9 +1,9 @@
 // hooks/useSignInEmailPassword.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useAppDispatch } from "../../../hooks/reduxTypeScriptHooks";
 import { login } from "../userSlice";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import "firebase/compat/auth";
 
 

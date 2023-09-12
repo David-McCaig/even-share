@@ -1,8 +1,8 @@
 import { useParams } from "react-router";
+import { useFetchUserGroupQuery } from "../features/expensetable/expenseTableSlice";
 import TopBar from "../Components/TopBar";
 import BalanceSummaryCard from "../features/balancesummary/Component/BalanceSummaryCard";
 import ExpenseTableRow from "../features/expensetable/Components/ExpenseTableRow";
-import { useFetchUserGroupQuery } from "../features/expensetable/expenseTableSlice";
 
 type UrlParams = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { auth } from "../../../utils/firebaseconfig";
 import { useAppDispatch } from "../../../hooks/reduxTypeScriptHooks";
 import { login } from "../userSlice";
+import { auth } from "../../../utils/firebaseconfig";
 
 export const useSignedinDispatchUserInfo = () => {
   const dispatch = useAppDispatch();

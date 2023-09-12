@@ -1,6 +1,8 @@
+import { MoreHorizontal } from "lucide-react";
+import { useParams } from "react-router";
+import { useDeleteExpenseGroupMutation } from "../expenseTableSlice";
 import { PoweroffOutlined } from "@ant-design/icons";
 import { Button } from "../../../Components/ui/button";
-import { MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,8 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../../Components/ui/dropdown-menu";
-import { useParams } from "react-router";
-import { useDeleteExpenseGroupMutation } from "../expenseTableSlice";
 
 interface ExpenseTableRowProps {
   expenseDescription: string;
@@ -25,13 +25,12 @@ function ExpenseTableRow({
   expenseAmount,
   expenseId,
 }: ExpenseTableRowProps) {
-  
   const groupId = useParams()?.id;
 
-const [deleteExpense] = useDeleteExpenseGroupMutation(); 
+  const [deleteExpense] = useDeleteExpenseGroupMutation();
 
   const deleteExpenseClick = async () => {
-    deleteExpense({groupId, expenseId});
+    deleteExpense({ groupId, expenseId });
   };
 
   return (

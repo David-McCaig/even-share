@@ -1,12 +1,11 @@
-import { Button } from "./ui/button"
 import AddExpenseModal from "../features/expensetable/Components/AddExpenseModal"
+import { Button } from "./ui/button"
 
 interface TopBarProps {
     currentPage:string
     AddExpenseClick: () => void; 
     AddSettleUpClick: () => void;
 }
-
 
 function TopBar({currentPage, AddSettleUpClick}:TopBarProps) {
   return (

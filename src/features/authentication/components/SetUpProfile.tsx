@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { useSignedinDispatchUserInfo } from "../hooks/useSignedinDispatchUserInfo";
 import { getAuth, updateProfile } from "firebase/auth";
 import UploadProfile from "../../../Components/UploadProfile";
-import { useNavigate } from "react-router";
 
 
 function SetUpProfile() {

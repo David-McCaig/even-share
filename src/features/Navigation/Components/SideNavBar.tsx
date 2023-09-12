@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
+import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
+import { useFetchUserGroupsQuery } from "../../expensetable/expenseTableSlice";
+import { selectUser } from "../../authentication/userSlice";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../../../Components/ui/accordion";
-import { useFetchUserGroupsQuery } from "../../expensetable/expenseTableSlice";
-import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
-import { selectUser } from "../../authentication/userSlice";
 
 type NavBarProps = {
   showNavBar: boolean;

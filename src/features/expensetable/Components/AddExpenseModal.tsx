@@ -1,7 +1,14 @@
 import { useState } from "react";
+import { useFetchUserGroupsQuery } from "../expenseTableSlice";
+import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
+import { selectUser } from "../../authentication/userSlice";
+import { useSetAddExpenseToGroupMutation } from "../expenseTableSlice";
+import DropDownMenu from "../../../Components/DropDownMenu";
 import { Button } from "../../../Components/ui/button";
+import { Input } from "../../../Components/ui/input";
+import { Label } from "@radix-ui/react-dropdown-menu";
 import {
-  Dialog,
+Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -10,13 +17,6 @@ import {
   DialogTrigger,
   DialogClose,
 } from "../../../Components/ui/dialog";
-import { Input } from "../../../Components/ui/input";
-import { Label } from "@radix-ui/react-dropdown-menu";
-import DropDownMenu from "../../../Components/DropDownMenu";
-import { useFetchUserGroupsQuery } from "../expenseTableSlice";
-import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
-import { selectUser } from "../../authentication/userSlice";
-import { useSetAddExpenseToGroupMutation } from "../expenseTableSlice";
 
 
 function AddExpenseModal() {

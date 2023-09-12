@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../../utils/firebaseconfig";
 import { useAppDispatch } from "../../../hooks/reduxTypeScriptHooks";
 import { logout } from "../../authentication/userSlice";
+import { auth } from "../../../utils/firebaseconfig";
+import { AlignLeftOutlined } from "@ant-design/icons";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "../../../Components/ui/avatar";
-import { AlignLeftOutlined } from "@ant-design/icons";
 import {
   NavigationMenu,
   NavigationMenuContent,

@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState } from "react";
 import { Navigate } from "react-router";
+import { Routes, Route } from "react-router";
 import { useAppSelector } from "./hooks/reduxTypeScriptHooks.tsx";
 import { selectUser } from "./features/authentication/userSlice.tsx";
 import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
@@ -10,7 +11,6 @@ import BalanceSummary from "./features/balancesummary/index.tsx";
 import GroupExpense from "./Pages/GroupExpense.tsx";
 import Login from "./features/authentication/components/Login";
 import SignUp from "./features/authentication/components/SignUp";
-import { Routes, Route } from "react-router";
 
 function App() {
 

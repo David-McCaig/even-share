@@ -1,9 +1,9 @@
 import { Fragment, useState } from "react";
-import { Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useFetchUserGroupsQuery } from "../features/expensetable/expenseTableSlice";
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
+import { Listbox, Transition } from "@headlessui/react";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -20,15 +20,16 @@ interface SelectMenuProps {
 }
 
 function DropDownMenu({ groupOnChange }: SelectMenuProps) {
-  const [selected, setSelected] = useState({ 
-    user_group_name: "Group Name",
-    user_group_email: [],
-    id: "0"
-});
-
+  
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
   const { data } = useFetchUserGroupsQuery(userEmail);
+
+  const [selected, setSelected] = useState({
+    user_group_name: "Group Name",
+    user_group_email: [],
+    id: "0",
+  });
 
   return (
     <Listbox
@@ -113,4 +114,3 @@ function DropDownMenu({ groupOnChange }: SelectMenuProps) {
 }
 
 export default DropDownMenu;
-
