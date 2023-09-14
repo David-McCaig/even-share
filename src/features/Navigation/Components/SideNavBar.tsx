@@ -4,6 +4,12 @@ import { useFetchUserGroupsQuery } from "../../expensetable/expenseTableSlice";
 import { selectUser } from "../../authentication/userSlice";
 import CreateGroupModal from "./CreateGroupModal";
 import {
+  DashboardIcon,
+  ActivityLogIcon,
+  GroupIcon,
+  PersonIcon
+} from "@radix-ui/react-icons";
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -15,7 +21,6 @@ type NavBarProps = {
 };
 
 function NavBar({ showNavBar }: NavBarProps) {
-  
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
   const { data } = useFetchUserGroupsQuery(userEmail);
@@ -38,7 +43,8 @@ function NavBar({ showNavBar }: NavBarProps) {
                   className="flex items-center p-2 text-primary-font-color rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                   to={"/"}
                 >
-                  <span className="ml-3 mt-2 text-2xl">Dashboard</span>
+                  <DashboardIcon className="w-6 h-6" />
+                  <span className="ml-3 text-2xl">Dashboard</span>
                 </Link>
               </li>
               <li>
@@ -46,7 +52,8 @@ function NavBar({ showNavBar }: NavBarProps) {
                   className="flex items-center p-2 text-primary-font-color rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                   to={"/postaride"}
                 >
-                  <span className="flex-1 ml-3 whitespace-nowrap mt-1 text-2xl">
+                  <ActivityLogIcon className="w-6 h-6" />
+                  <span className="flex-1 ml-3 whitespace-nowrap text-2xl">
                     Recent Activity
                   </span>
                 </Link>
@@ -54,13 +61,18 @@ function NavBar({ showNavBar }: NavBarProps) {
               <li>
                 <Accordion type="single" collapsible>
                   <AccordionItem value="item-1">
-                    <AccordionTrigger>Group  </AccordionTrigger>
-                    
+                    <AccordionTrigger>
+                      <GroupIcon className="w-7 h-7 mr-2" /> Group{" "}
+                    </AccordionTrigger>
                     <AccordionContent>
-                    <div className="text-lg"><CreateGroupModal/></div>
+                      <div className="text-lg">
+                        <CreateGroupModal />
+                      </div>
                       {data?.map((group) => (
                         <div key={group.id}>
-                          <Link to={"/group/" + group.id}>{group.user_group_name}</Link>
+                          <Link to={"/group/" + group.id}>
+                            {group.user_group_name}
+                          </Link>
                         </div>
                       ))}
                     </AccordionContent>
@@ -69,6 +81,7 @@ function NavBar({ showNavBar }: NavBarProps) {
               </li>
               <li>
                 <a className="flex items-center p-2 text-primary-font-color rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <PersonIcon className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap mt-1 text-2xl">
                     Profile
                   </span>
