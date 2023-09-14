@@ -3,6 +3,7 @@ import { useAppDispatch } from "../../../hooks/reduxTypeScriptHooks";
 import { logout } from "../../authentication/userSlice";
 import { auth } from "../../../utils/firebaseconfig";
 import { AlignLeftOutlined } from "@ant-design/icons";
+import  evenShareLogo  from "../../../assets/icons/cutouttest.png";
 import {
   Avatar,
   AvatarFallback,
@@ -49,7 +50,7 @@ export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
   };
 
   return (
-    <nav className="h-16 flex justify-between m-auto sm:px-8  max-w-5xl items-center ">
+    <nav className="h-16 flex justify-between m-auto   max-w-5xl items-center ">
       <div className="sm:hidden">
      <button
         onClick={openNavClick}
@@ -77,8 +78,9 @@ export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
       </button>
       </aside>
       </div>
-      <h1>Split-Bill</h1>
-      <div className="flex sm:gap-2">
+      {/* <h1>Split-Bill</h1> */}
+      <img src={evenShareLogo} className="w-40 object-contain " />
+      <div className="flex sm:gap-2 bg-primary-bg-color">
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>CN</AvatarFallback>
