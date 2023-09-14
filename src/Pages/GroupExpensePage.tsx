@@ -14,7 +14,6 @@ type UrlParams = {
 
 function GroupExpense() {
   const  id  = useParams<UrlParams>()?.id;
-  console.log(typeof id)
   const { data } = useFetchUserGroupQuery(id);
 
   const dispatch = useAppDispatch();

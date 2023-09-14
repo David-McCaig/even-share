@@ -10,14 +10,15 @@ import { db } from "../../utils/firebaseconfig";
 import { query, where } from "firebase/firestore";
 
 interface UserGroup {
-  id: string | undefined;
+  id: string;
   user_group_id: string;
   user_group_name: string;
   user_expense_description: string;
-  user_expense_amount: string;
+  user_expense_amount: number;
 }
 
 type UserGroups = UserGroup[];
+
 
 export const scoresApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -66,13 +67,14 @@ export const scoresApi = firestoreApi.injectEndpoints({
     setAddExpenseToGroup: builder.mutation({
       async queryFn({
         groupId,
-        userExpenseAmount,
+        userExpenseAmountNumber,
         userExpenseDescription,
         userExpenseName,
       }) {
+        console.log(userExpenseAmountNumber)
         try {
           await addDoc(collection(db, `userGroups/${groupId}/expenses`), {
-            user_expense_amount: userExpenseAmount,
+            user_expense_amount: userExpenseAmountNumber,
             user_expense_description: userExpenseDescription,
             user_expense_name: userExpenseName,
           });

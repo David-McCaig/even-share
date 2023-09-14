@@ -5,24 +5,17 @@ import { useFetchUserGroupQuery } from "../expensetable/expenseTableSlice";
 import BalanceSummaryColumn from "./Component/BalanceSummaryColumn";
 import BalanceSummaryCard from "./Component/BalanceSummaryCard";
 import { useEffect } from "react";
-import { Group } from "lucide-react";
 
-interface GroupData {
-  filter(arg0: (expense: GroupData) => void): unknown;
-  name: string;
-  expenses: number[];
-  user_expense_name: string;
-  user_expense_amount: number;
+interface UserGroup {
   id: string;
-  user_expense_description:string;
+  user_group_id: string;
+  user_group_name: string;
+  user_expense_description: string;
+  user_expense_amount: number;
+  user_expense_name: string;
 }
 
-interface GroupDataExpense {
-  filter(arg0: (expense: GroupDataExpense) => void): unknown;
-  user_expense_name: string;
-  user_expense_amount: number;
-  user_expense_description:string;
-}
+type UserGroups = UserGroup[];
 
 interface People {
   name: string;
@@ -39,7 +32,7 @@ function Index() {
 
   function calculateOwes(people:People[]) {
     const numPeople = people.length;
-    console.log(people)
+ 
     const totalExpenses = people.map((person) =>
       person.expenses.reduce((acc: number, expense: number) => acc + expense, 0)
     );
@@ -72,7 +65,7 @@ function Index() {
         }
       }
     }
-    console.log(transactions);
+   
     const results = transactions.map((transaction) =>
       transaction.from === "You"
         ? `${transaction.from} owe ${
@@ -83,13 +76,13 @@ function Index() {
           } $${transaction.amount.toFixed(2)}`
     );
 
-    return results.length > 0 ? results : ["All people are settled up."];
+    return results.length > 0 ? results : ["All people are settled up"];
   }
 
 
-  const createUserObject = (groupData:GroupDataExpense) => {
+  const createUserObject = (groupData:UserGroups) => {
     const expenseData: { name: string; expenses: number[]; }[] = [];
-    groupData?.filter((expense:GroupDataExpense) => {
+    groupData?.filter((expense) => {
       if (expenseData.length === 0) {
         expenseData.push({
           name: expense.user_expense_name,
@@ -134,10 +127,9 @@ function Index() {
 
   useEffect(() => {
     const userObject = createUserObject(data);
-    console.log(data)
     const [result] = calculateOwes(userObject);
     // setUserExpense(result)
-    console.log(findNumber(result));
+    findNumber(result);
   }, [data]);
 
   return (

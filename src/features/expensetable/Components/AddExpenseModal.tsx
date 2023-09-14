@@ -33,9 +33,11 @@ function AddExpenseModal() {
 
   const addExpenseSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const userExpenseAmountNumber = parseFloat(userExpenseAmount);
+   
     setAddExpenseToGroup({
       groupId,
-      userExpenseAmount,
+      userExpenseAmountNumber,
       userExpenseDescription,
       userExpenseName,
     });
@@ -72,8 +74,9 @@ function AddExpenseModal() {
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Price</Label>
               <Input
+              type="number"
                 onChange={(e) => setUserExpenseAmount(e.target.value)}
-                id="username"
+                id="userExpenseAmount"
                 value={userExpenseAmount}
                 placeholder="$0.00"
                 className="col-span-3"
