@@ -1,21 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "../src/features/authentication/userSlice";
+import groupIdSlice from "./features/expensetable/groupIdSlice";
 import { firestoreApi } from "./firestoreApi";
-
-// const store = configureStore({
-//     reducer: {
-//         user: userReducer,
-//         [firestoreApi.reducerPath]: firestoreApi.reducer,
-//     },
-//         middleware: (getDefaultMiddleware) => {
-//       return getDefaultMiddleware().concat(firestoreApi.middleware);
-//     },
-// });
 
 export const setupStore = () =>
   configureStore({
     reducer: {
       user: userReducer,
+      groupId: groupIdSlice,
       [firestoreApi.reducerPath]: firestoreApi.reducer,
     },
     middleware: (getDefaultMiddleware) => {

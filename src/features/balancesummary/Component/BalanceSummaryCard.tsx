@@ -5,11 +5,13 @@ import {
   CardTitle,
 } from "../../../Components/ui/card";
 
-function BalanceSummaryCard() {
+
+function BalanceSummaryCard({userName, userAmount}) {
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">Mary Owes you</CardTitle>
+        <CardTitle className="text-sm font-medium">{userName}</CardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -24,7 +26,7 @@ function BalanceSummaryCard() {
         </svg>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">$20.00</div>
+        <div className="text-2xl font-bold">{userAmount}</div>
       </CardContent>
     </Card>
   );

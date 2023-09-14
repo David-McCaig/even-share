@@ -43,7 +43,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
       },
       providesTags: ["Score"],
     }),
-    fetchUserGroup: builder.query<UserGroups, void>({
+    fetchUserGroup: builder.query<UserGroups, void | string>({
       async queryFn(urlId) {
         try {
           const billQuery = query(
