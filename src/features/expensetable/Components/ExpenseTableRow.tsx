@@ -17,6 +17,7 @@ interface ExpenseTableRowProps {
   expenseDate: string;
   expenseAmount: string;
   expenseId: string | undefined;
+  billPaidBy:string | string[];
 }
 
 function ExpenseTableRow({
@@ -24,6 +25,7 @@ function ExpenseTableRow({
   expenseDate,
   expenseAmount,
   expenseId,
+  billPaidBy,
 }: ExpenseTableRowProps) {
   const groupId = useParams()?.id;
 
@@ -53,8 +55,8 @@ function ExpenseTableRow({
                     {expenseDate}
                   </p>
                 </div>
-                <div className="flex flex-col text-base font-semibold dark:text-white">
-                  <p className="text-secondary-font-color">You paid</p>
+                <div className="w-20 flex flex-col text-base font-semibold dark:text-white">
+                  <p className="text-secondary-font-color">{billPaidBy}</p>
                   <p>{expenseAmount}</p>
                 </div>
                 <DropdownMenu>

@@ -30,7 +30,6 @@ export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
   const firstLetterDisplayName = useAppSelector(selectUser)?.displayName.slice(0,1)
   const userDisplayImage = useAppSelector(selectUser)?.photoUrl
 
-  console.log(userDisplayImage)
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {

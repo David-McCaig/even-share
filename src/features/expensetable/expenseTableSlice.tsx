@@ -14,7 +14,8 @@ interface UserGroup {
   user_group_id: string;
   user_group_name: string;
   user_expense_description: string;
-  user_expense_amount: number;
+  user_expense_amount: string;
+  user_expense_name: string;
 }
 
 type UserGroups = UserGroup[];
