@@ -11,6 +11,8 @@ import BalanceSummary from "./features/balancesummary/index.tsx";
 import GroupExpense from "./Pages/GroupExpensePage.tsx";
 import Login from "./Pages/LoginPage.tsx";
 import SignUp from "./Pages/SignUpPage.tsx";
+import RecentActivityPage from "./Pages/RecentActivityPage.tsx";
+import ProfilePage from "./Pages/ProfilePage.tsx";
 
 function App() {
 
@@ -29,6 +31,8 @@ function App() {
         <Route path="/signup" element={userInfo? <Navigate to="/"/> :<SignUp />} />
         <Route path="/" element={userInfo ? <Dashboard /> : <Navigate to="/login"/>} />
         <Route path="/group/:id" element={userInfo ? <GroupExpense/> : <Navigate to="/login"/>} />
+        <Route path="/recentactivity" element={userInfo ? <RecentActivityPage/> : <Navigate to="/login"/>} />
+        <Route path="/profile" element={userInfo ? <ProfilePage/> : <Navigate to="/login"/>} /> 
       </Routes>
       {userInfo && <BalanceSummary/>}
       </div>

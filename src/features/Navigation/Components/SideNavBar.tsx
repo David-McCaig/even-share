@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { useFetchUserGroupsQuery } from "../../expensetable/expenseTableSlice";
@@ -21,6 +22,8 @@ type NavBarProps = {
 };
 
 function NavBar({ showNavBar }: NavBarProps) {
+  const [activeLink, setActiveLink] = useState("/");
+  console.log(activeLink)
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
   const { data } = useFetchUserGroupsQuery(userEmail);
@@ -40,7 +43,8 @@ function NavBar({ showNavBar }: NavBarProps) {
               <li></li>
               <li>
                 <Link
-                  className="flex items-center p-2 text-primary-font-color rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  className={`flex items-center p-2 text-primary-font-color rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/" ? "text-primary-button-color" : ""}`}
+                  onClick={() => setActiveLink("/")}
                   to={"/"}
                 >
                   <DashboardIcon className="w-6 h-6" />
@@ -49,8 +53,9 @@ function NavBar({ showNavBar }: NavBarProps) {
               </li>
               <li>
                 <Link
-                  className="flex items-center p-2 text-primary-font-color rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                  to={"/postaride"}
+                  className={`flex items-center p-2  rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/recentactivity" ? "text-primary-button-color" : ""}`}
+                  onClick={() => setActiveLink("/recentactivity")}
+                  to={"/recentactivity"}
                 >
                   <ActivityLogIcon className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap text-2xl">
@@ -70,7 +75,11 @@ function NavBar({ showNavBar }: NavBarProps) {
                       </div>
                       {data?.map((group) => (
                         <div key={group.id}>
-                          <Link to={"/group/" + group.id}>
+                          <Link 
+                          className={`${activeLink === "/group/" + group.id ? "text-primary-button-color" : ""}`}
+                          to={"/group/" + group.id}
+                          onClick={() => setActiveLink("/group/" + group.id)}
+                          >
                             {group.user_group_name}
                           </Link>
                         </div>
@@ -80,12 +89,16 @@ function NavBar({ showNavBar }: NavBarProps) {
                 </Accordion>
               </li>
               <li>
-                <a className="flex items-center p-2 text-primary-font-color rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <Link 
+                className={`flex items-center p-2 text-primary-font-color rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/profile" ? "text-primary-button-color" : ""}`}
+                to={"/profile"}
+                onClick={() => setActiveLink("/profile")}
+                >
                 <PersonIcon className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap mt-1 text-2xl">
                     Profile
                   </span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
