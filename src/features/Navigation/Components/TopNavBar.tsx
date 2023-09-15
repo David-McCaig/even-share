@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../../hooks/reduxTypeScriptHooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
+import { selectUser } from "../../authentication/userSlice";
 import { logout } from "../../authentication/userSlice";
 import { auth } from "../../../utils/firebaseconfig";
 import { AlignLeftOutlined } from "@ant-design/icons";
-import  evenShareLogo  from "../../../assets/icons/cutouttest.png";
+import  evenShareLogo  from "../../../assets/icons/facebook_cutout_cover_photo_1.png";
 import {
   Avatar,
   AvatarFallback,
@@ -26,6 +27,10 @@ type NavBarProps = {
 export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
   const navigate = useNavigate();
 
+  const firstLetterDisplayName = useAppSelector(selectUser)?.displayName.slice(0,1)
+  const userDisplayImage = useAppSelector(selectUser)?.photoUrl
+
+  console.log(userDisplayImage)
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {
@@ -78,17 +83,16 @@ export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
       </button>
       </aside>
       </div>
-      {/* <h1>Split-Bill</h1> */}
       <img src={evenShareLogo} className="w-40 object-contain " />
       <div className="flex sm:gap-2 bg-primary-bg-color">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={userDisplayImage} />
+          <AvatarFallback>{firstLetterDisplayName}</AvatarFallback>
         </Avatar>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>David McCaig</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="bg-primary-bg-color " >David McCaig</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div
                   onClick={handleLogout}
