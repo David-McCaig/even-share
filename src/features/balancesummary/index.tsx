@@ -68,10 +68,10 @@ function Index() {
    
     const results = transactions.map((transaction) =>
       transaction.from === "You"
-        ? `${transaction.from} owe ${
+        ? `${transaction.from.split(" ")[0]} owe ${
             transaction.to
           } $${transaction.amount.toFixed(2)}`
-        : `${transaction.from} owes ${
+        : `${transaction.from.split(" ")[0]} owes ${
             transaction.to
           } $${transaction.amount.toFixed(2)}`
     );
@@ -126,10 +126,12 @@ function Index() {
   };
 
   useEffect(() => {
-    const userObject = createUserObject(data);
-    const [result] = calculateOwes(userObject);
-    // setUserExpense(result)
-    findNumber(result);
+    if(data) {
+      const userObject = createUserObject(data);
+      const [result] = calculateOwes(userObject);
+      // setUserExpense(result)
+      findNumber(result);
+    }
   }, [data]);
 
   return (

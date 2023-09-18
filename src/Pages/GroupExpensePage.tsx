@@ -53,7 +53,7 @@ function GroupExpense() {
             expenseDate={getFormattedDate(expense?.created_at?.seconds, expense?.created_at?.nanoseconds)}
             expenseAmount={`$${expense.user_expense_amount}`}
             expenseId={expense.id}
-            billPaidBy={displayName === expense.user_expense_name ? "You paid" : expense.user_expense_name.split(" ").slice(0, 1)}
+            billPaidBy={displayName === expense.user_expense_name ? "You paid" : expense.user_expense_name.split(" ").slice(0, 1) + " paid"}
           />
         </div>
       ))}
