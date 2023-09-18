@@ -5,8 +5,13 @@ import {
   CardTitle,
 } from "../../../Components/ui/card";
 
+interface BalanceSummartProps {
+  userName: string;
+  userAmount: number;
+}
 
-function BalanceSummaryCard({userName, userAmount}) {
+
+function BalanceSummaryCard({userName, userAmount}: BalanceSummartProps) {
 
   return (
     <Card>
