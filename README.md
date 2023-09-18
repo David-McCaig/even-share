@@ -1,6 +1,6 @@
 ## PartsBin
 
-EvenShare is an application that allows you to easily split expenses with other users. This was a great prject that allowed me to deepen my knowledge when it comes to Typescript and Redux. 
+EvenShare is an application that allows you to easily split expenses with other users. This was a great project that allowed me to deepen my knowledge when it comes to Typescript and Redux. 
 
 
 ![Home Page Screenshot](https://res.cloudinary.com/dui1zm17r/image/upload/v1695007503/Github/image_1_iucg11.png)
