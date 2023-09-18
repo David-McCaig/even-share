@@ -1,7 +1,6 @@
 import { MoreHorizontal } from "lucide-react";
 import { useParams } from "react-router";
 import { useDeleteExpenseGroupMutation } from "../expenseTableSlice";
-import { PoweroffOutlined } from "@ant-design/icons";
 
 import { Button } from "../../../Components/ui/button";
 import {
@@ -19,6 +18,7 @@ interface ExpenseTableRowProps {
   expenseAmount: string;
   expenseId: string | undefined;
   billPaidBy:string | string[];
+  expenseIcon: JSX.Element | string;
 }
 
 function ExpenseTableRow({
@@ -27,6 +27,7 @@ function ExpenseTableRow({
   expenseAmount,
   expenseId,
   billPaidBy,
+  expenseIcon
 }: ExpenseTableRowProps) {
   const groupId = useParams()?.id;
 
@@ -35,6 +36,8 @@ function ExpenseTableRow({
   const deleteExpenseClick = async () => {
     deleteExpense({ groupId, expenseId });
   };
+
+ 
 
   return (
     <div className="">
@@ -47,7 +50,8 @@ function ExpenseTableRow({
             <li className="py-3 sm:py-4">
               <div className="flex items-center space-x-4">
                 <div className="flex-shrink-0"></div>
-                <PoweroffOutlined className="text-xl" />
+                {expenseIcon}
+                {/* <PoweroffOutlined className="text-xl" /> */}
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate dark:text-white">
                     {expenseDescription}
