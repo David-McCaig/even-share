@@ -3,6 +3,7 @@ import { useFetchUserGroupsQuery } from "../expenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { useSetAddExpenseToGroupMutation } from "../expenseTableSlice";
+import { Timestamp, serverTimestamp } from "firebase/firestore";
 import DropDownMenu from "../../../Components/DropDownMenu";
 import { Button } from "../../../Components/ui/button";
 import { Input } from "../../../Components/ui/input";
@@ -20,6 +21,10 @@ Dialog,
 
 
 function AddExpenseModal() {
+  const createdAt = {
+    seconds: Timestamp.now().seconds,
+    nanoseconds: Timestamp.now().nanoseconds,
+  }
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
   useFetchUserGroupsQuery(userEmail);
@@ -30,16 +35,16 @@ function AddExpenseModal() {
   const [userExpenseName] = useState(userInfo.displayName);
 
   const [setAddExpenseToGroup] = useSetAddExpenseToGroupMutation();
-
+  
   const addExpenseSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const userExpenseAmountNumber = parseFloat(userExpenseAmount);
-   
     setAddExpenseToGroup({
       groupId,
       userExpenseAmountNumber,
       userExpenseDescription,
       userExpenseName,
+      createdAt
     });
   };
 

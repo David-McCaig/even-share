@@ -27,7 +27,7 @@ type NavBarProps = {
 export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
   const navigate = useNavigate();
 
-  const firstLetterDisplayName = useAppSelector(selectUser)?.displayName.slice(0,1)
+  const firstLetterDisplayName = useAppSelector(selectUser)?.email.slice(0,1).toUpperCase()
   const userDisplayImage = useAppSelector(selectUser)?.photoUrl
 
   const dispatch = useAppDispatch();

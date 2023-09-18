@@ -16,6 +16,10 @@ interface UserGroup {
   user_expense_description: string;
   user_expense_amount: string;
   user_expense_name: string;
+  created_at: {
+    nanoseconds: number;
+    seconds: number;
+  };
 }
 
 type UserGroups = UserGroup[];
@@ -71,13 +75,15 @@ export const scoresApi = firestoreApi.injectEndpoints({
         userExpenseAmountNumber,
         userExpenseDescription,
         userExpenseName,
+        createdAt,
       }) {
-        console.log(userExpenseAmountNumber)
+     
         try {
           await addDoc(collection(db, `userGroups/${groupId}/expenses`), {
             user_expense_amount: userExpenseAmountNumber,
             user_expense_description: userExpenseDescription,
             user_expense_name: userExpenseName,
+            created_at: createdAt,
           });
           return { data: null };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

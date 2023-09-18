@@ -23,7 +23,7 @@ type NavBarProps = {
 
 function NavBar({ showNavBar }: NavBarProps) {
   const [activeLink, setActiveLink] = useState("/");
-  console.log(activeLink)
+
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
   const { data } = useFetchUserGroupsQuery(userEmail);
@@ -43,7 +43,7 @@ function NavBar({ showNavBar }: NavBarProps) {
               <li></li>
               <li>
                 <Link
-                  className={`flex items-center p-2 text-primary-font-color rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/" ? "text-primary-button-color" : ""}`}
+                  className={`flex items-center p-2  rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/" ? "text-primary-button-color" : "text-primary-font-color"}`}
                   onClick={() => setActiveLink("/")}
                   to={"/"}
                 >
@@ -90,7 +90,7 @@ function NavBar({ showNavBar }: NavBarProps) {
               </li>
               <li>
                 <Link 
-                className={`flex items-center p-2 text-primary-font-color rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/profile" ? "text-primary-button-color" : ""}`}
+                className={`flex items-center p-2  rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/profile" ? "text-primary-button-color" : "text-primary-font-color"}`}
                 to={"/profile"}
                 onClick={() => setActiveLink("/profile")}
                 >
