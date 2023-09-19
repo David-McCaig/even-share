@@ -30,13 +30,13 @@ function DropDownMenu({ groupOnChange }: SelectMenuProps) {
     user_group_email: [],
     id: "0",
   });
-
+console.log(selected)
   return (
     <Listbox
       value={selected}
       onChange={(value) => {
         setSelected(value);
-        groupOnChange(value); // Call the callback function with the selected data
+        groupOnChange(value); 
       }}
     >
       {({ open }) => (
