@@ -23,16 +23,17 @@ interface People {
 }
 
 function Index() {
-  const [userExpenseString, setUserExpenseString] = useState("");
-  const [userExpenseNumber, setUserExpenseNumber] = useState("");
+  const [expensesArray, setExpensesArray] = useState<
+    string[] | { userString: string; userNumber: number }[]
+  >([]);
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
 
   const user = useAppSelector(selectUser);
   const { data } = useFetchUserGroupQuery(groupId);
 
-  function calculateOwes(people:People[]) {
+  function calculateOwes(people: People[]) {
     const numPeople = people.length;
- 
+
     const totalExpenses = people.map((person) =>
       person.expenses.reduce((acc: number, expense: number) => acc + expense, 0)
     );
@@ -57,31 +58,35 @@ function Index() {
             balances[i] += transferAmount;
             balances[j] -= transferAmount;
             transactions.push({
-              from: people[i].name,
-              to: people[j].name,
+              from:
+                people[i].name === user.displayName ? "You" : people[i].name,
+              to: people[j].name === user.displayName ? "You" : people[j].name,
               amount: transferAmount,
             });
           }
         }
       }
     }
-   
     const results = transactions.map((transaction) =>
       transaction.from === "You"
-        ? `${transaction.from.split(" ")[0]} owe ${
-            transaction.to
-          } $${transaction.amount.toFixed(2)}`
-        : `${transaction.from.split(" ")[0]} owes ${
-            transaction.to
-          } $${transaction.amount.toFixed(2)}`
+        ? {
+            userString: `${transaction.from?.split(" ")[0]} owe ${
+              transaction.to
+            }`,
+            userNumber: parseInt(transaction.amount.toFixed(2)),
+          }
+        : {
+            userString: `${transaction.from?.split(" ")[0]} owes ${
+              transaction.to
+            }`,
+            userNumber: parseInt(transaction.amount?.toFixed(2)),
+          }
     );
-
     return results.length > 0 ? results : ["All people are settled up"];
   }
 
-
-  const createUserObject = (groupData:UserGroups) => {
-    const expenseData: { name: string; expenses: number[]; }[] = [];
+  const createUserObject = (groupData: UserGroups) => {
+    const expenseData: { name: string; expenses: number[] }[] = [];
     groupData?.filter((expense) => {
       if (expenseData.length === 0) {
         expenseData.push({
@@ -110,37 +115,28 @@ function Index() {
     return expenseData;
   };
 
-  const findNumber = (string: string) => {
-    const char = "1234567890$.";
-    let newNumber = "";
-    let newString = "";
-    for (let i = 0; i < string.length; i++) {
-      if (char.indexOf(string[i]) >= 0) {
-        newNumber += string[i];
-      } else {
-        newString += string[i];
-      }
-    }
-    setUserExpenseString(newString);
-    setUserExpenseNumber(newNumber);
-  };
-
   useEffect(() => {
-    if(data) {
+    if (data) {
       const userObject = createUserObject(data);
-      const [result] = calculateOwes(userObject);
-      // setUserExpense(result)
-      findNumber(result);
+      const result = calculateOwes(userObject);
+      setExpensesArray(result);
     }
   }, [data]);
 
   return (
     <>
       <BalanceSummaryColumn>
-        <BalanceSummaryCard
-          userName={userExpenseString}
-          userAmount={userExpenseNumber}
-        />
+        {expensesArray?.map((expense,i) => (
+            <BalanceSummaryCard
+            key={i}
+              userName={
+                typeof expense === "string" ? expense : expense.userString
+              }
+              userAmount={
+                typeof expense === "string" ? 0 : expense.userNumber || 0
+              }
+            />
+        ))}
       </BalanceSummaryColumn>
     </>
   );

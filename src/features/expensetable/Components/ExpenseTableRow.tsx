@@ -18,7 +18,7 @@ interface ExpenseTableRowProps {
   expenseAmount: string;
   expenseId: string | undefined;
   billPaidBy:string | string[];
-  expenseIcon: JSX.Element | string;
+  expenseIcon: JSX.Element | string | undefined;
 }
 
 function ExpenseTableRow({
