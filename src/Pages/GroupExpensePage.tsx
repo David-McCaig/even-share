@@ -33,10 +33,6 @@ function GroupExpense() {
   );
 },[dispatch, id])
 
-  const AddExpenseClick = () => {};
-
-  const AddSettleUpClick = () => {};
-
   const selectIcon = (billType: JSX.Element | string) => {
     const billTypeString = typeof billType === 'string' ? billType : billType.toString();
   
@@ -53,13 +49,11 @@ function GroupExpense() {
     }
   };
   
-
+console.log(data)
   return (
     <div className="w-full">
       <TopBar
         currentPage={"Dashboard"}
-        AddExpenseClick={AddExpenseClick}
-        AddSettleUpClick={AddSettleUpClick}
       />
       <div className="lg:hidden">
         <BalanceSummaryCard userName={"feffe"} userAmount={"fefe"} />
@@ -72,7 +66,7 @@ function GroupExpense() {
             expenseDate={getFormattedDate(expense?.created_at?.seconds, expense?.created_at?.nanoseconds)}
             expenseAmount={`$${expense.user_expense_amount}`}
             expenseId={expense.id}
-            billPaidBy={displayName === expense.user_expense_name ? "You paid" : expense.user_expense_name.split(" ").slice(0, 1) + " paid"}
+            billPaidBy={displayName === expense?.user_expense_name ? "You paid" : expense?.user_expense_name?.split(" ")?.slice(0, 1) + " paid"}
           />
         </div>
       ))}

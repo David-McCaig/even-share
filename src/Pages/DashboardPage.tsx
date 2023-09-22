@@ -3,19 +3,15 @@ import BalanceSummaryCard from "../features/balancesummary/Component/BalanceSumm
 import ExpenseTable from "../features/expensetable/index"
 
 function Dashboard() {
-  const AddExpenseClick = () => {};
-
-  const AddSettleUpClick = () => {};
 
   return (
     <div className="w-full bg-primary">
       <TopBar
         currentPage={"Dashboard"}
-        AddExpenseClick={AddExpenseClick}
-        AddSettleUpClick={AddSettleUpClick}
+
       />
       <div className="lg:hidden" >
-        <BalanceSummaryCard />
+        <BalanceSummaryCard userName="Dave" userAmount='2' />
       </div>
       <ExpenseTable/>
     </div>

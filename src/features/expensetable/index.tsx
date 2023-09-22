@@ -1,10 +1,10 @@
-import ExpenseTableRow from "./Components/ExpenseTableRow"
+// import ExpenseTableRow from "./Components/ExpenseTableRow"
 
 function Index() {
 
   return (
     <>
-    <ExpenseTableRow expenseDescription={"Power Bill"} expenseDate={"March 28th 2023"} expenseAmount={"$200"} expenseId={'iffe'}/>
+    {/* <ExpenseTableRow billPaidBy={"Dave"} expenseDescription={"Power Bill"} expenseDate={"March 28th 2023"} expenseAmount={"$200"} expenseId={'iffe'}/> */}
     </>
   )
 }

@@ -7,7 +7,7 @@ import {
 
 interface BalanceSummartProps {
   userName: string;
-  userAmount: string;
+  userAmount: number;
 }
 
 
@@ -31,7 +31,7 @@ function BalanceSummaryCard({userName, userAmount}: BalanceSummartProps) {
         </svg>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{userAmount}</div>
+        <div className="text-2xl font-bold">${userAmount}</div>
       </CardContent>
     </Card>
   );
