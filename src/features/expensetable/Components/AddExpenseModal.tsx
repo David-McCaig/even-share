@@ -70,6 +70,7 @@ console.log(validationSchema)
         userExpenseAmountNumber,
         userExpenseDescription: values.userExpenseDescription,
         userExpenseName,
+        settledUp: false,
         createdAt,
       });
       setOpen(false);

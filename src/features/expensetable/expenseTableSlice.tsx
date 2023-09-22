@@ -16,6 +16,7 @@ interface UserGroup {
   user_expense_description: string;
   user_expense_amount: number;
   user_expense_name: string;
+  settled_up: boolean;
   created_at: {
     nanoseconds: number;
     seconds: number;
@@ -75,6 +76,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
         userExpenseAmountNumber,
         userExpenseDescription,
         userExpenseName,
+        settledUp,
         createdAt,
       }) {
      
@@ -83,6 +85,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
             user_expense_amount: userExpenseAmountNumber,
             user_expense_description: userExpenseDescription,
             user_expense_name: userExpenseName,
+            settled_up: settledUp,
             created_at: createdAt,
           });
           return { data: null };
