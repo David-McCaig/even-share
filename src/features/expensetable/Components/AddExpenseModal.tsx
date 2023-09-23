@@ -54,7 +54,7 @@ function AddExpenseModal() {
       .required("Price is required"),
       groupId: Yup.string().required("Group is required"),
   });
-console.log(validationSchema)
+
   // Initialize Formik
   const formik = useFormik({
     initialValues: {

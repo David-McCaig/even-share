@@ -24,7 +24,7 @@ function GroupExpense() {
   // getFormattedDate()
   const { displayName } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
-  console.log(displayName)
+
   useEffect(() => {
   dispatch(
     setGroupId({
@@ -49,7 +49,7 @@ function GroupExpense() {
     }
   };
   
-console.log(data)
+
   return (
     <div className="w-full">
       <TopBar

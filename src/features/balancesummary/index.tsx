@@ -7,12 +7,18 @@ import BalanceSummaryCard from "./Component/BalanceSummaryCard";
 import { useEffect } from "react";
 import { createUserObject } from "../../utils/utils";
 import { calculateOwes } from "../../utils/utils";
+import { generateBalanceSummaryStatement } from "../../utils/utils";
+
+interface BalanceSummary {
+  userString: string;
+  userNumber: number;
+}
 
 function Index() {
   
-  const [expensesArray, setExpensesArray] = useState<
-    string[] | { userString: string; userNumber: number }[]
-  >([]);
+  const [expensesArray, setExpensesArray] = useState<(string | BalanceSummary)[]>(
+    []
+  );
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
 
   const user = useAppSelector(selectUser);
@@ -22,7 +28,9 @@ function Index() {
     if (data) {
       const userObject = createUserObject(data, user.displayName);
       const result = calculateOwes(userObject, user.displayName);
-      setExpensesArray(result);
+      const balanceSummaryStatement = generateBalanceSummaryStatement(result)
+      setExpensesArray(balanceSummaryStatement as (string | BalanceSummary)[]);
+      console.log(expensesArray)
     }
   }, [data]);
 

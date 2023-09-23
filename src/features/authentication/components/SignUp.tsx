@@ -16,7 +16,6 @@ interface Values {
 function LoginPage() {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  console.log(auth.currentUser)
   // Validation schema using Yup
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),

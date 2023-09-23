@@ -16,6 +16,17 @@ interface People {
   name: string;
   expenses: number[];
 }
+
+interface Transaction {
+  from: string;
+  to: string;
+  amount: number;
+}
+
+interface BalanceSummary {
+  userString: string;
+  userNumber: number;
+}
  
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -87,6 +98,12 @@ export   function calculateOwes(people: People[], displayName: string) {
       }
     }
   }
+  return transactions;
+}
+
+export const generateBalanceSummaryStatement = <T extends Transaction>(
+  transactions: T[]
+): BalanceSummary[] | string => {
   const results = transactions.map((transaction) =>
     transaction.from === "You"
       ? {
@@ -99,9 +116,32 @@ export   function calculateOwes(people: People[], displayName: string) {
           userString: `${transaction.from?.split(" ")[0]} owes ${
             transaction.to
           }`,
-          userNumber: parseInt(transaction.amount?.toFixed(2)),
+          userNumber: parseInt(transaction.amount.toFixed(2)),
         }
   );
-  return results.length > 0 ? results : ["All people are settled up"];
-}
+
+  return results.length > 0 ? results : [{userString: "All people are settled up", userNumber: 0}];
+};
+
+export const generateBalanceSettleUpStatement = <T extends Transaction>(
+  transactions: T[]
+): BalanceSummary[] | string => {
+  const results = transactions.map((transaction) =>
+    transaction.from === "You"
+      ? {
+          userString: `${transaction.from?.split(" ")[0]} paied ${
+            transaction.to
+          }`,
+          userNumber: parseInt(transaction.amount.toFixed(2)),
+        }
+      : {
+          userString: `${transaction.from?.split(" ")[0]} paied ${
+            transaction.to
+          }`,
+          userNumber: parseInt(transaction.amount.toFixed(2)),
+        }
+  );
+
+  return results.length > 0 ? results : [{userString: "All people are settled up", userNumber: 0}];
+};
 
