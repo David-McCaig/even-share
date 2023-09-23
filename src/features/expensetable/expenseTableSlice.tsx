@@ -54,7 +54,8 @@ export const scoresApi = firestoreApi.injectEndpoints({
       async queryFn(urlId) {
         try {
           const billQuery = query(
-            collection(db, `userGroups/${urlId}/expenses`)
+            collection(db, `userGroups/${urlId}/expenses`),
+            where("settled_up", "==", false)
           );
           const querySnapshot = await getDocs(billQuery);
           const userGroups: UserGroups = [];
