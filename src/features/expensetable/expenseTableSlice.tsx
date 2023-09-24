@@ -5,6 +5,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
+  limit,
 } from "firebase/firestore";
 import { db } from "../../utils/firebaseconfig";
 import { query, where } from "firebase/firestore";
@@ -71,6 +72,36 @@ export const scoresApi = firestoreApi.injectEndpoints({
       },
       providesTags: ["Score"],
     }),
+    fetchUserExpenses: builder.query<UserGroups, void | string>({
+      async queryFn(email: string) {
+        try {
+          const expensesArray: UserGroups = [];
+
+          const userGroupRef = collection(db, "userGroups");
+          const queryGroupByEmail = query(
+            userGroupRef,
+            where("user_group_email", "array-contains", email)
+          );
+          const querySnapshot = await getDocs(queryGroupByEmail);
+
+          for (const doc of querySnapshot.docs) {
+            const expensesCollectionRef = query(collection(doc.ref, "expenses"),limit(3));
+            const expensesSnapshot = await getDocs(expensesCollectionRef);
+
+            for (const expenseDoc of expensesSnapshot.docs) {
+              expensesArray.push({ id: expenseDoc.id, ...expenseDoc.data() } as UserGroup);
+            }
+          }
+
+          console.log(expensesArray);
+          return { data: expensesArray };
+        } catch (error: unknown) {
+          console.error((error as Error).message);
+          return { error: (error as Error).message };
+        }
+      },
+      providesTags: ["Score"],
+    }),
     setAddExpenseToGroup: builder.mutation({
       async queryFn({
         groupId,
@@ -119,6 +150,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
 export const {
   useFetchUserGroupsQuery,
   useFetchUserGroupQuery,
+  useFetchUserExpensesQuery,
   useSetAddExpenseToGroupMutation,
   useDeleteExpenseGroupMutation,
 } = scoresApi;
