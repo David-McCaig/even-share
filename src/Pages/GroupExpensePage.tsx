@@ -56,7 +56,7 @@ function GroupExpense() {
         currentPage={"Dashboard"}
       />
       <div className="lg:hidden">
-        <BalanceSummaryCard userName={"feffe"} userAmount={"fefe"} />
+        <BalanceSummaryCard userName={"feffe"} userAmount={20} />
       </div>
       {data?.map((expense) => (
         <div key={expense.id}>

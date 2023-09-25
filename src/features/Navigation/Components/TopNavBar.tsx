@@ -28,6 +28,7 @@ export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
   const navigate = useNavigate();
 
   const firstLetterDisplayName = useAppSelector(selectUser)?.email.slice(0,1).toUpperCase()
+  const displayName = useAppSelector(selectUser)?.displayName
   const userDisplayImage = useAppSelector(selectUser)?.photoUrl
 
   const dispatch = useAppDispatch();
@@ -91,7 +92,7 @@ export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-primary-bg-color " >David McCaig</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="bg-primary-bg-color " >{displayName}</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div
                   onClick={handleLogout}

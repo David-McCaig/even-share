@@ -27,7 +27,7 @@ function NavBar({ showNavBar }: NavBarProps) {
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
   const { data } = useFetchUserGroupsQuery(userEmail);
-  console.log(userInfo)
+
   return (
     <nav>
       <div className="sticky top-24 sm:top-16 ">

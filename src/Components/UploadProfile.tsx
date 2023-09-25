@@ -1,5 +1,3 @@
-
-
 function UploadProfile() {
   return (
     <div className=" w-full flex justify-center text-center ">

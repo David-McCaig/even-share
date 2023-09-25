@@ -1,4 +1,5 @@
 import { firestoreApi } from "../../firestoreApi";
+import { UserGroups, UserGroup } from "../../types";
 import {
   addDoc,
   collection,
@@ -9,23 +10,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../../utils/firebaseconfig";
 import { query, where } from "firebase/firestore";
-
-interface UserGroup {
-  id: string;
-  user_group_id: string;
-  user_group_name: string;
-  user_expense_description: string;
-  user_expense_amount: number;
-  user_expense_name: string;
-  settled_up: boolean;
-  created_at: {
-    nanoseconds: number;
-    seconds: number;
-  };
-}
-
-type UserGroups = UserGroup[];
-
 
 export const scoresApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -85,11 +69,17 @@ export const scoresApi = firestoreApi.injectEndpoints({
           const querySnapshot = await getDocs(queryGroupByEmail);
 
           for (const doc of querySnapshot.docs) {
-            const expensesCollectionRef = query(collection(doc.ref, "expenses"),limit(3));
+            const expensesCollectionRef = query(
+              collection(doc.ref, "expenses"),
+              limit(3)
+            );
             const expensesSnapshot = await getDocs(expensesCollectionRef);
 
             for (const expenseDoc of expensesSnapshot.docs) {
-              expensesArray.push({ id: expenseDoc.id, ...expenseDoc.data() } as UserGroup);
+              expensesArray.push({
+                id: expenseDoc.id,
+                ...expenseDoc.data(),
+              } as UserGroup);
             }
           }
 
@@ -111,7 +101,6 @@ export const scoresApi = firestoreApi.injectEndpoints({
         settledUp,
         createdAt,
       }) {
-     
         try {
           await addDoc(collection(db, `userGroups/${groupId}/expenses`), {
             user_expense_amount: userExpenseAmountNumber,

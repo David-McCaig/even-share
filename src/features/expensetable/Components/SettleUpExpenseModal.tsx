@@ -17,6 +17,7 @@ import { useFetchUserGroupQuery } from "../expenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { ArrowRightOutlined } from "@ant-design/icons";
+import { BalanceSummary } from "../../../types";
 import { Avatar, AvatarFallback } from "../../../Components/ui/avatar";
 import { Button } from "../../../Components/ui/button";
 import {
@@ -29,10 +30,7 @@ import {
   DialogTrigger,
 } from "../../../Components/ui/dialog";
 
-interface BalanceSummary {
-  userString: string;
-  userNumber: number;
-}
+
 
 function SettleUpExpenseModal() {
   const [open, setOpen] = useState(false);

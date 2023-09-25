@@ -8,11 +8,7 @@ import { useEffect } from "react";
 import { createUserObject } from "../../utils/utils";
 import { calculateOwes } from "../../utils/utils";
 import { generateBalanceSummaryStatement } from "../../utils/utils";
-
-interface BalanceSummary {
-  userString: string;
-  userNumber: number;
-}
+import { BalanceSummary } from "../../types";
 
 function Index() {
   

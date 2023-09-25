@@ -3,14 +3,10 @@ import { selectUser } from "../../authentication/userSlice";
 import { getAuth, updateProfile, updateEmail} from "firebase/auth";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Values } from "../../../types";
 import { Button } from "../../../Components/ui/button";
 import { Input } from "../../../Components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
-
-interface Values { 
-    userName: string;
-    userEmail: string;
-}
 
 function Profile() {
 

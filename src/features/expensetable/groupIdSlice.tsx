@@ -14,6 +14,4 @@ export const groupIdSlice = createSlice({
 
 export const { setGroupId } = groupIdSlice.actions;
 
-// export const selectGroupId = (state: string ) => state.groupId.groupId; 
-
 export default groupIdSlice.reducer;

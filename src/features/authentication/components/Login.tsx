@@ -6,12 +6,7 @@ import { useSignedinDispatchUserInfo } from "../hooks/useSignedinDispatchUserInf
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
-
-
-interface Values {
-  password: string;
-  email: string;
-}
+import { AuthValues } from "../../../types.tsx";
 
 function LoginPage() {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
@@ -74,7 +69,7 @@ function LoginPage() {
             email: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={(values: Values) => {
+          onSubmit={(values: AuthValues) => {
             signInWithEmailPassword(values);
             setErrorMessage(passwordErrorMessage)
           }}
