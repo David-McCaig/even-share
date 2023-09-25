@@ -5,16 +5,20 @@ import {
   CardTitle,
 } from "../../../Components/ui/card";
 
-interface BalanceSummartProps {
+interface BalanceSummaryProps {
   userName: string;
   userAmount: number;
 }
 
-
-function BalanceSummaryCard({userName, userAmount}: BalanceSummartProps) {
-
+function BalanceSummaryCard({ userName, userAmount }: BalanceSummaryProps) {
   return (
-    <Card className={userName?.split(" ")[0] === "You" || undefined ? "text-rose-600" : "text-primary-button-color"}>
+    <Card
+      className={
+        userName?.split(" ")[0] === "You" || undefined
+          ? "text-rose-600"
+          : "text-primary-button-color"
+      }
+    >
       <CardHeader className="flex flex-row items-center  justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium ">{userName}</CardTitle>
         <svg

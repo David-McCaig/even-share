@@ -17,7 +17,7 @@ interface ExpenseTableRowProps {
   expenseDate: string;
   expenseAmount: string;
   expenseId: string | undefined;
-  billPaidBy:string | string[];
+  billPaidBy: string | string[];
   expenseIcon: JSX.Element | string | undefined;
 }
 
@@ -27,7 +27,7 @@ function ExpenseTableRow({
   expenseAmount,
   expenseId,
   billPaidBy,
-  expenseIcon
+  expenseIcon,
 }: ExpenseTableRowProps) {
   const groupId = useParams()?.id;
 
@@ -36,8 +36,6 @@ function ExpenseTableRow({
   const deleteExpenseClick = async () => {
     deleteExpense({ groupId, expenseId });
   };
-
- 
 
   return (
     <div className="">
@@ -64,22 +62,26 @@ function ExpenseTableRow({
                   <p className="text-secondary-font-color">{billPaidBy}</p>
                   <p>{expenseAmount}</p>
                 </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                      <span className="sr-only">Open menu</span>
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={deleteExpenseClick}>
-                      Delete
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>Update</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {groupId ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={deleteExpenseClick}>
+                        Delete
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>Update</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <div className="w-4"></div>
+                )}
               </div>
             </li>
           </ul>

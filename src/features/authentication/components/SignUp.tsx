@@ -4,19 +4,15 @@ import { useGoogleGetSignInResult } from "../hooks/useGoogleGetSignInResult.js";
 import { useSignUpEmailPassword } from "../hooks/useSignUpEmailAndPassword.js";
 import { useSignedinDispatchUserInfo } from "../hooks/useSignedinDispatchUserInfo.js";
 import { Link } from "react-router-dom";
-import { auth } from "../../../utils/firebaseconfig.js";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
+import { AuthValues } from "../../../types.tsx";
 
-interface Values {
-  password: string;
-  email: string;
-}
+
 
 function LoginPage() {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  console.log(auth.currentUser)
   // Validation schema using Yup
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -75,7 +71,7 @@ function LoginPage() {
             email: "",
           }}
           validationSchema={validationSchema}
-          onSubmit={(values: Values) => {
+          onSubmit={(values: AuthValues) => {
             signUpEmailPassword(values);
             setErrorMessage(passwordErrorMessage)
           }}

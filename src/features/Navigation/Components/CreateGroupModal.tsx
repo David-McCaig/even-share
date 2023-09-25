@@ -38,7 +38,7 @@ function CreateGroupModal() {
     updatedEmails.splice(index, 1);
     setGroupMemberEmails(updatedEmails);
   };
-console.log(groupMemberEmails)
+
   const validationSchema = Yup.object().shape({
     emails: Yup.array()
       .of(Yup.string().email("Invalid email format"))

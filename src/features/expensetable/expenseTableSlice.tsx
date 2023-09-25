@@ -1,29 +1,15 @@
 import { firestoreApi } from "../../firestoreApi";
+import { UserGroups, UserGroup } from "../../types";
 import {
   addDoc,
   collection,
   getDocs,
   deleteDoc,
   doc,
+  limit,
 } from "firebase/firestore";
 import { db } from "../../utils/firebaseconfig";
 import { query, where } from "firebase/firestore";
-
-interface UserGroup {
-  id: string;
-  user_group_id: string;
-  user_group_name: string;
-  user_expense_description: string;
-  user_expense_amount: number;
-  user_expense_name: string;
-  created_at: {
-    nanoseconds: number;
-    seconds: number;
-  };
-}
-
-type UserGroups = UserGroup[];
-
 
 export const scoresApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -53,7 +39,8 @@ export const scoresApi = firestoreApi.injectEndpoints({
       async queryFn(urlId) {
         try {
           const billQuery = query(
-            collection(db, `userGroups/${urlId}/expenses`)
+            collection(db, `userGroups/${urlId}/expenses`),
+            where("settled_up", "==", false)
           );
           const querySnapshot = await getDocs(billQuery);
           const userGroups: UserGroups = [];
@@ -69,20 +56,57 @@ export const scoresApi = firestoreApi.injectEndpoints({
       },
       providesTags: ["Score"],
     }),
+    fetchUserExpenses: builder.query<UserGroups, void | string>({
+      async queryFn(email: string) {
+        try {
+          const expensesArray: UserGroups = [];
+
+          const userGroupRef = collection(db, "userGroups");
+          const queryGroupByEmail = query(
+            userGroupRef,
+            where("user_group_email", "array-contains", email)
+          );
+          const querySnapshot = await getDocs(queryGroupByEmail);
+
+          for (const doc of querySnapshot.docs) {
+            const expensesCollectionRef = query(
+              collection(doc.ref, "expenses"),
+              limit(3)
+            );
+            const expensesSnapshot = await getDocs(expensesCollectionRef);
+
+            for (const expenseDoc of expensesSnapshot.docs) {
+              expensesArray.push({
+                id: expenseDoc.id,
+                ...expenseDoc.data(),
+              } as UserGroup);
+            }
+          }
+
+          console.log(expensesArray);
+          return { data: expensesArray };
+        } catch (error: unknown) {
+          console.error((error as Error).message);
+          return { error: (error as Error).message };
+        }
+      },
+      providesTags: ["Score"],
+    }),
     setAddExpenseToGroup: builder.mutation({
       async queryFn({
         groupId,
         userExpenseAmountNumber,
         userExpenseDescription,
         userExpenseName,
+        settledUp,
         createdAt,
       }) {
-     
         try {
           await addDoc(collection(db, `userGroups/${groupId}/expenses`), {
             user_expense_amount: userExpenseAmountNumber,
             user_expense_description: userExpenseDescription,
             user_expense_name: userExpenseName,
+            settled_up: settledUp,
             created_at: createdAt,
           });
           return { data: null };
@@ -115,6 +139,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
 export const {
   useFetchUserGroupsQuery,
   useFetchUserGroupQuery,
+  useFetchUserExpensesQuery,
   useSetAddExpenseToGroupMutation,
   useDeleteExpenseGroupMutation,
 } = scoresApi;

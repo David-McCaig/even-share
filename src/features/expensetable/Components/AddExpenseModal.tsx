@@ -11,7 +11,7 @@ import { Button } from "../../../Components/ui/button";
 import { Input } from "../../../Components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import {
-Dialog,
+  Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -20,17 +20,16 @@ Dialog,
   DialogTrigger,
 } from "../../../Components/ui/dialog";
 
-
 function AddExpenseModal() {
   const createdAt = {
     seconds: Timestamp.now().seconds,
     nanoseconds: Timestamp.now().nanoseconds,
   };
+
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
   useFetchUserGroupsQuery(userEmail);
 
-  
   const [userExpenseName] = useState(userInfo.displayName);
 
   const [setAddExpenseToGroup] = useSetAddExpenseToGroupMutation();
@@ -40,21 +39,20 @@ function AddExpenseModal() {
   const OpenModalClick = () => {
     setOpen(true);
     formik.values.groupId = "";
-    formik.values.userExpenseDescription = "";  
+    formik.values.userExpenseDescription = "";
     formik.values.userExpenseAmount = "";
-  }
+  };
 
   // Define a validation schema using Yup
   const validationSchema = Yup.object({
-    
     userExpenseDescription: Yup.string().required("Description is required"),
     userExpenseAmount: Yup.number()
       .typeError("Price must be a number")
       .positive("Price must be greater than zero")
       .required("Price is required"),
-      groupId: Yup.string().required("Group is required"),
+    groupId: Yup.string().required("Group is required"),
   });
-console.log(validationSchema)
+
   // Initialize Formik
   const formik = useFormik({
     initialValues: {
@@ -62,7 +60,7 @@ console.log(validationSchema)
       userExpenseAmount: "",
       groupId: "",
     },
-    validationSchema: validationSchema, 
+    validationSchema: validationSchema,
     onSubmit: async (values) => {
       const userExpenseAmountNumber = parseFloat(values.userExpenseAmount);
       setAddExpenseToGroup({
@@ -70,30 +68,31 @@ console.log(validationSchema)
         userExpenseAmountNumber,
         userExpenseDescription: values.userExpenseDescription,
         userExpenseName,
+        settledUp: false,
         createdAt,
       });
       setOpen(false);
     },
-    validateOnChange: false, 
-    validateOnBlur: false, 
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   const handleGroupChange = (selectedData: { id: string }) => {
     formik.setFieldValue("groupId", selectedData.id);
   };
 
-
-  
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={OpenModalClick} >Add Expense</Button>
+        <Button onClick={OpenModalClick}>Add Expense</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={formik.handleSubmit}>
           <DialogHeader>
             <DialogTitle>Add Expense</DialogTitle>
-            <DialogDescription>You can add an expense to the group here.</DialogDescription>
+            <DialogDescription>
+              You can add an expense to the group here.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -108,9 +107,12 @@ console.log(validationSchema)
                 className="col-span-3"
               />
             </div>
-            {formik.touched.userExpenseDescription && formik.errors.userExpenseDescription ? (
-                <div className="text-red-500">{formik.errors.userExpenseDescription}</div>
-              ) : null}
+            {formik.touched.userExpenseDescription &&
+            formik.errors.userExpenseDescription ? (
+              <div className="text-red-500">
+                {formik.errors.userExpenseDescription}
+              </div>
+            ) : null}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Price</Label>
               <Input
@@ -124,17 +126,20 @@ console.log(validationSchema)
                 className="col-span-3"
               />
             </div>
-            {formik.touched.userExpenseAmount && formik.errors.userExpenseAmount ? (
-                <div className="text-red-500 w-full">{formik.errors.userExpenseAmount}</div>
-              ) : null}
+            {formik.touched.userExpenseAmount &&
+            formik.errors.userExpenseAmount ? (
+              <div className="text-red-500 w-full">
+                {formik.errors.userExpenseAmount}
+              </div>
+            ) : null}
             <DropDownMenu groupOnChange={handleGroupChange} />
           </div>
           {formik.touched.groupId && formik.errors.groupId ? (
-                <div className="text-red-500 w-full">{formik.errors.groupId}</div>
-              ) : null}
-          
+            <div className="text-red-500 w-full">{formik.errors.groupId}</div>
+          ) : null}
+
           <DialogFooter>
-              <Button  type="submit">Add Expense</Button>
+            <Button type="submit">Add Expense</Button>
           </DialogFooter>
         </form>
       </DialogContent>

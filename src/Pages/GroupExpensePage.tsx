@@ -24,7 +24,7 @@ function GroupExpense() {
   // getFormattedDate()
   const { displayName } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
-  console.log(displayName)
+
   useEffect(() => {
   dispatch(
     setGroupId({
@@ -49,14 +49,14 @@ function GroupExpense() {
     }
   };
   
-console.log(data)
+
   return (
     <div className="w-full">
       <TopBar
         currentPage={"Dashboard"}
       />
       <div className="lg:hidden">
-        <BalanceSummaryCard userName={"feffe"} userAmount={"fefe"} />
+        <BalanceSummaryCard userName={"feffe"} userAmount={20} />
       </div>
       {data?.map((expense) => (
         <div key={expense.id}>

@@ -11,7 +11,7 @@ function Dashboard() {
 
       />
       <div className="lg:hidden" >
-        <BalanceSummaryCard userName="Dave" userAmount='2' />
+        <BalanceSummaryCard userName="Dave" userAmount={20} />
       </div>
       <ExpenseTable/>
     </div>

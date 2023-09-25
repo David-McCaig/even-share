@@ -1,7 +1,6 @@
 import AddExpenseModal from "../features/expensetable/Components/AddExpenseModal";
 import SettleUpExpenseModal from "../features/expensetable/Components/SettleUpExpenseModal";
 
-
 interface TopBarProps {
   currentPage: string;
 }

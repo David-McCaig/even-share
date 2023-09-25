@@ -3,20 +3,15 @@ import { useFetchUserGroupsQuery } from "../features/expensetable/expenseTableSl
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
 import { Listbox, Transition } from "@headlessui/react";
+import { SelectedType } from "../types";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-interface selectedType {
-  id: string;
-  user_group_name: string;
-  user_group_email: string[];
-}
-
 interface SelectMenuProps {
-  groupOnChange: (value: selectedType) => void;
+  groupOnChange: (value: SelectedType) => void;
 }
 
 function DropDownMenu({ groupOnChange }: SelectMenuProps) {
@@ -30,7 +25,7 @@ function DropDownMenu({ groupOnChange }: SelectMenuProps) {
     user_group_email: [],
     id: "0",
   });
-console.log(selected)
+
   return (
     <Listbox
       value={selected}
@@ -44,7 +39,6 @@ console.log(selected)
           <div className="relative mt-2">
             <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
               <span className="flex items-center">
-                {/* <img src={selected.avatar} alt="" className="h-5 w-5 flex-shrink-0 rounded-full" /> */}
                 <span className="ml-3 block truncate">
                   {selected.user_group_name || "Group Name"}
                 </span>
