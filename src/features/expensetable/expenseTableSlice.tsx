@@ -35,19 +35,23 @@ export const scoresApi = firestoreApi.injectEndpoints({
       },
       providesTags: ["Score"],
     }),
+    
     fetchUserGroup: builder.query<UserGroups, void | string>({
-      async queryFn(urlId) {
+      async queryFn( urlId ) {
+        
         try {
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
             where("settled_up", "==", false)
           );
           const querySnapshot = await getDocs(billQuery);
+          
           const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
             userGroups.push({ id: doc.id, ...doc.data() } as UserGroup);
           });
           return { data: userGroups };
+        
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error(error.message);

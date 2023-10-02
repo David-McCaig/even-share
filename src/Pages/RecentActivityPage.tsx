@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
-import { useFetchUserGroupsQuery } from "../features/expensetable/expenseTableSlice";
+import { useFetchUserGroupsQuery, useFetchUserGroupQuery } from "../features/expensetable/expenseTableSlice";
 import {
   collection,
   query,
@@ -27,28 +27,27 @@ import { UserGroups, UserGroup } from "../types";
 function RecentActivityPage() {
   const { email, displayName } = useAppSelector(selectUser);
   const { data: groupId } = useFetchUserGroupsQuery(email);
-  console.log(groupId)
-  const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
+  const { data: userGroup } = useFetchUserGroupQuery(groupId?.[0]?.id);
 
+  const firstDocumentId = userGroup
+  console.log(firstDocumentId)
+  const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
   const [indexUserGroupId, setIndexUserGroupId] = useState(0);
   const [pagination, setPagination] =
     useState<QueryDocumentSnapshot<DocumentData> | null>(null);
 
-  console.log(indexUserGroupId);
-
   useEffect(() => {
     getData();
   }, [groupId]);
+
+
 
   const getData = async () => {
     if (!groupId) {
       return;
     }
     const first = query(
-      collection(
-        db,
-        `userGroups/${groupId?.[indexUserGroupId]?.id}/expenses`
-      ),
+      collection(db, `userGroups/${groupId?.[indexUserGroupId]?.id}/expenses`),
       orderBy("created_at"),
       limit(3)
     );
@@ -64,24 +63,21 @@ function RecentActivityPage() {
 
   const nextPageClick = async () => {
     const next = query(
-      collection(
-        db,
-        `userGroups/${groupId?.[indexUserGroupId]?.id}/expenses`
-      ),
+      collection(db, `userGroups/${groupId?.[indexUserGroupId]?.id}/expenses`),
       orderBy("created_at"),
-      startAfter(pagination!),
+      startAfter(pagination),
       limit(3)
     );
     const querySnapshot = await getDocs(next);
-  
+
     if (
       querySnapshot.docs.length === 0 &&
-      indexUserGroupId < (groupId?.length || 0) - 1 
+      indexUserGroupId < (groupId?.length || 0) - 1
     ) {
       // No more expenses in the current user group. Move to the next group.
       setIndexUserGroupId((prevIndex) => prevIndex + 1);
       setPagination(null); // Reset pagination for the new group.
-  
+
       // Fetch the expenses for the next user group immediately.
       const nextGroup = query(
         collection(
@@ -92,17 +88,17 @@ function RecentActivityPage() {
         limit(3)
       );
       const nextGroupSnapshot = await getDocs(nextGroup);
-  
+
       const nextExpenseArray: UserGroups = [];
       nextGroupSnapshot.forEach((doc) => {
         nextExpenseArray.push({ id: doc.id, ...doc.data() } as UserGroup);
       });
-  
+
       setExpensesArray((prevExpensesArray: UserGroup[]) => [
         ...prevExpensesArray,
         ...nextExpenseArray,
       ]);
-  
+
       setPagination(
         nextGroupSnapshot.docs[nextGroupSnapshot.docs.length - 1] || null
       );
