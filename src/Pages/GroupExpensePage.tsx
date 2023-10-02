@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useDispatchGroupID } from "../features/expensetable/hooks/useDispatchGroupID";
+import { usePagination } from "../features/expensetable/hooks/usePagination";
 import {
   useFetchUserGroupQuery,
   useFetchUserGroupPaginationQuery,
@@ -47,11 +48,7 @@ function GroupExpense() {
     fetchNextPage();
   };
 
-  useEffect(() => {
-    if (nextExpenseArray) {
-      setExpensesArray((prevExpense) => [...prevExpense, ...nextExpenseArray]);
-    }
-  }, [nextExpenseArray]);
+  usePagination(nextExpenseArray || [], setExpensesArray);
 
   const selectIcon = (billType: JSX.Element | string) => {
     const billTypeString =
