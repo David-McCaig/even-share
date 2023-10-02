@@ -70,7 +70,10 @@ export const scoresApi = firestoreApi.injectEndpoints({
     }),
     fetchUserGroupPagination: builder.query<UserGroups, void | string>({
       async queryFn( urlId ) {
+        
         try {
+          if (!groupSnapshotArray) return { data: [] };
+          
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("settled_up", "asc"),
@@ -78,6 +81,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
             // where("settled_up", "==", false),
             startAfter(groupSnapshotArray)
           );
+          
           const querySnapshot = await getDocs(billQuery);
           groupSnapshotArray = querySnapshot.docs[querySnapshot.docs.length - 1];
           console.log(querySnapshot);
@@ -85,7 +89,6 @@ export const scoresApi = firestoreApi.injectEndpoints({
           querySnapshot?.forEach((doc) => {
             userGroups.push({ id: doc.id, ...doc.data() } as UserGroup);
           });
-          console.log(userGroups)
           return { data: userGroups };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {

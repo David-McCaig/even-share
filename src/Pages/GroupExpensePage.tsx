@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { useDispatchGroupID } from "../features/expensetable/hooks/useDispatchGroupID";
 import {
   useFetchUserGroupQuery,
   useFetchUserGroupPaginationQuery,
 } from "../features/expensetable/expenseTableSlice";
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
-import { useAppDispatch } from "../hooks/reduxTypeScriptHooks";
-import { setGroupId } from "../features/expensetable/groupIdSlice";
 import { getFormattedDate } from "../utils";
 import {
   PoweroffOutlined,
@@ -31,16 +30,9 @@ function GroupExpense() {
   const { data } = useFetchUserGroupQuery(id);
 
   const { displayName } = useAppSelector(selectUser);
-  const dispatch = useAppDispatch();
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
 
-  useEffect(() => {
-    dispatch(
-      setGroupId({
-        groupId: id,
-      })
-    );
-  }, [dispatch, id]);
+  useDispatchGroupID(id);
 
   useEffect(() => {
     if (data) {
