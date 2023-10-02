@@ -7,9 +7,14 @@ import {
   deleteDoc,
   doc,
   limit,
+  orderBy,
+  startAfter,
 } from "firebase/firestore";
 import { db } from "../../utils/firebaseconfig";
 import { query, where } from "firebase/firestore";
+import { DocumentData, DocumentSnapshot } from "firebase/firestore";
+
+let groupSnapshotArray: DocumentSnapshot<DocumentData> | null = null;
 
 export const scoresApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -42,16 +47,46 @@ export const scoresApi = firestoreApi.injectEndpoints({
         try {
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
-            where("settled_up", "==", false)
+            orderBy("settled_up", "asc"),
+            limit(3),
+            // where("settled_up", "==", false)
           );
           const querySnapshot = await getDocs(billQuery);
-          
+          groupSnapshotArray = querySnapshot.docs[querySnapshot.docs.length - 1];
           const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
             userGroups.push({ id: doc.id, ...doc.data() } as UserGroup);
           });
+          console.log(userGroups)
           return { data: userGroups };
         
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          console.error(error.message);
+          return { error: error.message };
+        }
+      },
+      providesTags: ["Score"],
+    }),
+    fetchUserGroupPagination: builder.query<UserGroups, void | string>({
+      async queryFn( urlId ) {
+        try {
+          const billQuery = query(
+            collection(db, `userGroups/${urlId}/expenses`),
+            orderBy("settled_up", "asc"),
+            limit(3),
+            // where("settled_up", "==", false),
+            startAfter(groupSnapshotArray)
+          );
+          const querySnapshot = await getDocs(billQuery);
+          groupSnapshotArray = querySnapshot.docs[querySnapshot.docs.length - 1];
+          console.log(querySnapshot);
+          const userGroups: UserGroups = [];
+          querySnapshot?.forEach((doc) => {
+            userGroups.push({ id: doc.id, ...doc.data() } as UserGroup);
+          });
+          console.log(userGroups)
+          return { data: userGroups };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error(error.message);
@@ -143,6 +178,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
 export const {
   useFetchUserGroupsQuery,
   useFetchUserGroupQuery,
+  useFetchUserGroupPaginationQuery,
   useFetchUserExpensesQuery,
   useSetAddExpenseToGroupMutation,
   useDeleteExpenseGroupMutation,
