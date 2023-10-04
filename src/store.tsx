@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "../src/features/authentication/userSlice";
-import groupIdSlice from "./features/expensetable/groupIdSlice";
+import groupIdSlice from "./features/groupexpense/groupIdSlice";
 import { firestoreApi } from "./firestoreApi";
 
 export const setupStore = () =>

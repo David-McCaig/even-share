@@ -13,7 +13,7 @@ import {
   createUserObject,
   generateBalanceSettleUpStatement,
 } from "../../../utils/utils";
-import { useFetchUserGroupQuery } from "../expenseTableSlice";
+import { useFetchUserGroupQuery } from "../groupexpenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { ArrowRightOutlined } from "@ant-design/icons";
@@ -53,6 +53,7 @@ function SettleUpExpenseModal() {
         balanceSettleUpStatementResult as BalanceSummary[]
       );
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const settleUpClick = async () => {

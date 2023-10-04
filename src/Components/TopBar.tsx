@@ -1,5 +1,5 @@
-import AddExpenseModal from "../features/expensetable/Components/AddExpenseModal";
-import SettleUpExpenseModal from "../features/expensetable/Components/SettleUpExpenseModal";
+import AddExpenseModal from "../features/groupexpense/Components/AddExpenseModal";
+import SettleUpExpenseModal from "../features/groupexpense/Components/SettleUpExpenseModal";
 
 interface TopBarProps {
   currentPage: string;

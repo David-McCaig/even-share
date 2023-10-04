@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
-import { useFetchUserGroupsQuery, useFetchUserGroupQuery } from "../features/expensetable/expenseTableSlice";
+import { useFetchUserGroupsQuery, useFetchUserGroupQuery } from "../features/groupexpense/groupexpenseTableSlice";
 import {
   collection,
   query,
@@ -13,7 +13,7 @@ import {
   DocumentData,
 } from "firebase/firestore";
 import { db } from "../utils/firebaseconfig";
-import ExpenseTableRow from "../features/expensetable/Components/ExpenseTableRow";
+import ExpenseTableRow from "../features/groupexpense/Components/ExpenseTableRow";
 import {
   PoweroffOutlined,
   WifiOutlined,
@@ -38,6 +38,7 @@ function RecentActivityPage() {
 
   useEffect(() => {
     getData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupId]);
 
 

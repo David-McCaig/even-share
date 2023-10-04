@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
-import { useFetchUserGroupsQuery } from "../../expensetable/expenseTableSlice";
+import { useFetchUserGroupsQuery } from "../../groupexpense/groupexpenseTableSlice";
 import { selectUser } from "../../authentication/userSlice";
 import CreateGroupModal from "./CreateGroupModal";
 import {

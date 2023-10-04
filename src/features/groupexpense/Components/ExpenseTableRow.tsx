@@ -1,6 +1,6 @@
 import { MoreHorizontal } from "lucide-react";
 import { useParams } from "react-router";
-import { useDeleteExpenseGroupMutation } from "../expenseTableSlice";
+import { useDeleteExpenseGroupMutation } from "../groupexpenseTableSlice";
 
 import { Button } from "../../../Components/ui/button";
 import {
