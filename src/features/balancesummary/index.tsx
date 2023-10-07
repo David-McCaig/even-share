@@ -12,7 +12,7 @@ import { BalanceSummary } from "../../types";
 
 function Index() {
   
-  const [expensesArray, setExpensesArray] = useState<(string | BalanceSummary)[]>(
+  const [balanceArray, setBalanceArray] = useState<(string | BalanceSummary)[]>(
     []
   );
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
@@ -25,15 +25,14 @@ function Index() {
       const userObject = createUserObject(data, user.displayName);
       const result = calculateOwes(userObject, user.displayName);
       const balanceSummaryStatement = generateBalanceSummaryStatement(result)
-      setExpensesArray(balanceSummaryStatement as (string | BalanceSummary)[]);
-      console.log(expensesArray)
+      setBalanceArray(balanceSummaryStatement as (string | BalanceSummary)[]);
     }
-  }, [data]);
+  }, [data, user.displayName]);
 
   return (
     <>
       <BalanceSummaryColumn>
-        {expensesArray?.map((expense, i) => (
+        {balanceArray?.map((expense, i) => (
           <BalanceSummaryCard
             key={i}
             userName={

@@ -9,6 +9,10 @@ import {
 import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../features/authentication/userSlice";
 import { getFormattedDate } from "../../utils";
+import { createUserObject } from "../../utils/utils";
+import { calculateOwes } from "../../utils/utils";
+import { generateBalanceSummaryStatement } from "../../utils/utils";
+import { BalanceSummary } from "../../types";
 import {
   PoweroffOutlined,
   WifiOutlined,
@@ -31,8 +35,9 @@ function Index() {
   const id = useParams<UrlParams>()?.id;
   const { data, refetch } = useFetchUserGroupQuery(id);
 
-  const { displayName } = useAppSelector(selectUser);
+  const user = useAppSelector(selectUser);
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
+  const [balanceArray, setBalanceArray] = useState<(string | BalanceSummary)[]>([]);
 
   useDispatchGroupID(id);
 
@@ -43,6 +48,15 @@ function Index() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, data]);
+
+  useEffect(() => {
+    if (data) {
+      const userObject = createUserObject(data, user.displayName);
+      const result = calculateOwes(userObject, user.displayName);
+      const balanceSummaryStatement = generateBalanceSummaryStatement(result)
+      setBalanceArray(balanceSummaryStatement as (string | BalanceSummary)[]);
+    }
+  }, [data]);
 
   const { data: nextExpenseArray, refetch: fetchNextPage } =
     useFetchUserGroupPaginationQuery(id);
@@ -69,12 +83,23 @@ function Index() {
       return <FileTextOutlined className="text-xl" />;
     }
   };
+  
   return (
     <>
     <div className="w-full">
       <TopBar currentPage={"Dashboard"} />
       <div className="lg:hidden">
-        <BalanceSummaryCard userName={"feffe"} userAmount={20} />
+      {balanceArray?.map((expense, i) => (
+          <BalanceSummaryCard
+            key={i}
+            userName={
+              typeof expense === "string" ? expense : expense.userString
+            }
+            userAmount={
+              typeof expense === "string" ? 0 : expense.userNumber || 0
+            }
+          />
+        ))}
       </div>
       {expensesArray?.map((expense) => (
         <div key={expense.id}>
@@ -88,7 +113,7 @@ function Index() {
             expenseAmount={`$${expense.user_expense_amount}`}
             expenseId={expense.id}
             billPaidBy={
-              displayName === expense?.user_expense_name
+              user.displayName === expense?.user_expense_name
                 ? "You paid"
                 : expense?.user_expense_name?.split(" ")?.slice(0, 1) + " paid"
             }
