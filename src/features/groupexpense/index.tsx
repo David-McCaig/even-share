@@ -45,9 +45,9 @@ function Index() {
 
   const { balanceArray } = useCalculateBalanceSummary(id);
 
-  const { data: nextExpenseArray, refetch: fetchNextPage } =
+  const { data: nextExpenseArray, refetch: fetchNextPage, isFetching } =
     useFetchPaginatedExpensesForGroupQuery(id);
-
+console.log(isFetching)
   const nextPageClick = () => {
     fetchNextPage();
   };
@@ -113,7 +113,7 @@ function Index() {
             className="bg-gray-200 w-40 text-black hover:bg-gray-300 "
             onClick={nextPageClick}
           >
-            Show more
+            {isFetching ? 'Loading...' : 'Show more'}
           </Button>
         </div>
       </div>{" "}

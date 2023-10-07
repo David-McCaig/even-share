@@ -24,7 +24,7 @@ function RecentActivityPage() {
 
   const { data: recentActivity, refetch:refetchRecentActivity } = useFetchRecentActivityQuery(groupId);
 
-  const { data: recentActivityPagination, refetch: paginationFetch } =
+  const { data: recentActivityPagination, refetch: paginationFetch, isFetching } =
     useFetchRecentActivityPaginationQuery(groupId);
 
 
@@ -83,7 +83,7 @@ function RecentActivityPage() {
       ))}
       <div className="w-full flex justify-center mt-4">
         <Button className="bg-gray-200 w-40 text-black hover:bg-gray-300 " onClick={nextPageClick}>
-          Show more
+        {isFetching ? 'Loading...' : 'Show more'}
         </Button>
       </div>
     </div>
