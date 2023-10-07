@@ -56,7 +56,7 @@ function Index() {
       const balanceSummaryStatement = generateBalanceSummaryStatement(result)
       setBalanceArray(balanceSummaryStatement as (string | BalanceSummary)[]);
     }
-  }, [data]);
+  }, [data, user.displayName]);
 
   const { data: nextExpenseArray, refetch: fetchNextPage } =
     useFetchUserGroupPaginationQuery(id);
