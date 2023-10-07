@@ -5,11 +5,11 @@ import { generateBalanceSummaryStatement } from "../../../utils/utils";
 import { BalanceSummary } from "../../../types";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
-import { useFetchUserGroupQuery } from "../../groupexpense/groupexpenseTableSlice";
+import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balanceSummarySlice";
 
 export const useCalculateBalanceSummary = (id:string) => {
     const [balanceArray, setBalanceArray] = useState<(string | BalanceSummary)[]>([]);
-    const { data } = useFetchUserGroupQuery(id);
+    const { data } = useFetchExpensesForBalanceSummaryGroupQuery(id);
     const user = useAppSelector(selectUser);
     useEffect(() => {
         if(data) {

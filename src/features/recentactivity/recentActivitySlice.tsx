@@ -43,7 +43,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
           return { error: error.message };
         }
       },
-      providesTags: ["Score"],
+      providesTags: ["recentActivity"],
     }),
 
     fetchRecentActivityPagination: builder.query<UserGroups, UserGroups | void>(
@@ -109,7 +109,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
             return { error: error.message };
           }
         },
-        providesTags: ["Score"],
+        providesTags: ["recentActivity"],
       }
     ),
   }),

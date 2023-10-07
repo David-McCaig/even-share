@@ -13,7 +13,7 @@ import {
   createUserObject,
   generateBalanceSettleUpStatement,
 } from "../../../utils/utils";
-import { useFetchUserGroupQuery } from "../groupExpenseTableSlice";
+import { useFetchExpensesForGroupQuery } from "../groupExpenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { ArrowRightOutlined } from "@ant-design/icons";
@@ -41,7 +41,7 @@ function SettleUpExpenseModal() {
 
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
   const user = useAppSelector(selectUser);
-  const { data, refetch } = useFetchUserGroupQuery(groupId);
+  const { data, refetch } = useFetchExpensesForGroupQuery(groupId);
   
   useEffect(() => {
     if (data) {

@@ -38,17 +38,17 @@ export const scoresApi = firestoreApi.injectEndpoints({
           return { error: error.message };
         }
       },
-      providesTags: ["Score"],
+      providesTags: ["groupExpense"],
     }),
     
-    fetchUserGroup: builder.query<UserGroups, void | string>({
+    fetchExpensesForGroup: builder.query<UserGroups, void | string>({
       async queryFn( urlId ) {
         groupSnapshotArray = null;
         try {
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("settled_up", "asc"),
-            limit(12),
+            limit(3),
             // where("settled_up", "==", false)
           );
           const querySnapshot = await getDocs(billQuery);
@@ -65,9 +65,9 @@ export const scoresApi = firestoreApi.injectEndpoints({
           return { error: error.message };
         }
       },
-      providesTags: ["Score"],
+      providesTags: ["groupExpense"],
     }),
-    fetchUserGroupPagination: builder.query<UserGroups, void | string>({
+    fetchPaginatedExpensesForGroup: builder.query<UserGroups, void | string>({
       async queryFn( urlId ) {
         
         try {
@@ -94,7 +94,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
           return { error: error.message };
         }
       },
-      providesTags: ["Score"],
+      providesTags: ["groupExpense"],
     }),
     fetchUserExpenses: builder.query<UserGroups, void | string>({
       async queryFn(email: string) {
@@ -128,7 +128,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
           return { error: (error as Error).message };
         }
       },
-      providesTags: ["Score"],
+      providesTags: ["groupExpense"],
     }),
     setAddExpenseToGroup: builder.mutation({
       async queryFn({
@@ -154,7 +154,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
           return { error: error.message };
         }
       },
-      invalidatesTags: ["Score"],
+      invalidatesTags: ["groupExpense"],
     }),
     deleteExpenseGroup: builder.mutation({
       async queryFn({ groupId, expenseId }) {
@@ -169,15 +169,15 @@ export const scoresApi = firestoreApi.injectEndpoints({
           return { error: error.message };
         }
       },
-      invalidatesTags: ["Score"],
+      invalidatesTags: ["groupExpense"],
     }),
   }),
 });
 
 export const {
   useFetchUserGroupsQuery,
-  useFetchUserGroupQuery,
-  useFetchUserGroupPaginationQuery,
+  useFetchExpensesForGroupQuery,
+  useFetchPaginatedExpensesForGroupQuery,
   useFetchUserExpensesQuery,
   useSetAddExpenseToGroupMutation,
   useDeleteExpenseGroupMutation,

@@ -7,7 +7,6 @@ function Index() {
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
 
   const { balanceArray } = useCalculateBalanceSummary(groupId);
-
   return (
     <>
       <BalanceSummaryColumn>

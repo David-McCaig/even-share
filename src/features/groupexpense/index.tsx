@@ -4,9 +4,9 @@ import { useCalculateBalanceSummary } from "../balancesummary/hooks/useCalculate
 import { useDispatchGroupID } from "../../features/groupexpense/hooks/useDispatchGroupID";
 import { usePagination } from "../../features/groupexpense/hooks/usePagination";
 import {
-  useFetchUserGroupQuery,
-  useFetchUserGroupPaginationQuery,
-} from "./groupExpenseTableSlice";
+  useFetchExpensesForGroupQuery,
+  useFetchPaginatedExpensesForGroupQuery,
+} from "./groupexpenseTableSlice";
 import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../features/authentication/userSlice";
 import { getFormattedDate } from "../../utils/utils";
@@ -30,7 +30,7 @@ type UrlParams = {
 
 function Index() {
   const id = useParams<UrlParams>()?.id;
-  const { data, refetch } = useFetchUserGroupQuery(id);
+  const { data, refetch } = useFetchExpensesForGroupQuery(id);
   const user = useAppSelector(selectUser);
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
 
@@ -47,7 +47,7 @@ function Index() {
   const { balanceArray } = useCalculateBalanceSummary(id);
 
   const { data: nextExpenseArray, refetch: fetchNextPage } =
-    useFetchUserGroupPaginationQuery(id);
+    useFetchPaginatedExpensesForGroupQuery(id);
 
   const nextPageClick = () => {
     fetchNextPage();
