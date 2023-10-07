@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { useCalculateBalanceSummary } from "../balancesummary/hooks/useCalculateBalanceSummary";
 import { useDispatchGroupID } from "../../features/groupexpense/hooks/useDispatchGroupID";
 import { usePagination } from "../../features/groupexpense/hooks/usePagination";
 import {
@@ -9,10 +10,6 @@ import {
 import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../features/authentication/userSlice";
 import { getFormattedDate } from "../../utils";
-import { createUserObject } from "../../utils/utils";
-import { calculateOwes } from "../../utils/utils";
-import { generateBalanceSummaryStatement } from "../../utils/utils";
-import { BalanceSummary } from "../../types";
 import {
   PoweroffOutlined,
   WifiOutlined,
@@ -34,10 +31,8 @@ type UrlParams = {
 function Index() {
   const id = useParams<UrlParams>()?.id;
   const { data, refetch } = useFetchUserGroupQuery(id);
-
   const user = useAppSelector(selectUser);
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
-  const [balanceArray, setBalanceArray] = useState<(string | BalanceSummary)[]>([]);
 
   useDispatchGroupID(id);
 
@@ -46,17 +41,10 @@ function Index() {
       setExpensesArray(data);
       refetch();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, data]);
 
-  useEffect(() => {
-    if (data) {
-      const userObject = createUserObject(data, user.displayName);
-      const result = calculateOwes(userObject, user.displayName);
-      const balanceSummaryStatement = generateBalanceSummaryStatement(result)
-      setBalanceArray(balanceSummaryStatement as (string | BalanceSummary)[]);
-    }
-  }, [data, user.displayName]);
+  const { balanceArray } = useCalculateBalanceSummary(id);
 
   const { data: nextExpenseArray, refetch: fetchNextPage } =
     useFetchUserGroupPaginationQuery(id);
@@ -83,50 +71,55 @@ function Index() {
       return <FileTextOutlined className="text-xl" />;
     }
   };
-  
+
   return (
     <>
-    <div className="w-full">
-      <TopBar currentPage={"Dashboard"} />
-      <div className="lg:hidden">
-      {balanceArray?.map((expense, i) => (
-          <BalanceSummaryCard
-            key={i}
-            userName={
-              typeof expense === "string" ? expense : expense.userString
-            }
-            userAmount={
-              typeof expense === "string" ? 0 : expense.userNumber || 0
-            }
-          />
-        ))}
-      </div>
-      {expensesArray?.map((expense) => (
-        <div key={expense.id}>
-          <ExpenseTableRow
-            expenseIcon={selectIcon(expense?.user_expense_description)}
-            expenseDescription={expense?.user_expense_description}
-            expenseDate={getFormattedDate(
-              expense?.created_at?.seconds,
-              expense?.created_at?.nanoseconds
-            )}
-            expenseAmount={`$${expense.user_expense_amount}`}
-            expenseId={expense.id}
-            billPaidBy={
-              user.displayName === expense?.user_expense_name
-                ? "You paid"
-                : expense?.user_expense_name?.split(" ")?.slice(0, 1) + " paid"
-            }
-          />
+      <div className="w-full">
+        <TopBar currentPage={"Dashboard"} />
+        <div className="lg:hidden">
+          {balanceArray?.map((expense, i) => (
+            <BalanceSummaryCard
+              key={i}
+              userName={
+                typeof expense === "string" ? expense : expense.userString
+              }
+              userAmount={
+                typeof expense === "string" ? 0 : expense.userNumber || 0
+              }
+            />
+          ))}
         </div>
-      ))}
-      <div className="w-full flex justify-center mt-4">
-        <Button className="bg-gray-200 w-40 text-black hover:bg-gray-300 " onClick={nextPageClick}>
-          Show more
-        </Button>
-      </div>
-    </div>    </>
-  )
+        {expensesArray?.map((expense) => (
+          <div key={expense.id}>
+            <ExpenseTableRow
+              expenseIcon={selectIcon(expense?.user_expense_description)}
+              expenseDescription={expense?.user_expense_description}
+              expenseDate={getFormattedDate(
+                expense?.created_at?.seconds,
+                expense?.created_at?.nanoseconds
+              )}
+              expenseAmount={`$${expense.user_expense_amount}`}
+              expenseId={expense.id}
+              billPaidBy={
+                user.displayName === expense?.user_expense_name
+                  ? "You paid"
+                  : expense?.user_expense_name?.split(" ")?.slice(0, 1) +
+                    " paid"
+              }
+            />
+          </div>
+        ))}
+        <div className="w-full flex justify-center mt-4">
+          <Button
+            className="bg-gray-200 w-40 text-black hover:bg-gray-300 "
+            onClick={nextPageClick}
+          >
+            Show more
+          </Button>
+        </div>
+      </div>{" "}
+    </>
+  );
 }
 
-export default Index
+export default Index;
