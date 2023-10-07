@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { AuthValues } from "../../../types.tsx";
+import LoadingDots from "../../../Components/LoadingDots";
 
 
 
@@ -33,14 +34,8 @@ function LoginPage() {
 
   if (authenticating) {
     return (
-      <div className="h-screen bg-white">
-        <div className="flex justify-center items-center h-full">
-          <img
-            className="h-16 w-16"
-            src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
-            alt=""
-          />
-        </div>
+      <div className="w-full h-screen flex justify-center items-center">
+        <LoadingDots />
       </div>
     );
   }

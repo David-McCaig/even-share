@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { AuthValues } from "../../../types.tsx";
+import LoadingDots from "../../../Components/LoadingDots";
 
 function LoginPage() {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
@@ -20,25 +21,20 @@ function LoginPage() {
 
   const googleSignInClick = () => {
     if (errorMessage !== "") setErrorMessage("");
-    googleSignIn()
+    googleSignIn();
   };
 
-  //custom hooks for authentication 
+  //custom hooks for authentication
   const { googleSignIn } = useGoogleSignIn(setAuthenticating, setErrorMessage);
   useGoogleGetSignInResult(setAuthenticating);
-  const { passwordErrorMessage, signInWithEmailPassword } = useSignInEmailPassword(setAuthenticating);
+  const { passwordErrorMessage, signInWithEmailPassword } =
+    useSignInEmailPassword(setAuthenticating);
   useSignedinDispatchUserInfo();
 
   if (authenticating) {
     return (
-      <div className="h-screen w-full bg-primary-bg-color ">
-        <div className="flex justify-center items-center h-full bg-primary-bg-color">
-          <img
-            className="h-16 w-16 bg-primary-bg-color"
-            src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
-            alt=""
-          />
-        </div>
+      <div className="w-full h-screen flex justify-center items-center">
+        <LoadingDots />
       </div>
     );
   }
@@ -71,7 +67,7 @@ function LoginPage() {
           validationSchema={validationSchema}
           onSubmit={(values: AuthValues) => {
             signInWithEmailPassword(values);
-            setErrorMessage(passwordErrorMessage)
+            setErrorMessage(passwordErrorMessage);
           }}
         >
           {({ errors, touched }) => (
@@ -173,13 +169,14 @@ function LoginPage() {
                   </Link>
                 </p>
               </div>
-              {errorMessage || passwordErrorMessage && (
-                <div className="w-full mt-6 rounded border border-red-400">
-                  <p className=" text-red-500 text-center py-2 font-medium">
-                    {errorMessage || passwordErrorMessage}
-                  </p>
-                </div>
-              )}
+              {errorMessage ||
+                (passwordErrorMessage && (
+                  <div className="w-full mt-6 rounded border border-red-400">
+                    <p className=" text-red-500 text-center py-2 font-medium">
+                      {errorMessage || passwordErrorMessage}
+                    </p>
+                  </div>
+                ))}
             </Form>
           )}
         </Formik>
