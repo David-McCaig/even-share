@@ -5,7 +5,7 @@ import { generateBalanceSummaryStatement } from "../../../utils/utils";
 import { BalanceSummary } from "../../../types";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
-import { useFetchUserGroupQuery } from "../../groupexpense/groupExpenseTableSlice";
+import { useFetchUserGroupQuery } from "../../groupexpense/groupexpenseTableSlice";
 
 export const useCalculateBalanceSummary = (id:string) => {
     const [balanceArray, setBalanceArray] = useState<(string | BalanceSummary)[]>([]);

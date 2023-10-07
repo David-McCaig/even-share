@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
-import { useFetchUserGroupsQuery } from "../features/groupexpense/groupExpenseTableSlice";
+import { useFetchUserGroupsQuery } from "../features/groupexpense/groupexpenseTableSlice";
 import { useFetchRecentActivityQuery } from "../features/recentactivity/recentActivitySlice";
 import { useFetchRecentActivityPaginationQuery } from "../features/recentactivity/recentActivitySlice";
 import { usePagination } from "../features/groupexpense/hooks/usePagination";
