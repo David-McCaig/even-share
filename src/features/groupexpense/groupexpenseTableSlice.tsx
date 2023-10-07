@@ -10,7 +10,7 @@ import {
   orderBy,
   startAfter,
 } from "firebase/firestore";
-import { db } from "../../utils/firebaseconfig";
+import { db } from "../../firebase/firebaseconfig";
 import { query, where } from "firebase/firestore";
 import { DocumentData, DocumentSnapshot } from "firebase/firestore";
 

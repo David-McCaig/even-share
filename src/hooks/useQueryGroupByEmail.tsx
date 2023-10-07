@@ -1,6 +1,6 @@
 import { useAppSelector } from "./reduxTypeScriptHooks"
 import { collection, where, query } from "firebase/firestore"
-import { db } from "../utils/firebaseconfig"
+import { db } from "../firebase/firebaseconfig"
 import { selectUser } from "../features/authentication/userSlice"
 
 

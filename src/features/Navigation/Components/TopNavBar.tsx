@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { logout } from "../../authentication/userSlice";
-import { auth } from "../../../utils/firebaseconfig";
+import { auth } from "../../../firebase/firebaseconfig";
 import { AlignLeftOutlined } from "@ant-design/icons";
 import  evenShareLogo  from "../../../assets/icons/facebook_cutout_cover_photo_1.png";
 import {

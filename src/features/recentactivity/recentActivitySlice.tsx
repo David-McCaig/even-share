@@ -7,7 +7,7 @@ import {
   limit,
   startAfter,
 } from "firebase/firestore";
-import { db } from "../../utils/firebaseconfig";
+import { db } from "../../firebase/firebaseconfig";
 import { UserGroups, UserGroup } from "../../types";
 import { DocumentData, DocumentSnapshot } from "firebase/firestore";
 

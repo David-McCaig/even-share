@@ -9,7 +9,7 @@ import {
 } from "./groupExpenseTableSlice";
 import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../features/authentication/userSlice";
-import { getFormattedDate } from "../../utils";
+import { getFormattedDate } from "../../utils/utils";
 import {
   PoweroffOutlined,
   WifiOutlined,

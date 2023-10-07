@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { auth } from "../../../utils/firebaseconfig";
+import { auth } from "../../../firebase/firebaseconfig";
 import { getRedirectResult } from "firebase/auth";
 
 export const useGoogleGetSignInResult = (

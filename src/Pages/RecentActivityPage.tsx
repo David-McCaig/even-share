@@ -13,7 +13,7 @@ import {
   PhoneOutlined,
   FileTextOutlined,
 } from "@ant-design/icons";
-import { getFormattedDate } from "../utils";
+import { getFormattedDate } from "../utils/utils";
 import { UserGroup } from "../types";
 import { Button } from "../Components/ui/button"; 
 

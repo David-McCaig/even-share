@@ -1,4 +1,4 @@
-import { Providers } from "../../../utils/firebaseproviders";
+import { Providers } from "../../../firebase/firebaseproviders";
 import { getAuth, signInWithRedirect } from "firebase/auth";
 
 export const useGoogleSignIn = (

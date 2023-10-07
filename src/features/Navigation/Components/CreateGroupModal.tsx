@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../../utils/firebaseconfig";
+import { db } from "../../../firebase/firebaseconfig";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
