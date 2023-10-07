@@ -22,7 +22,7 @@ function RecentActivityPage() {
   const { data: groupId } = useFetchUserGroupsQuery(email);
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
 
-  const { data: recentActivity } = useFetchRecentActivityQuery(groupId);
+  const { data: recentActivity, refetch:refetchRecentActivity } = useFetchRecentActivityQuery(groupId);
 
   const { data: recentActivityPagination, refetch: paginationFetch } =
     useFetchRecentActivityPaginationQuery(groupId);
@@ -31,8 +31,9 @@ function RecentActivityPage() {
   useEffect(() => {
     if (recentActivity) {
       setExpensesArray(recentActivity);
+      refetchRecentActivity();
     }
-  }, [groupId, recentActivity]);
+  }, [groupId, recentActivity, refetchRecentActivity]);
 
   const nextPageClick = async () => {
     paginationFetch();

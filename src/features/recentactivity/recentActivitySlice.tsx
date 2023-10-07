@@ -18,6 +18,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
     fetchRecentActivity: builder.query<UserGroups, UserGroups | void>({
       async queryFn(groupId) {
+        indexUserGroupId = 0;
         pagination = null;
         try {
           const first = query(
@@ -48,6 +49,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
     fetchRecentActivityPagination: builder.query<UserGroups, UserGroups | void>(
       {
         async queryFn(groupId) {
+          console.log(indexUserGroupId)
           try {
             if (!pagination) return { data: [] };
             const next = query(

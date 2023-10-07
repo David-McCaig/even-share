@@ -1,7 +1,5 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-
-
 interface UserGroup {
   id: string;
   user_group_id: string;
@@ -145,7 +143,5 @@ export const generateBalanceSettleUpStatement = <T extends Transaction>(
 
   return results.length > 0 ? results : [{userString: "All people are settled up", userNumber: 0}];
 };
-
-
 
 
