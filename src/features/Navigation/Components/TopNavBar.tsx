@@ -4,7 +4,7 @@ import { selectUser } from "../../authentication/userSlice";
 import { logout } from "../../authentication/userSlice";
 import { auth } from "../../../firebase/firebaseconfig";
 import { AlignLeftOutlined } from "@ant-design/icons";
-import  evenShareLogo  from "../../../assets/icons/facebook_cutout_cover_photo_1.png";
+import  evenShareLogo  from "../../../assets/icons/output-onlinepngtools.png";
 import {
   Avatar,
   AvatarFallback,
@@ -83,7 +83,7 @@ export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
       </button>
       </aside>
       </div>
-      <img src={evenShareLogo} className="w-40 object-contain " />
+      <img src={evenShareLogo} className="sm:ml-6 w-20 object-contain lg:ml-4" />
       <div className="flex sm:gap-2 bg-primary-bg-color">
         <Avatar>
           <AvatarImage src={userDisplayImage} />
@@ -92,7 +92,7 @@ export default function NavBar({ showNavBar, setShowNavBar }:NavBarProps) {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-primary-bg-color " >{displayName}</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="mr-2 sm:mr-6 bg-primary-bg-color" >{displayName}</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div
                   onClick={handleLogout}

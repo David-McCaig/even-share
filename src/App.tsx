@@ -24,7 +24,7 @@ function App() {
     <div className="w-full h-full bg-primary-bg-color text-primary-font-color">
       { userInfo && <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />}
       <div className="border-b-[.5px]"></div>
-      <div className="flex m-auto h-screen max-w-5xl">
+      <div className="flex m-auto h-full max-w-5xl">
       {userInfo && <SideNavBar showNavBar={showNavBar} />}
       <Routes>
         <Route path="/login" element={userInfo? <Navigate to="/"/> : <Login />} />

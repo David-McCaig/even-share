@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
-import { useFetchUserGroupsQuery } from "../../groupexpense/groupExpenseTableSlice";
+import { useFetchUserGroupsQuery } from "../../groupexpense/groupexpenseTableSlice";
 import { selectUser } from "../../authentication/userSlice";
 import CreateGroupModal from "./CreateGroupModal";
 import {
@@ -30,7 +30,7 @@ function NavBar({ showNavBar }: NavBarProps) {
 
   return (
     <nav>
-      <div className="sticky top-24 sm:top-16 ">
+      <div className="sticky top-24 sm:top-0 ">
         <aside
           className={
             showNavBar
