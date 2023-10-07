@@ -13,7 +13,7 @@ import {
   createUserObject,
   generateBalanceSettleUpStatement,
 } from "../../../utils/utils";
-import { useFetchUserGroupQuery } from "../groupexpenseTableSlice";
+import { useFetchUserGroupQuery } from "../groupExpenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { ArrowRightOutlined } from "@ant-design/icons";

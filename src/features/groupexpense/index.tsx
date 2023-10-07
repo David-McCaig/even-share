@@ -5,7 +5,7 @@ import { usePagination } from "../../features/groupexpense/hooks/usePagination";
 import {
   useFetchUserGroupQuery,
   useFetchUserGroupPaginationQuery,
-} from "../../features/groupexpense/groupexpenseTableSlice";
+} from "./groupExpenseTableSlice";
 import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../features/authentication/userSlice";
 import { getFormattedDate } from "../../utils";

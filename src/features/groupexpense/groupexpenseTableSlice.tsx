@@ -48,7 +48,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("settled_up", "asc"),
-            limit(10),
+            limit(3),
             // where("settled_up", "==", false)
           );
           const querySnapshot = await getDocs(billQuery);
@@ -122,8 +122,6 @@ export const scoresApi = firestoreApi.injectEndpoints({
               } as UserGroup);
             }
           }
-
-          console.log(expensesArray);
           return { data: expensesArray };
         } catch (error: unknown) {
           console.error((error as Error).message);

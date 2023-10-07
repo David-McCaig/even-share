@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../authentication/userSlice";
-import { useFetchUserGroupQuery } from "../groupexpense/groupexpenseTableSlice";
+import { useFetchUserGroupQuery } from "../groupexpense/groupExpenseTableSlice";
 import BalanceSummaryColumn from "./Component/BalanceSummaryColumn";
 import BalanceSummaryCard from "./Component/BalanceSummaryCard";
 import { useEffect } from "react";

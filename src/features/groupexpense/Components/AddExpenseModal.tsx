@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useFetchUserGroupsQuery } from "../groupexpenseTableSlice";
+import { useFetchUserGroupsQuery } from "../groupExpenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
-import { useSetAddExpenseToGroupMutation } from "../groupexpenseTableSlice";
+import { useSetAddExpenseToGroupMutation } from "../groupExpenseTableSlice";
 import { Timestamp } from "firebase/firestore";
 import { useFormik } from "formik";
 import * as Yup from "yup";

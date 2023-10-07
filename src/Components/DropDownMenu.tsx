@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { useFetchUserGroupsQuery } from "../features/groupexpense/groupexpenseTableSlice";
+import { useFetchUserGroupsQuery } from "../features/groupexpense/groupExpenseTableSlice";
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
 import { Listbox, Transition } from "@headlessui/react";
