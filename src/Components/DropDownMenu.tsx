@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { useFetchExpensesForGroupQuery, } from "../features/groupexpense/groupexpenseTableSlice";
+import { useFetchUserGroupsQuery } from "../features/groupexpense/groupexpenseTableSlice";
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
 import { Listbox, Transition } from "@headlessui/react";
@@ -18,8 +18,8 @@ function DropDownMenu({ groupOnChange }: SelectMenuProps) {
   
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
-  const { data } =   useFetchExpensesForGroupQuery(userEmail);
-
+  const { data } =   useFetchUserGroupsQuery(userEmail);
+console.log(data)
   const [selected, setSelected] = useState({
     user_group_name: "Group Name",
     user_group_email: [],

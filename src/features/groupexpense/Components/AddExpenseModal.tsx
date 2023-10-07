@@ -33,7 +33,6 @@ function AddExpenseModal() {
   const [userExpenseName] = useState(userInfo.displayName);
 
   const [setAddExpenseToGroup] = useSetAddExpenseToGroupMutation();
-
   const [open, setOpen] = useState(false);
 
   const OpenModalClick = () => {

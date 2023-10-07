@@ -33,7 +33,6 @@ function Index() {
   const { data, refetch } = useFetchExpensesForGroupQuery(id);
   const user = useAppSelector(selectUser);
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
-
   useDispatchGroupID(id);
 
   useEffect(() => {
