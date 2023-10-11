@@ -22,7 +22,16 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
             const querySnapshot = await getDocs(billQuery);
             const userGroups: UserGroups = [];
             querySnapshot?.forEach((doc) => {
-              userGroups.push({ id: doc.id, ...doc.data() } as UserGroup);
+              const data = doc.data();
+              const createdTimestamp = data.created_at 
+              userGroups.push({
+                id: doc.id,
+                ...data,
+                created_at: {
+                  seconds: createdTimestamp.seconds,
+                  nanoseconds: createdTimestamp.nanoseconds,
+                },
+              } as UserGroup);
             });
             
             return { data: userGroups };

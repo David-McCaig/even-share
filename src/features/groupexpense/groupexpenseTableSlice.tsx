@@ -11,7 +11,7 @@ import {
   startAfter,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
-import { query, where } from "firebase/firestore";
+import { query, where, Timestamp } from "firebase/firestore";
 import { DocumentData, DocumentSnapshot } from "firebase/firestore";
 
 let groupSnapshotArray: DocumentSnapshot<DocumentData> | null = null;
@@ -47,15 +47,24 @@ export const scoresApi = firestoreApi.injectEndpoints({
         try {
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
-            orderBy("settled_up", "asc"),
-            limit(3),
+            orderBy("created_at", "asc"),
+            limit(9),
             // where("settled_up", "==", false)
           );
           const querySnapshot = await getDocs(billQuery);
           groupSnapshotArray = querySnapshot.docs[querySnapshot.docs.length - 1];
           const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
-            userGroups.push({ id: doc.id, ...doc.data() } as UserGroup);
+            const data = doc.data();
+            const createdTimestamp = data.created_at 
+            userGroups.push({
+              id: doc.id,
+              ...data,
+              created_at: {
+                seconds: createdTimestamp.seconds,
+                nanoseconds: createdTimestamp.nanoseconds,
+              },
+            } as UserGroup);
           });
           
           return { data: userGroups };
@@ -75,8 +84,8 @@ export const scoresApi = firestoreApi.injectEndpoints({
           
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
-            orderBy("settled_up", "asc"),
-            limit(3),
+            orderBy("created_at", "asc"),
+            limit(4),
             // where("settled_up", "==", false),
             startAfter(groupSnapshotArray)
           );
@@ -85,7 +94,16 @@ export const scoresApi = firestoreApi.injectEndpoints({
           groupSnapshotArray = querySnapshot.docs[querySnapshot.docs.length - 1];
           const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
-            userGroups.push({ id: doc.id, ...doc.data() } as UserGroup);
+            const data = doc.data();
+            const createdTimestamp = data.created_at 
+            userGroups.push({
+              id: doc.id,
+              ...data,
+              created_at: {
+                seconds: createdTimestamp.seconds,
+                nanoseconds: createdTimestamp.nanoseconds,
+              },
+            } as UserGroup);
           });
           return { data: userGroups };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -139,13 +157,16 @@ export const scoresApi = firestoreApi.injectEndpoints({
         settledUp,
         createdAt,
       }) {
+   
         try {
+          const { seconds, nanoseconds } = createdAt;
+          const createdTimestamp = new Timestamp(seconds, nanoseconds);
           await addDoc(collection(db, `userGroups/${groupId}/expenses`), {
             user_expense_amount: userExpenseAmountNumber,
             user_expense_description: userExpenseDescription,
             user_expense_name: userExpenseName,
             settled_up: settledUp,
-            created_at: createdAt,
+            created_at: createdTimestamp,
           });
           return { data: null };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

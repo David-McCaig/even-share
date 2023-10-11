@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { UserGroup } from "../../../types";
 
 
-export const usePagination = (nextExpenseArray: UserGroup[], setExpensesArray: React.Dispatch<React.SetStateAction<UserGroup[]>>) => {
+export const usePagination = (nextGroupExpenses: UserGroup[], setNextGroupExpenses: React.Dispatch<React.SetStateAction<UserGroup[]>>) => {
     useEffect(() => {
-        if (nextExpenseArray) {
-            setExpensesArray((prevExpense: UserGroup[]) => [...prevExpense, ...nextExpenseArray]);
+        if (nextGroupExpenses) {
+            setNextGroupExpenses((prevExpense: UserGroup[]) => [...prevExpense, ...nextGroupExpenses]);
         }
-    }, [nextExpenseArray, setExpensesArray]);
+    }, [nextGroupExpenses, setNextGroupExpenses]);
 }

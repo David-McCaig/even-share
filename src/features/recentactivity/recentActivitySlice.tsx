@@ -26,17 +26,27 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
               db,
               `userGroups/${groupId?.[indexUserGroupId]?.id}/expenses`
             ),
-            orderBy("settled_up", "asc"),
-            limit(10)
+            orderBy("created_at", "asc"),
+            limit(9)
           );
           const querySnapshot = await getDocs(first);
           pagination = querySnapshot.docs[querySnapshot.docs.length - 1];
           const expenseArray: UserGroups = [];
           querySnapshot?.forEach((doc) => {
-            expenseArray.push({ id: doc.id, ...doc.data() } as UserGroup);
+            const data = doc.data();
+            const createdTimestamp = data.created_at 
+            expenseArray.push({
+              id: doc.id,
+              ...data,
+              created_at: {
+                seconds: createdTimestamp.seconds,
+                nanoseconds: createdTimestamp.nanoseconds,
+              },
+            } as UserGroup);
           });
 
           return { data: expenseArray };
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error(error.message);
           return { error: error.message };
@@ -56,9 +66,9 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
                 db,
                 `userGroups/${groupId?.[indexUserGroupId]?.id}/expenses`
               ),
-              orderBy("settled_up", "asc"),
+              orderBy("created_at", "asc"),
               startAfter(pagination),
-              limit(3)
+              limit(4)
             );
             const querySnapshot = await getDocs(next);
             if (
@@ -76,18 +86,24 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
                   db,
                   `userGroups/${groupId?.[indexUserGroupId]?.id}/expenses`
                 ),
-                orderBy("settled_up", "asc"),
-                limit(5)
+                orderBy("created_at", "asc"),
+                limit(4)
               );
               const nextGroupSnapshot = await getDocs(nextGroup);
               pagination =
                 nextGroupSnapshot.docs[nextGroupSnapshot.docs.length - 1] ||
                 null;
               const nextExpenseArray: UserGroups = [];
-              nextGroupSnapshot.forEach((doc) => {
+              nextGroupSnapshot?.forEach((doc) => {
+                const data = doc.data();
+                const createdTimestamp = data.created_at 
                 nextExpenseArray.push({
                   id: doc.id,
-                  ...doc.data(),
+                  ...data,
+                  created_at: {
+                    seconds: createdTimestamp.seconds,
+                    nanoseconds: createdTimestamp.nanoseconds,
+                  },
                 } as UserGroup);
               });
 
@@ -96,12 +112,22 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
             } else {
               pagination = querySnapshot.docs[querySnapshot.docs.length - 1];
               const expenseArray: UserGroups = [];
-              querySnapshot.forEach((doc) => {
-                expenseArray.push({ id: doc.id, ...doc.data() } as UserGroup);
+              querySnapshot?.forEach((doc) => {
+                const data = doc.data();
+                const createdTimestamp = data.created_at 
+                expenseArray.push({
+                  id: doc.id,
+                  ...data,
+                  created_at: {
+                    seconds: createdTimestamp.seconds,
+                    nanoseconds: createdTimestamp.nanoseconds,
+                  },
+                } as UserGroup);
               });
               // expensesArray = [...expensesArray, ...expenseArray];
               return { data: expenseArray };
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             console.error(error.message);
             return { error: error.message };

@@ -78,7 +78,7 @@ export   function calculateOwes(people: People[], displayName: string) {
     balances[i] = totalExpenses[i] - averageExpense;
   }
 
-  const transactions = [];
+  const transactions: Transaction[] = [];
 
   for (let i = 0; i < numPeople; i++) {
     if (balances[i] < 0) {
@@ -146,25 +146,27 @@ export const generateBalanceSettleUpStatement = <T extends Transaction>(
 
 export const getFormattedDate = (seconds: number, nanoseconds: number) => {
   const totalMilliseconds = (seconds * 1000) + (nanoseconds / 1000000);
-
   const createdAtDate = new Date(totalMilliseconds);
 
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
   const monthIndex = createdAtDate.getMonth();
-  
-    const day = createdAtDate.getDate();
-    if (day >= 11 && day <= 13) {
-      return `${day}th`;
-    }
-    
+  const day = createdAtDate.getDate();
+
+  let daySuffix = "th";
+  if (day < 11 || day > 13) {  // Only change suffix if outside 11-13 range
     switch (day % 10) {
       case 1:
-       return `${monthNames[monthIndex]} ${day}st`;
+        daySuffix = "st";
+        break;
       case 2:
-       return `${monthNames[monthIndex]} ${day}nd`;
+        daySuffix = "nd";
+        break;
       case 3:
-        return `${monthNames[monthIndex]} ${day}rd`;
-      default:
-        return `${monthNames[monthIndex]} ${day}th`;
+        daySuffix = "rd";
+        break;
     }
+  }
+
+  return `${monthNames[monthIndex]} ${day}${daySuffix}`;
 }
+

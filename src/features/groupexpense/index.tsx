@@ -31,18 +31,18 @@ type UrlParams = {
 function Index() {
   const id = useParams<UrlParams>()?.id;
   const user = useAppSelector(selectUser);
-  const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
+  const [groupExpenses, setGroupExpenses] = useState<UserGroup[]>([]);
   useDispatchGroupID(id);
 
   const {
-    data,
+    data: groupExpensesData,
     refetch,
     isError: expensesIsError,
     error: expensesError,
   } = useFetchExpensesForGroupQuery(id);
 
   const {
-    data: nextExpenseArray,
+    data: nextGroupExpenses,
     refetch: fetchNextPage,
     isFetching,
     isError: nextExpenseIsError,
@@ -50,12 +50,12 @@ function Index() {
   } = useFetchPaginatedExpensesForGroupQuery(id);
 
   useEffect(() => {
-    if (data) {
-      setExpensesArray(data);
+    if (groupExpensesData) {
+      setGroupExpenses(groupExpensesData);
       refetch();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, data]);
+  }, [id, groupExpensesData]);
 
   const { balanceArray } = useCalculateBalanceSummary(id);
 
@@ -63,7 +63,7 @@ function Index() {
     fetchNextPage();
   };
 
-  usePagination(nextExpenseArray || [], setExpensesArray);
+  usePagination(nextGroupExpenses || [], setGroupExpenses);
 
   const selectIcon = (billType: JSX.Element | string) => {
     const billTypeString =
@@ -110,7 +110,7 @@ function Index() {
             />
           ))}
         </div>
-        {expensesArray?.map((expense) => (
+        {groupExpenses?.map((expense) => (
           <div key={expense.id}>
             <ExpenseTableRow
               expenseIcon={selectIcon(expense?.user_expense_description)}
