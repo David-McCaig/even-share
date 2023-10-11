@@ -30,10 +30,19 @@ type UrlParams = {
 
 function Index() {
   const id = useParams<UrlParams>()?.id;
-  const { data, refetch } = useFetchExpensesForGroupQuery(id);
   const user = useAppSelector(selectUser);
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
   useDispatchGroupID(id);
+
+  const { data, refetch, isError:expensesIsError, error:expensesError } = useFetchExpensesForGroupQuery(id);
+
+  const {
+    data: nextExpenseArray,
+    refetch: fetchNextPage,
+    isFetching,
+    isError:nextExpenseIsError,
+    error:nextExpenseError
+  } = useFetchPaginatedExpensesForGroupQuery(id);
 
   useEffect(() => {
     if (data) {
@@ -45,9 +54,6 @@ function Index() {
 
   const { balanceArray } = useCalculateBalanceSummary(id);
 
-  const { data: nextExpenseArray, refetch: fetchNextPage, isFetching } =
-    useFetchPaginatedExpensesForGroupQuery(id);
-console.log(isFetching)
   const nextPageClick = () => {
     fetchNextPage();
   };
@@ -70,6 +76,17 @@ console.log(isFetching)
       return <FileTextOutlined className="text-xl" />;
     }
   };
+
+  if (expensesIsError || nextExpenseIsError) {
+    console.error(expensesError || nextExpenseError)
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <div className="text-red-500 text-2xl">
+          <p>"Server Error, Please try again later"</p>
+        </div>
+      </div>
+    );
+    }
 
   return (
     <>
@@ -113,7 +130,7 @@ console.log(isFetching)
             className="bg-gray-200 w-40 text-black hover:bg-gray-300 "
             onClick={nextPageClick}
           >
-            {isFetching ? 'Loading...' : 'Show more'}
+            {isFetching ? "Loading..." : "Show more"}
           </Button>
         </div>
       </div>{" "}
