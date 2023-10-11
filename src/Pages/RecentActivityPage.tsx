@@ -22,9 +22,9 @@ function RecentActivityPage() {
   const { data: groupId } = useFetchUserGroupsQuery(email);
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
 
-  const { data: recentActivity, refetch:refetchRecentActivity } = useFetchRecentActivityQuery(groupId);
+  const { data: recentActivity, refetch:refetchRecentActivity, isError:recentActivityisError, error:recentActivityError } = useFetchRecentActivityQuery(groupId);
 
-  const { data: recentActivityPagination, refetch: paginationFetch, isFetching } =
+  const { data: recentActivityPagination, refetch: paginationFetch, isFetching, isError:paginationisError, error:paginationError } =
     useFetchRecentActivityPaginationQuery(groupId);
 
 
@@ -59,6 +59,17 @@ function RecentActivityPage() {
       return <FileTextOutlined className="text-xl" />;
     }
   };
+
+  if (recentActivityisError || paginationisError) {
+    console.error(recentActivityError || paginationError)
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <div className="text-red-500 text-2xl">
+          <p>"Server Error, Please try again later"</p>
+        </div>
+      </div>
+    );
+    }
 
   return (
     <div className="w-full">

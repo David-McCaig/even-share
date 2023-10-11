@@ -37,7 +37,6 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
           });
 
           return { data: expenseArray };
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error(error.message);
           return { error: error.message };
@@ -103,7 +102,6 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
               // expensesArray = [...expensesArray, ...expenseArray];
               return { data: expenseArray };
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             console.error(error.message);
             return { error: error.message };
