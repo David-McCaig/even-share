@@ -34,14 +34,19 @@ function Index() {
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
   useDispatchGroupID(id);
 
-  const { data, refetch, isError:expensesIsError, error:expensesError } = useFetchExpensesForGroupQuery(id);
+  const {
+    data,
+    refetch,
+    isError: expensesIsError,
+    error: expensesError,
+  } = useFetchExpensesForGroupQuery(id);
 
   const {
     data: nextExpenseArray,
     refetch: fetchNextPage,
     isFetching,
-    isError:nextExpenseIsError,
-    error:nextExpenseError
+    isError: nextExpenseIsError,
+    error: nextExpenseError,
   } = useFetchPaginatedExpensesForGroupQuery(id);
 
   useEffect(() => {
@@ -78,7 +83,7 @@ function Index() {
   };
 
   if (expensesIsError || nextExpenseIsError) {
-    console.error(expensesError || nextExpenseError)
+    console.error(expensesError || nextExpenseError);
     return (
       <div className="w-full h-screen flex justify-center items-center">
         <div className="text-red-500 text-2xl">
@@ -86,7 +91,7 @@ function Index() {
         </div>
       </div>
     );
-    }
+  }
 
   return (
     <>

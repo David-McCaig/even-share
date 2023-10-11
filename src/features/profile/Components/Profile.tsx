@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { getAuth, updateProfile, updateEmail} from "firebase/auth";
@@ -11,7 +12,7 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 function Profile() {
 
   const userInfo = useAppSelector(selectUser);
-
+  const [error, setError] = useState<string | null>(null);
   // Define a validation schema using Yup
   const validationSchema = Yup.object({
     userName: Yup.string().required("Description is required"),
@@ -36,16 +37,27 @@ function Profile() {
                         displayName: values.userName,
                     });
                     await updateEmail(currentUser, values.userEmail);
-                } catch (error) {
+                } catch (error:any) {
                     // An error occurred
                     // ...
                     console.log(error)
+                    setError(error.message);
                 }
             }
     },
     validateOnChange: false,
     validateOnBlur: false,
   });
+
+  if (error) {
+    return (
+      <div className="w-full h-screen flex justify-center mt-16">
+        <div className="text-red-500 text-2xl">
+          {<p>"Server Error, Please try again later"</p> || error}
+        </div>
+      </div>
+    );
+    }
 
 
   return (
