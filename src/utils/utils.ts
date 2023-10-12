@@ -101,7 +101,9 @@ export   function calculateOwes(people: People[], displayName: string) {
 }
 
 export const generateBalanceSummaryStatement = <T extends Transaction>(
-  transactions: T[]
+  transactions: T[],
+  id?:string,
+  currentName?:string
 ): BalanceSummary[] | string => {
   const results = transactions.map((transaction) =>
     transaction.from === "You"
@@ -110,12 +112,16 @@ export const generateBalanceSummaryStatement = <T extends Transaction>(
             transaction.to
           }`,
           userNumber: parseInt(transaction.amount.toFixed(2)),
+          groupId: id,
+          groupName: currentName,
         }
       : {
           userString: `${transaction.from?.split(" ")[0]} owes ${
             transaction.to
           }`,
           userNumber: parseInt(transaction.amount.toFixed(2)),
+          groupId: id,
+          groupName: currentName,
         }
   );
 
