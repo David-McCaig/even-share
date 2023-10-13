@@ -8,7 +8,7 @@ import { selectUser } from "../../authentication/userSlice";
 import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balanceSummarySlice";
 
 export const useCalculateBalanceSummary = (id:string) => {
-    const [balanceArray, setBalanceArray] = useState<(string | BalanceSummary)[]>([]);
+    const [balanceArray, setBalanceArray] = useState<(BalanceSummary)[]>([]);
     const { data } = useFetchExpensesForBalanceSummaryGroupQuery(id);
     const user = useAppSelector(selectUser);
     useEffect(() => {
@@ -16,7 +16,7 @@ export const useCalculateBalanceSummary = (id:string) => {
             const userObject = createUserObject(data, user.displayName);
             const result = calculateOwes(userObject, user.displayName);
             const balanceSummaryStatement = generateBalanceSummaryStatement(result)
-            setBalanceArray(balanceSummaryStatement as (string | BalanceSummary)[]);
+            setBalanceArray(balanceSummaryStatement as (BalanceSummary)[]);
         }
       }, [data, user.displayName]);
     return { balanceArray }

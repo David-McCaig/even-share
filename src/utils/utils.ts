@@ -104,7 +104,7 @@ export const generateBalanceSummaryStatement = <T extends Transaction>(
   transactions: T[],
   id?:string,
   currentName?:string
-): BalanceSummary[] | string => {
+): BalanceSummary[] => {
   const results = transactions.map((transaction) =>
     transaction.from === "You"
       ? {
@@ -130,7 +130,7 @@ export const generateBalanceSummaryStatement = <T extends Transaction>(
 
 export const generateBalanceSettleUpStatement = <T extends Transaction>(
   transactions: T[]
-): BalanceSummary[] | string => {
+): BalanceSummary[] => {
   const results = transactions.map((transaction) =>
     transaction.from === "You"
       ? {

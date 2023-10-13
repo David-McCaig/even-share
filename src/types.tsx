@@ -34,3 +34,8 @@ export interface Values {
     userName: string;
     userEmail: string;
 }
+
+export interface GroupExpenses {
+  userString: string; 
+  userNumber: number;
+}

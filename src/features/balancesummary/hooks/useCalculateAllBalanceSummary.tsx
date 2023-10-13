@@ -9,7 +9,7 @@ import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balanceSummarySl
 import { useFetchUserGroupsQuery } from "../../groupexpense/groupexpenseTableSlice";
 
 export const useCalculateAllBalanceSummary = () => {
-    const [allBalanceSummary, setAllBalanceSummary] = useState<(string | BalanceSummary)[]>([]);
+    const [allBalanceSummary, setAllBalanceSummary] = useState<(BalanceSummary)[]>([]);
     const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
 
     const user = useAppSelector(selectUser);
@@ -31,7 +31,6 @@ export const useCalculateAllBalanceSummary = () => {
             }
         }
     }, [currentGroupExpenses]);
-    console.log(allBalanceSummary)
     return { allBalanceSummary };
 };
 
