@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { useCalculateBalanceSummary } from "../balancesummary/hooks/useCalculateBalanceSummary";
 import { useDispatchGroupID } from "../../features/groupexpense/hooks/useDispatchGroupID";
 import { usePagination } from "../../features/groupexpense/hooks/usePagination";
 import {
@@ -19,7 +18,7 @@ import {
 } from "@ant-design/icons";
 import { Button } from "../../Components/ui/button";
 import TopBar from "../../Components/TopBar";
-import BalanceSummaryCard from "../../features/balancesummary/Component/BalanceSummaryCard";
+import BalanceSummary from "../../features/balancesummary/index";
 import ExpenseTableRow from "../../features/groupexpense/Components/ExpenseTableRow";
 import { UserGroup } from "../../types";
 
@@ -56,8 +55,6 @@ function Index() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, groupExpensesData]);
-
-  const { balanceArray } = useCalculateBalanceSummary(id);
 
   const nextPageClick = () => {
     fetchNextPage();
@@ -98,17 +95,7 @@ function Index() {
       <div className="w-full">
         <TopBar currentPage={"Dashboard"} />
         <div className="lg:hidden">
-          {balanceArray?.map((expense, i) => (
-            <BalanceSummaryCard
-              key={i}
-              userName={
-                typeof expense === "string" ? expense : expense.userString
-              }
-              userAmount={
-                typeof expense === "string" ? 0 : expense.userNumber || 0
-              }
-            />
-          ))}
+          <BalanceSummary />
         </div>
         {groupExpenses?.map((expense) => (
           <div key={expense.id}>
