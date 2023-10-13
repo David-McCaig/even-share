@@ -6,6 +6,7 @@ import { useFetchRecentActivityQuery } from "../features/recentactivity/recentAc
 import { useFetchRecentActivityPaginationQuery } from "../features/recentactivity/recentActivitySlice";
 import { usePagination } from "../features/groupexpense/hooks/usePagination";
 import ExpenseTableRow from "../features/groupexpense/Components/ExpenseTableRow";
+import BalanceSummary from "../features/balancesummary/index";
 import {
   PoweroffOutlined,
   WifiOutlined,
@@ -15,18 +16,27 @@ import {
 } from "@ant-design/icons";
 import { getFormattedDate } from "../utils/utils";
 import { UserGroup } from "../types";
-import { Button } from "../Components/ui/button"; 
+import { Button } from "../Components/ui/button";
 
 function RecentActivityPage() {
   const { email, displayName } = useAppSelector(selectUser);
   const { data: groupId } = useFetchUserGroupsQuery(email);
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
 
-  const { data: recentActivity, refetch:refetchRecentActivity, isError:recentActivityisError, error:recentActivityError } = useFetchRecentActivityQuery(groupId);
+  const {
+    data: recentActivity,
+    refetch: refetchRecentActivity,
+    isError: recentActivityisError,
+    error: recentActivityError,
+  } = useFetchRecentActivityQuery(groupId);
 
-  const { data: recentActivityPagination, refetch: paginationFetch, isFetching, isError:paginationisError, error:paginationError } =
-    useFetchRecentActivityPaginationQuery(groupId);
-
+  const {
+    data: recentActivityPagination,
+    refetch: paginationFetch,
+    isFetching,
+    isError: paginationisError,
+    error: paginationError,
+  } = useFetchRecentActivityPaginationQuery(groupId);
 
   useEffect(() => {
     if (recentActivity) {
@@ -61,7 +71,7 @@ function RecentActivityPage() {
   };
 
   if (recentActivityisError || paginationisError) {
-    console.error(recentActivityError || paginationError)
+    console.error(recentActivityError || paginationError);
     return (
       <div className="w-full h-screen flex justify-center items-center">
         <div className="text-red-500 text-2xl">
@@ -69,10 +79,13 @@ function RecentActivityPage() {
         </div>
       </div>
     );
-    }
+  }
 
   return (
     <div className="w-full">
+      <div className="lg:hidden">
+        <BalanceSummary />
+      </div>
       {expensesArray?.map((expense, i) => (
         <div key={i}>
           <ExpenseTableRow
@@ -93,8 +106,11 @@ function RecentActivityPage() {
         </div>
       ))}
       <div className="w-full flex justify-center mt-4">
-        <Button className="bg-gray-200 w-40 text-black hover:bg-gray-300 " onClick={nextPageClick}>
-        {isFetching ? 'Loading...' : 'Show more'}
+        <Button
+          className="bg-gray-200 w-40 text-black hover:bg-gray-300 "
+          onClick={nextPageClick}
+        >
+          {isFetching ? "Loading..." : "Show more"}
         </Button>
       </div>
     </div>

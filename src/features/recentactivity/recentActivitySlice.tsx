@@ -34,7 +34,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
           const expenseArray: UserGroups = [];
           querySnapshot?.forEach((doc) => {
             const data = doc.data();
-            const createdTimestamp = data.created_at 
+            const createdTimestamp = data.created_at;
             expenseArray.push({
               id: doc.id,
               ...data,
@@ -58,7 +58,6 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
     fetchRecentActivityPagination: builder.query<UserGroups, UserGroups | void>(
       {
         async queryFn(groupId) {
-          console.log(indexUserGroupId)
           try {
             if (!pagination) return { data: [] };
             const next = query(
@@ -96,7 +95,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
               const nextExpenseArray: UserGroups = [];
               nextGroupSnapshot?.forEach((doc) => {
                 const data = doc.data();
-                const createdTimestamp = data.created_at 
+                const createdTimestamp = data.created_at;
                 nextExpenseArray.push({
                   id: doc.id,
                   ...data,
@@ -114,7 +113,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
               const expenseArray: UserGroups = [];
               querySnapshot?.forEach((doc) => {
                 const data = doc.data();
-                const createdTimestamp = data.created_at 
+                const createdTimestamp = data.created_at;
                 expenseArray.push({
                   id: doc.id,
                   ...data,
