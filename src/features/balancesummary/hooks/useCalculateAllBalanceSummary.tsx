@@ -17,19 +17,24 @@ export const useCalculateAllBalanceSummary = () => {
     const currentGroupId = userGroups?.[currentGroupIndex]?.id;
     const currentName = userGroups?.[currentGroupIndex]?.user_group_name;
     const { data: currentGroupExpenses } = useFetchExpensesForBalanceSummaryGroupQuery(currentGroupId);
-    console.log(currentGroupExpenses)
+
+    useEffect(() => {
+        setAllBalanceSummary([]);
+        setCurrentGroupIndex(0);
+    }, []); 
+
     useEffect(() => {
         if (currentGroupExpenses) {
             const userObject = createUserObject(currentGroupExpenses, user.displayName);
             const result = calculateOwes(userObject, user.displayName);
             const balanceSummaryStatement = generateBalanceSummaryStatement(result, currentGroupId, currentName);
             setAllBalanceSummary(prev => [...prev, ...balanceSummaryStatement]);
-
             // Move to the next group
             if (currentGroupIndex < (userGroups?.length || 0) - 1) {
                 setCurrentGroupIndex(prev => prev + 1);
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentGroupExpenses]);
     return { allBalanceSummary };
 };
