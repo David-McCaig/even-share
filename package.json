@@ -28,6 +28,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@types/react-redux": "^7.1.26",
     "antd": "^5.9.0",
+    "chart.js": "^4.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "firebase": "^10.3.1",
@@ -36,6 +37,7 @@
     "formik": "^2.4.3",
     "lucide-react": "^0.274.0",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.2",
     "react-redux": "^8.1.2",
@@ -43,6 +45,7 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.7",
+    "uuidv4": "^6.2.13",
     "yup": "^1.2.0",
     "zod": "^3.22.2"
   },
