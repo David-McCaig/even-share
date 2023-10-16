@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useLocation } from "react-router";
 import { db } from "../../../firebase/firebaseconfig";
 import {
   collection,
@@ -8,16 +9,10 @@ import {
   updateDoc,
   getDocs,
 } from "firebase/firestore";
-import {
-  calculateOwes,
-  createUserObject,
-  generateBalanceSettleUpStatement,
-} from "../../../utils/utils";
-import { useFetchExpensesForGroupQuery } from "../groupExpenseTableSlice";
+import { useCalculateBalanceSummary } from "../../balancesummary/hooks/useCalculateBalanceSummary";
+import { useFetchExpensesForGroupQuery } from "../groupexpenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
-import { selectUser } from "../../authentication/userSlice";
 import { ArrowRightOutlined } from "@ant-design/icons";
-import { BalanceSummary } from "../../../types";
 import { Avatar, AvatarFallback } from "../../../Components/ui/avatar";
 import { Button } from "../../../Components/ui/button";
 import {
@@ -30,32 +25,16 @@ import {
   DialogTrigger,
 } from "../../../Components/ui/dialog";
 
-
-
 function SettleUpExpenseModal() {
+  const location = useLocation();
   const [open, setOpen] = useState(false);
 
-  const [balanceSettleUpStatement, setBalanceSettleUpStatement] = useState<
-    BalanceSummary[]
-  >([]);
-
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
-  const user = useAppSelector(selectUser);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data, refetch } = useFetchExpensesForGroupQuery(groupId);
-  
-  useEffect(() => {
-    if (data) {
-      const userObject = createUserObject(data, user.displayName);
-      const result = calculateOwes(userObject, user.displayName);
-      const balanceSettleUpStatementResult =
-        generateBalanceSettleUpStatement(result);
-      setBalanceSettleUpStatement(
-        balanceSettleUpStatementResult as BalanceSummary[]
-      );
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
 
+  const { balanceArray } = useCalculateBalanceSummary(groupId);
+  console.log(balanceArray);
   const settleUpClick = async () => {
     const userGroupsRef = collection(db, "userGroups");
     const expensesRef = collection(userGroupsRef, groupId, "expenses");
@@ -77,45 +56,64 @@ function SettleUpExpenseModal() {
       console.error("Error updating settled_up:", error);
     }
   };
-
+  console.log(location.pathname, groupId);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="ml-2">Settle up</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Settle Up</DialogTitle>
-          <DialogDescription>
-            If you have settled up outside of EvenShare, you can record it here
-          </DialogDescription>
-          {balanceSettleUpStatement?.map((statement, i) => (
-            <div key={i} className="flex flex-col items-center mt-4">
-              <div className="flex justify-center items-center gap-3  ">
-                <Avatar className="w-20 h-20">
-                  <AvatarFallback>
-                    {statement?.userString?.split(" ")[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <ArrowRightOutlined />
-                <Avatar className="w-20 h-20">
-                  <AvatarFallback>
-                    {statement?.userString?.split(" ")[2]}
-                  </AvatarFallback>
-                </Avatar>
+      {location.pathname == `/group/${groupId}` ? (
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Settle Up</DialogTitle>
+            <DialogDescription>
+              If you have settled up outside of EvenShare, you can record it
+              here
+            </DialogDescription>
+            {balanceArray[0]?.userString !== "All people are settled up" ? (
+              balanceArray?.map((statement, i) => (
+                <div key={i} className="flex flex-col items-center mt-4">
+                  <div className="flex justify-center items-center gap-3 mt-4">
+                    <Avatar className="w-20 h-20">
+                      <AvatarFallback>
+                        {statement?.userString?.split(" ")[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <ArrowRightOutlined />
+                    <Avatar className="w-20 h-20">
+                      <AvatarFallback>
+                        {statement?.userString?.split(" ")[2]}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <h2 className="text-xl mt-4">{statement.userString}</h2>
+                  <h2 className="text-xl mt-1">{"$" + statement.userNumber}</h2>
+                </div>
+              ))
+            ) : (
+              <div className="flex flex-col items-center mt-4">
+                <h2 className="text-xl my-8 ">{balanceArray[0]?.userString}</h2>
               </div>
-              <h2 className="text-xl mt-4">{statement.userString}</h2>
-              <h2 className="text-xl mt-1">{"$" + statement.userNumber}</h2>
-            </div>
-          ))}
-        </DialogHeader>
+            )}
+          </DialogHeader>
 
-        <DialogFooter style={{ justifyContent: "center", width: "100%" }}>
-          <Button style={{ width: "100%" }} onClick={settleUpClick}>
-            Settle up expenses
-          </Button>
-        </DialogFooter>
-      </DialogContent>
+          <DialogFooter style={{ justifyContent: "center", width: "100%" }}>
+            <Button style={{ width: "100%" }} onClick={settleUpClick}>
+              Settle up expenses
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      ) : (
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <div className="mx-3">
+              <DialogDescription className="text-lg">
+                Please navigate to the group you would like to settle up with.
+              </DialogDescription>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      )}
     </Dialog>
   );
 }

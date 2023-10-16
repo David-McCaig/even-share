@@ -49,7 +49,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("created_at", "asc"),
             limit(9),
-            // where("settled_up", "==", false)
+            where("settled_up", "==", false),
           );
           const querySnapshot = await getDocs(billQuery);
           groupSnapshotArray = querySnapshot.docs[querySnapshot.docs.length - 1];
@@ -86,7 +86,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("created_at", "asc"),
             limit(4),
-            // where("settled_up", "==", false),
+            where("settled_up", "==", false),
             startAfter(groupSnapshotArray)
           );
           
