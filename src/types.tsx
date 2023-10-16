@@ -39,3 +39,14 @@ export interface GroupExpenses {
   userString: string; 
   userNumber: number;
 }
+
+interface UserTotalsArray {
+  user_expense_name: string;
+  user_expense_amount: number;
+}
+
+export interface UserGroupTotals {
+id: string;
+user_group_name:string;
+user_group_totals: UserTotalsArray[];
+}

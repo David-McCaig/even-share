@@ -176,3 +176,21 @@ export const getFormattedDate = (seconds: number, nanoseconds: number) => {
   return `${monthNames[monthIndex]} ${day}${daySuffix}`;
 }
 
+export const totalUserExpenses = (expenses) => {
+  return expenses?.reduce((acc, expense) => {
+    const existingExpense = acc.find(
+      (item) => item.user_expense_name === expense.user_expense_name
+    );
+
+    if (existingExpense) {
+      existingExpense.user_expense_amount += expense.user_expense_amount;
+    } else {
+      acc.push({
+        user_expense_name: expense.user_expense_name,
+        user_expense_amount: expense.user_expense_amount,
+      });
+    }
+    return acc;
+  }, []);
+}
+

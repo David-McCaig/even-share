@@ -7,6 +7,7 @@ import { useFetchRecentActivityPaginationQuery } from "../features/recentactivit
 import { usePagination } from "../features/groupexpense/hooks/usePagination";
 import ExpenseTableRow from "../features/groupexpense/Components/ExpenseTableRow";
 import BalanceSummary from "../features/balancesummary/index";
+import TopBar from "../Components/TopBar";
 import {
   PoweroffOutlined,
   WifiOutlined,
@@ -83,6 +84,7 @@ function RecentActivityPage() {
 
   return (
     <div className="w-full">
+       <TopBar currentPage={"Recent Activity"} />
       <div className="lg:hidden">
         <BalanceSummary />
       </div>

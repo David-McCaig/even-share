@@ -93,7 +93,7 @@ function Index() {
   return (
     <>
       <div className="w-full">
-        <TopBar currentPage={"Dashboard"} />
+        <TopBar currentPage={"Group"} />
         <div className="lg:hidden">
           <BalanceSummary />
         </div>

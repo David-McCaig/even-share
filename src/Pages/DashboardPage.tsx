@@ -1,17 +1,14 @@
-import BalanceSummaryCard from "../features/balancesummary/Component/BalanceSummaryCard";
-import ExpenseTable from "../features/groupexpense/index"
+import TopBar from "../Components/TopBar";
+import Dashboard from "../features/dashboard/index"
 
-function Dashboard() {
-
+function DashboardPage() {
+  
   return (
     <div className="w-full bg-primary">
-
-      <div className="lg:hidden" >
-        <BalanceSummaryCard userName="Dave" userAmount={20} />
-      </div>
-      <ExpenseTable/>
+      <TopBar currentPage="Dashboard" />
+      <Dashboard/>
     </div>
   );
 }
 
-export default Dashboard;
+export default DashboardPage;
