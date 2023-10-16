@@ -56,7 +56,7 @@ function SettleUpExpenseModal() {
       console.error("Error updating settled_up:", error);
     }
   };
-  console.log(location.pathname, groupId);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -86,7 +86,7 @@ function SettleUpExpenseModal() {
                       </AvatarFallback>
                     </Avatar>
                   </div>
-                  <h2 className="text-xl mt-4">{statement.userString}</h2>
+                  <h2 className="text-xl mt-4">{statement.userString.split("owe").join("paid")}</h2>
                   <h2 className="text-xl mt-1">{"$" + statement.userNumber}</h2>
                 </div>
               ))
