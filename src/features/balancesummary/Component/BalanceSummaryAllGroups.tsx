@@ -6,7 +6,7 @@ import { GroupExpenses } from "../../../types";
 function BalanceSummaryAllGroups() {
   const { allBalanceSummary } = useCalculateAllBalanceSummary();
   const groupedExpenses = groupExpensesByGroupName(allBalanceSummary);
-
+  console.log(allBalanceSummary)
   function groupExpensesByGroupName(expenses) {
     return expenses.reduce((acc, expense) => {
       if (!acc[expense.groupName]) {
@@ -16,6 +16,7 @@ function BalanceSummaryAllGroups() {
       return acc;
     }, {});
   }
+  console.log(groupedExpenses)
   return (
     <>
       {Object.keys(groupedExpenses).map((groupName) => (

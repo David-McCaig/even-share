@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../../firebase/firebaseconfig";
+import { useSetAddGroupMutation } from "../../groupexpense/groupexpenseTableSlice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -23,6 +22,8 @@ function CreateGroupModal() {
 
   const [groupMemberEmails, setGroupMemberEmails] = useState([""]);
   const [open, setOpen] = useState(false);
+
+  const [setAddGroup] = useSetAddGroupMutation()
 
   const openModalClick = () => {
     setOpen(true)
@@ -66,10 +67,10 @@ function CreateGroupModal() {
   });
 
   const addGroup = async (emailArray: string[], groupName: string) => {
-    await addDoc(collection(db, "userGroups"), {
+    setAddGroup({
       user_group_email: emailArray,
       user_group_name: groupName,
-    });
+    })
     setGroupMemberEmails([""]);
     setOpen(false)
   };
