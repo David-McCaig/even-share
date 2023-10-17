@@ -22,8 +22,10 @@ function CreateGroupModal() {
   const userInfo = useAppSelector(selectUser);
 
   const [groupMemberEmails, setGroupMemberEmails] = useState([""]);
+  const [open, setOpen] = useState(false);
 
   const openModalClick = () => {
+    setOpen(true)
     formik.values.groupName = "";
     formik.values.emails = [""];
     setGroupMemberEmails([""]);
@@ -69,10 +71,11 @@ function CreateGroupModal() {
       user_group_name: groupName,
     });
     setGroupMemberEmails([""]);
+    setOpen(false)
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger onClick={openModalClick} asChild>
         <div className="cursor-pointer"> Create Group +</div>
       </DialogTrigger>
