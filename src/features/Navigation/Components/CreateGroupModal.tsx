@@ -90,6 +90,7 @@ function CreateGroupModal() {
             <Label className="text-left mr-3">Group</Label>
             <Input
               name={`groupName`}
+              autoComplete="off"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.groupName}

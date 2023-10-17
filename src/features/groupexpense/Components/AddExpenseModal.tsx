@@ -99,6 +99,7 @@ function AddExpenseModal() {
               <Input
                 id="userExpenseDescription"
                 name="userExpenseDescription"
+                autoComplete="off"
                 type="text"
                 onChange={formik.handleChange}
                 value={formik.values.userExpenseDescription}
