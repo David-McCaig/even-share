@@ -17,7 +17,6 @@ export const useCalculateAllBalanceSummary = () => {
     const currentGroupId = userGroups?.[currentGroupIndex]?.id;
     const currentName = userGroups?.[currentGroupIndex]?.user_group_name;
     const { data: currentGroupExpenses } = useFetchExpensesForBalanceSummaryGroupQuery(currentGroupId);
-
     useEffect(() => {
         setAllBalanceSummary([]);
         setCurrentGroupIndex(0);

@@ -125,7 +125,8 @@ export const generateBalanceSummaryStatement = <T extends Transaction>(
         }
   );
 
-  return results.length > 0 ? results : [{userString: "All people are settled up", userNumber: 0}];
+  return results.length > 0 ? results : [{userString: "All people are settled up", userNumber: 0, groupId: id,
+  groupName:currentName}];
 };
 
 export const generateBalanceSettleUpStatement = <T extends Transaction>(
@@ -181,7 +182,6 @@ export const totalUserExpenses = (expenses) => {
     const existingExpense = acc.find(
       (item) => item.user_expense_name === expense.user_expense_name
     );
-
     if (existingExpense) {
       existingExpense.user_expense_amount += expense.user_expense_amount;
     } else {

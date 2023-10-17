@@ -28,7 +28,7 @@ export const useCreateDataStructureForUserTotals = () => {
   }, []);
 
   useEffect(() => {
-    if (totalExpenses) {
+    if (totalExpenses && totalExpenses.length !== 0) {
       setTotalUserExpensesData((prev) => [
         ...prev,
         {
@@ -44,6 +44,6 @@ export const useCreateDataStructureForUserTotals = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
-
+  
   return { totalUserExpensesData };
 };

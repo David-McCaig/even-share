@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../../firebase/firebaseconfig";
+import { useSetAddGroupMutation } from "../../groupexpense/groupexpenseTableSlice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -22,8 +21,12 @@ function CreateGroupModal() {
   const userInfo = useAppSelector(selectUser);
 
   const [groupMemberEmails, setGroupMemberEmails] = useState([""]);
+  const [open, setOpen] = useState(false);
+
+  const [setAddGroup] = useSetAddGroupMutation()
 
   const openModalClick = () => {
+    setOpen(true)
     formik.values.groupName = "";
     formik.values.emails = [""];
     setGroupMemberEmails([""]);
@@ -64,15 +67,16 @@ function CreateGroupModal() {
   });
 
   const addGroup = async (emailArray: string[], groupName: string) => {
-    await addDoc(collection(db, "userGroups"), {
+    setAddGroup({
       user_group_email: emailArray,
       user_group_name: groupName,
-    });
+    })
     setGroupMemberEmails([""]);
+    setOpen(false)
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger onClick={openModalClick} asChild>
         <div className="cursor-pointer"> Create Group +</div>
       </DialogTrigger>
@@ -90,6 +94,7 @@ function CreateGroupModal() {
             <Label className="text-left mr-3">Group</Label>
             <Input
               name={`groupName`}
+              autoComplete="off"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.groupName}

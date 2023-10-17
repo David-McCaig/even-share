@@ -40,23 +40,24 @@ export const scoresApi = firestoreApi.injectEndpoints({
       },
       providesTags: ["groupExpense"],
     }),
-    
+
     fetchExpensesForGroup: builder.query<UserGroups, void | string>({
-      async queryFn( urlId ) {
+      async queryFn(urlId) {
         groupSnapshotArray = null;
         try {
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("created_at", "asc"),
             limit(9),
-            where("settled_up", "==", false),
+            where("settled_up", "==", false)
           );
           const querySnapshot = await getDocs(billQuery);
-          groupSnapshotArray = querySnapshot.docs[querySnapshot.docs.length - 1];
+          groupSnapshotArray =
+            querySnapshot.docs[querySnapshot.docs.length - 1];
           const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
             const data = doc.data();
-            const createdTimestamp = data.created_at 
+            const createdTimestamp = data.created_at;
             userGroups.push({
               id: doc.id,
               ...data,
@@ -66,7 +67,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
               },
             } as UserGroup);
           });
-          
+
           return { data: userGroups };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
@@ -77,11 +78,10 @@ export const scoresApi = firestoreApi.injectEndpoints({
       providesTags: ["groupExpense"],
     }),
     fetchPaginatedExpensesForGroup: builder.query<UserGroups, void | string>({
-      async queryFn( urlId ) {
-        
+      async queryFn(urlId) {
         try {
           if (!groupSnapshotArray) return { data: [] };
-          
+
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("created_at", "asc"),
@@ -89,13 +89,14 @@ export const scoresApi = firestoreApi.injectEndpoints({
             where("settled_up", "==", false),
             startAfter(groupSnapshotArray)
           );
-          
+
           const querySnapshot = await getDocs(billQuery);
-          groupSnapshotArray = querySnapshot.docs[querySnapshot.docs.length - 1];
+          groupSnapshotArray =
+            querySnapshot.docs[querySnapshot.docs.length - 1];
           const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
             const data = doc.data();
-            const createdTimestamp = data.created_at 
+            const createdTimestamp = data.created_at;
             userGroups.push({
               id: doc.id,
               ...data,
@@ -148,6 +149,22 @@ export const scoresApi = firestoreApi.injectEndpoints({
       },
       providesTags: ["groupExpense"],
     }),
+    setAddGroup: builder.mutation({
+      async queryFn({ user_group_email, user_group_name }) {
+        try {
+          await addDoc(collection(db, "userGroups"), {
+            user_group_name: user_group_name,
+            user_group_email: user_group_email,
+          });
+          return { data: null };
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          console.error(error.message);
+          return { error: error.message };
+        }
+      },
+      invalidatesTags: ["groupExpense"],
+    }),
     setAddExpenseToGroup: builder.mutation({
       async queryFn({
         groupId,
@@ -157,7 +174,6 @@ export const scoresApi = firestoreApi.injectEndpoints({
         settledUp,
         createdAt,
       }) {
-   
         try {
           const { seconds, nanoseconds } = createdAt;
           const createdTimestamp = new Timestamp(seconds, nanoseconds);
@@ -201,5 +217,6 @@ export const {
   useFetchPaginatedExpensesForGroupQuery,
   useFetchUserExpensesQuery,
   useSetAddExpenseToGroupMutation,
+  useSetAddGroupMutation,
   useDeleteExpenseGroupMutation,
 } = scoresApi;
