@@ -1,5 +1,6 @@
 import PieChart from "./Components/PieChart";
 import { useCreateDataStructureForUserTotals } from "./hooks/useCreateDataStructureForUserTotals";
+
 function DashBoard() {
   const { totalUserExpensesData } = useCreateDataStructureForUserTotals();
 

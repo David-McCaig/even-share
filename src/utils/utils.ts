@@ -181,7 +181,6 @@ export const totalUserExpenses = (expenses) => {
     const existingExpense = acc.find(
       (item) => item.user_expense_name === expense.user_expense_name
     );
-
     if (existingExpense) {
       existingExpense.user_expense_amount += expense.user_expense_amount;
     } else {

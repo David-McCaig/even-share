@@ -41,7 +41,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
             return { error: error.message };
           }
         },
-        providesTags: ["balanceSummary"],
+        providesTags: ["balanceSummary", "groupExpense"],
       }),
   }),
 });
