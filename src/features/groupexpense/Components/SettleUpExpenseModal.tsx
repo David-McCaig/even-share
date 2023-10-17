@@ -34,7 +34,7 @@ function SettleUpExpenseModal() {
   const { data, refetch } = useFetchExpensesForGroupQuery(groupId);
 
   const { balanceArray } = useCalculateBalanceSummary(groupId);
-  console.log(balanceArray);
+  
   const settleUpClick = async () => {
     const userGroupsRef = collection(db, "userGroups");
     const expensesRef = collection(userGroupsRef, groupId, "expenses");
