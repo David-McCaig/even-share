@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { useCalculateBalanceSummary } from "../../balancesummary/hooks/useCalculateBalanceSummary";
 import { useFetchExpensesForGroupQuery } from "../groupexpenseTableSlice";
+import { useFetchExpensesForBalanceSummaryGroupQuery } from "../../balancesummary/balanceSummarySlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { Avatar, AvatarFallback } from "../../../Components/ui/avatar";
@@ -31,10 +32,13 @@ function SettleUpExpenseModal() {
 
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data, refetch } = useFetchExpensesForGroupQuery(groupId);
+  const { refetch: refetchExpensesForGroup } =
+    useFetchExpensesForGroupQuery(groupId);
+  const { refetch: refetchBalanceSummary } =
+    useFetchExpensesForBalanceSummaryGroupQuery(groupId);
 
   const { balanceArray } = useCalculateBalanceSummary(groupId);
-  
+
   const settleUpClick = async () => {
     const userGroupsRef = collection(db, "userGroups");
     const expensesRef = collection(userGroupsRef, groupId, "expenses");
@@ -50,8 +54,9 @@ function SettleUpExpenseModal() {
           settled_up: true,
         });
       });
+      refetchExpensesForGroup();
+      refetchBalanceSummary();
       setOpen(false);
-      refetch();
     } catch (error) {
       console.error("Error updating settled_up:", error);
     }
@@ -86,7 +91,9 @@ function SettleUpExpenseModal() {
                       </AvatarFallback>
                     </Avatar>
                   </div>
-                  <h2 className="text-xl mt-4">{statement.userString.split("owe").join("paid")}</h2>
+                  <h2 className="text-xl mt-4">
+                    {statement.userString.split("owes").join("paid")}
+                  </h2>
                   <h2 className="text-xl mt-1">{"$" + statement.userNumber}</h2>
                 </div>
               ))
