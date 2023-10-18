@@ -14,23 +14,23 @@ export const selectExpenseIcon = (billType: JSX.Element | string) => {
     typeof billType === "string" ? billType : billType?.toString();
 
   if (billTypeString.toLowerCase().includes("power")) {
-    return <img className="w-7" src={powerIcon} />;
+    return <img className="w-7" src={powerIcon} alt="Power Icon" />;
   } else if (billTypeString.toLowerCase().includes("internet")) {
-    return <img className="w-7" src={wifiIcon} />;
+    return <img className="w-7" src={wifiIcon} alt="Wifi icon" />;
   } else if (billTypeString.toLowerCase().includes("car")) {
-    return <img className="w-7" src={carIcon} />;
+    return <img className="w-7" src={carIcon} alt="Car icon" />;
   } else if (billTypeString.toLowerCase().includes("phone")) {
-    return <img className="w-7" src={phoneIcon} />;
+    return <img className="w-7" src={phoneIcon} alt="Phone icon" />;
   } else if (billTypeString.toLowerCase().includes("parking")) {
-    return <img className="w-7" src={fileIcon} />;
+    return <img className="w-7" src={fileIcon} alt="parking icon" />;
   } else if (billTypeString.toLowerCase().includes("boat")) {
-    return <img className="w-7" src={boatIcon} />;
+    return <img className="w-7" src={boatIcon} alt="boat icon" />;
   } else if (billTypeString.toLowerCase().includes("hotel")) {
-    return <img className="w-7" src={hotelIcon} />;
+    return <img className="w-7" src={hotelIcon} alt="hotel icon" />;
   } else if (billTypeString.toLowerCase().includes("groceries" || "food")) {
-    return <img className="w-7" src={foodIcon} />;
+    return <img className="w-7" src={foodIcon} alt="food icon" />;
   } else if (billTypeString.toLowerCase().includes("house" || "rent")) {
-    return <img className="w-7" src={houseIcon} />;
+    return <img className="w-7" src={houseIcon} alt="house icon" />;
   } else {
     return <img className="w-7" src={fileIcon} />;
   }
