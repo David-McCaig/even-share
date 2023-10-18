@@ -13,6 +13,7 @@ import {
 import { db } from "../../firebase/firebaseconfig";
 import { query, where, Timestamp } from "firebase/firestore";
 import { DocumentData, DocumentSnapshot } from "firebase/firestore";
+import { toast } from "react-hot-toast";
 
 let groupSnapshotArray: DocumentSnapshot<DocumentData> | null = null;
 
@@ -152,10 +153,13 @@ export const scoresApi = firestoreApi.injectEndpoints({
     setAddGroup: builder.mutation({
       async queryFn({ user_group_email, user_group_name }) {
         try {
+          const loadingToast = toast.loading("Adding group...");
           await addDoc(collection(db, "userGroups"), {
             user_group_name: user_group_name,
             user_group_email: user_group_email,
           });
+          toast.dismiss(loadingToast);
+          toast.success("Group has been added");
           return { data: null };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
@@ -175,6 +179,8 @@ export const scoresApi = firestoreApi.injectEndpoints({
         createdAt,
       }) {
         try {
+          const loadingToast = toast.loading("Adding expense...");
+
           const { seconds, nanoseconds } = createdAt;
           const createdTimestamp = new Timestamp(seconds, nanoseconds);
           await addDoc(collection(db, `userGroups/${groupId}/expenses`), {
@@ -184,6 +190,8 @@ export const scoresApi = firestoreApi.injectEndpoints({
             settled_up: settledUp,
             created_at: createdTimestamp,
           });
+          toast.dismiss(loadingToast);
+          toast.success("Expense added");
           return { data: null };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
@@ -196,9 +204,12 @@ export const scoresApi = firestoreApi.injectEndpoints({
     deleteExpenseGroup: builder.mutation({
       async queryFn({ groupId, expenseId }) {
         try {
+          const loadingToast = toast.loading("Deleting expense...")
           await deleteDoc(
             doc(db, `userGroups/${groupId}/expenses/${expenseId}`)
           );
+          toast.dismiss(loadingToast)
+          toast.success("Expense deleted")
           return { data: null };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {

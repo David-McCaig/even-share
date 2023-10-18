@@ -12,6 +12,7 @@ import {
 import { useCalculateBalanceSummary } from "../../balancesummary/hooks/useCalculateBalanceSummary";
 import { useFetchExpensesForGroupQuery } from "../groupexpenseTableSlice";
 import { useFetchExpensesForBalanceSummaryGroupQuery } from "../../balancesummary/balanceSummarySlice";
+import { toast }  from "react-hot-toast"
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import arrowRight from "../../../assets/icons/expenseicons/arrow-forward-outline.svg";
 import { Avatar, AvatarFallback } from "../../../Components/ui/avatar";
@@ -45,6 +46,7 @@ function SettleUpExpenseModal() {
     // Create the query to find documents with settled_up as false
     const queryExpenses = query(expensesRef, where("settled_up", "==", false));
     try {
+      const loadingToast = toast.loading("Settling up expenses")
       // Get the documents that match the query
       const querySnapshot = await getDocs(queryExpenses);
       // Iterate over the documents in the query snapshot and update settled_up to true
@@ -56,6 +58,8 @@ function SettleUpExpenseModal() {
       });
       refetchExpensesForGroup();
       refetchBalanceSummary();
+      toast.dismiss(loadingToast)
+      toast.success("Expenses settled up")
       setOpen(false);
     } catch (error) {
       console.error("Error updating settled_up:", error);
