@@ -8,7 +8,7 @@ import { Values } from "../../../types";
 import { Button } from "../../../Components/ui/button";
 import { Input } from "../../../Components/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
-
+import { toast } from "react-hot-toast";
 function Profile() {
 
   const userInfo = useAppSelector(selectUser);
@@ -28,7 +28,8 @@ function Profile() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values: Values) => {
-        console.log(values.userName)
+            const loadingToast = toast.loading("Updating profile...")
+
             const auth = getAuth();
             const currentUser = auth.currentUser;
             if (currentUser) {
@@ -37,9 +38,9 @@ function Profile() {
                         displayName: values.userName,
                     });
                     await updateEmail(currentUser, values.userEmail);
+                    toast.dismiss(loadingToast)
+                    toast.success('Profile updated successfully!')
                 } catch (error:any) {
-                    // An error occurred
-                    // ...
                     console.log(error)
                     setError(error.message);
                 }

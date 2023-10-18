@@ -1,18 +1,24 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App.tsx'
-import './index.css'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.tsx';
+import './index.css';
 
-import { Provider } from 'react-redux'
-import { store }   from './store.js'
+import { Provider } from 'react-redux';
+import { store } from './store.js';
+
+import { Toaster } from 'react-hot-toast';  // Import the Toaster component
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <Provider store={store} >
+    <Provider store={store}>
       <BrowserRouter>
         <App />
+        {/* Place the Toaster component here, outside of your App component */}
+        <Toaster />
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,
-)
+);
+
+
