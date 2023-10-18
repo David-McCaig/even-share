@@ -13,7 +13,7 @@ import { useCalculateBalanceSummary } from "../../balancesummary/hooks/useCalcul
 import { useFetchExpensesForGroupQuery } from "../groupexpenseTableSlice";
 import { useFetchExpensesForBalanceSummaryGroupQuery } from "../../balancesummary/balanceSummarySlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
-import { ArrowRightOutlined } from "@ant-design/icons";
+import arrowRight from "../../../assets/icons/expenseicons/arrow-forward-outline.svg";
 import { Avatar, AvatarFallback } from "../../../Components/ui/avatar";
 import { Button } from "../../../Components/ui/button";
 import {
@@ -84,7 +84,7 @@ function SettleUpExpenseModal() {
                         {statement?.userString?.split(" ")[0]}
                       </AvatarFallback>
                     </Avatar>
-                    <ArrowRightOutlined />
+                    <img src={arrowRight} className="w-8" />
                     <Avatar className="w-20 h-20">
                       <AvatarFallback>
                         {statement?.userString?.split(" ")[2]}

@@ -48,7 +48,6 @@ function ExpenseTableRow({
               <div className="flex items-center space-x-4">
                 <div className="flex-shrink-0"></div>
                 {expenseIcon}
-                {/* <PoweroffOutlined className="text-xl" /> */}
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate dark:text-white">
                     {expenseDescription}

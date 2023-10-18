@@ -9,13 +9,7 @@ import {
 import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../features/authentication/userSlice";
 import { getFormattedDate } from "../../utils/utils";
-import {
-  PoweroffOutlined,
-  WifiOutlined,
-  CarOutlined,
-  PhoneOutlined,
-  FileTextOutlined,
-} from "@ant-design/icons";
+import { selectExpenseIcon } from "../../utils/selectExpenseIcon";
 import { Button } from "../../Components/ui/button";
 import TopBar from "../../Components/TopBar";
 import BalanceSummary from "../../features/balancesummary/index";
@@ -62,23 +56,6 @@ function Index() {
 
   usePagination(nextGroupExpenses || [], setGroupExpenses);
 
-  const selectIcon = (billType: JSX.Element | string) => {
-    const billTypeString =
-      typeof billType === "string" ? billType : billType?.toString();
-
-    if (billTypeString.split(" ")[0].toLowerCase() === "power") {
-      return <PoweroffOutlined className="text-xl" />;
-    } else if (billTypeString.split(" ")[0].toLowerCase() === "internet") {
-      return <WifiOutlined className="text-xl" />;
-    } else if (billTypeString.split(" ")[0].toLowerCase() === "car") {
-      return <CarOutlined className="text-xl" />;
-    } else if (billTypeString.split(" ")[0].toLowerCase() === "phone") {
-      return <PhoneOutlined className="text-xl" />;
-    } else if (billTypeString.split(" ")[0].toLowerCase() === "parking") {
-      return <FileTextOutlined className="text-xl" />;
-    }
-  };
-
   if (expensesIsError || nextExpenseIsError) {
     console.error(expensesError || nextExpenseError);
     return (
@@ -100,7 +77,7 @@ function Index() {
         {groupExpenses?.map((expense) => (
           <div key={expense.id}>
             <ExpenseTableRow
-              expenseIcon={selectIcon(expense?.user_expense_description)}
+              expenseIcon={selectExpenseIcon(expense?.user_expense_description)}
               expenseDescription={expense?.user_expense_description}
               expenseDate={getFormattedDate(
                 expense?.created_at?.seconds,

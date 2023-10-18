@@ -5,16 +5,10 @@ import { useFetchUserGroupsQuery } from "../features/groupexpense/groupexpenseTa
 import { useFetchRecentActivityQuery } from "../features/recentactivity/recentActivitySlice";
 import { useFetchRecentActivityPaginationQuery } from "../features/recentactivity/recentActivitySlice";
 import { usePagination } from "../features/groupexpense/hooks/usePagination";
+import { selectExpenseIcon } from "../utils/selectExpenseIcon";
 import ExpenseTableRow from "../features/groupexpense/Components/ExpenseTableRow";
 import BalanceSummary from "../features/balancesummary/index";
 import TopBar from "../Components/TopBar";
-import {
-  PoweroffOutlined,
-  WifiOutlined,
-  CarOutlined,
-  PhoneOutlined,
-  FileTextOutlined,
-} from "@ant-design/icons";
 import { getFormattedDate } from "../utils/utils";
 import { UserGroup } from "../types";
 import { Button } from "../Components/ui/button";
@@ -52,25 +46,6 @@ function RecentActivityPage() {
 
   usePagination(recentActivityPagination || [], setExpensesArray);
 
-  const selectIcon = (billType: JSX.Element | string) => {
-    const billTypeString =
-      typeof billType === "string" ? billType : billType?.toString();
-
-    if (billTypeString.split(" ")[0].toLowerCase() === "power") {
-      return <PoweroffOutlined className="text-xl" />;
-    } else if (billTypeString.split(" ")[0].toLowerCase() === "internet") {
-      return <WifiOutlined className="text-xl" />;
-    } else if (billTypeString.split(" ")[0].toLowerCase() === "car") {
-      return <CarOutlined className="text-xl" />;
-    } else if (billTypeString.split(" ")[0].toLowerCase() === "phone") {
-      return <PhoneOutlined className="text-xl" />;
-    } else if (billTypeString.split(" ")[0].toLowerCase() === "parking") {
-      return <FileTextOutlined className="text-xl" />;
-    } else {
-      return <FileTextOutlined className="text-xl" />;
-    }
-  };
-
   if (recentActivityisError || paginationisError) {
     console.error(recentActivityError || paginationError);
     return (
@@ -90,8 +65,9 @@ function RecentActivityPage() {
       </div>
       {expensesArray?.map((expense, i) => (
         <div key={i}>
+          
           <ExpenseTableRow
-            expenseIcon={selectIcon(expense?.user_expense_description)}
+            expenseIcon={selectExpenseIcon(expense?.user_expense_description)}
             expenseDescription={expense?.user_expense_description}
             expenseDate={getFormattedDate(
               expense?.created_at?.seconds,

@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.2.6",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.3.1",
@@ -27,7 +26,6 @@
     "@radix-ui/react-toast": "^1.1.4",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/react-redux": "^7.1.26",
-    "antd": "^5.9.0",
     "chart.js": "^4.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
