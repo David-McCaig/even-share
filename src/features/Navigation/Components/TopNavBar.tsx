@@ -6,6 +6,7 @@ import {
 import { selectUser } from "../../authentication/userSlice";
 import { logout } from "../../authentication/userSlice";
 import { auth } from "../../../firebase/firebaseconfig";
+import  menuToggle  from "../../../assets/icons/expenseicons/menu-outline.svg";
 import evenShareLogo from "../../../assets/icons/output-onlinepngtools.png";
 import {
   Avatar,
@@ -64,9 +65,10 @@ export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
         <button
           onClick={openNavClick}
           type="button"
-          className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+          className="inline-flex items-center p-2  text-sm  rounded-lg sm:hidden"
         >
           <span className="sr-only">Open sidebar</span>
+        <img src={menuToggle} className="w-12 h-12" alt="Open menu"  />
         </button>
         <aside
           className={
@@ -78,10 +80,9 @@ export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
           <button
             onClick={closeNavClick}
             type="button"
-            className="mt-4 ml-6 inline-flex items-center text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-          >
+            className="inline-flex items-center p-2 text-sm  rounded-lg sm:hidden"          >
             <span className="sr-only">Open sidebar</span>
-            
+            <img src={menuToggle} className="w-12 h-12" alt="Close menu"  />
           </button>
         </aside>
       </div>
