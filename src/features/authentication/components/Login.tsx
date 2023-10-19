@@ -41,7 +41,7 @@ function LoginPage() {
   }
 
   return (
-    <section className="w-full flex justify-center">
+    <section className="px-4 w-full flex justify-center">
       {/* <form onSubmit={onSubmit}> */}
       <Formik
         initialValues={{
@@ -109,11 +109,11 @@ function LoginPage() {
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
                   </div>
-                  <div className="relative flex justify-center text-sm uppercase">
+                  <div className=" relative flex justify-center text-sm uppercase">
                     <Link to="/signup" className="text-primary-button-color">
                       Signup
                     </Link>
-                    <span className="bg-background px-2 text-muted-foreground ">
+                    <span className="bg-background px-2 text-muted-foreground z-10 bg-primary-bg-color ">
                       Or continue with
                     </span>
                   </div>
