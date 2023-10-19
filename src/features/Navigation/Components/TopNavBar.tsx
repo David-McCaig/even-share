@@ -110,7 +110,7 @@ export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
                   onClick={handleLogout}
                   className="md:pt-2"
                 >
-                  <NavigationMenuLink className=" md:px-4 ">Logout</NavigationMenuLink>
+                  <NavigationMenuLink className="md:px-4 cursor-pointer">Logout</NavigationMenuLink>
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
