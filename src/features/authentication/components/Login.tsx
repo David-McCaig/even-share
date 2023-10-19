@@ -109,7 +109,7 @@ function LoginPage() {
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
                   </div>
-                  <div className=" relative flex justify-center text-sm uppercase">
+                  <div className="relative flex justify-center text-sm uppercase">
                     <Link to="/signup" className="text-primary-button-color">
                       Signup
                     </Link>
