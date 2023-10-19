@@ -40,43 +40,32 @@ function LoginPage() {
   }
 
   return (
-    <section className="antialiased h-screen w-full flex justify-center items-center ">
-      <div className="sm:mx-px sm:w-full w-11/12  max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300 ">
-        <h1 className="text-4xl font-medium text-center">Sign Up</h1>
-
-        <div className="my-5">
-          <button
-            className="w-full text-center py-3 my-3 border flex space-x-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
-            disabled={authenticating}
-            onClick={googleSignInClick}
-          >
-            <img
-              src="https://www.svgrepo.com/show/355037/google.svg"
-              className="w-6 h-6"
-              alt=""
-            />{" "}
-            <span>Sign Up with Google</span>
-          </button>
-        </div>
-
-        <Formik
-          initialValues={{
-            password: "",
-            email: "",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={(values: AuthValues) => {
-            signUpEmailPassword(values);
-            setErrorMessage(passwordErrorMessage);
-          }}
-        >
-          {({ errors, touched }) => (
-            <Form className="my-10">
-              <div className="flex flex-col space-y-5">
-                <label>
-                  <p className="font-medium text-slate-700 pb-2">
-                    Email address
-                  </p>
+    <section className="w-full flex justify-center">
+      {/* <form onSubmit={onSubmit}> */}
+      <Formik
+        initialValues={{
+          password: "",
+          email: "",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values: AuthValues) => {
+          signUpEmailPassword(values);
+          setErrorMessage(passwordErrorMessage);
+        }}
+      >
+        {({ errors, touched }) => (
+          <Form>
+            <div className="h-screen mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+              <div className="flex flex-col space-y-2 text-center">
+                <h1 className="text-2xl font-semibold tracking-tight">Sign Up</h1>
+                <p className="text-sm text-muted-foreground">
+                  Welcome to EvenShare! Please Sign up here
+                </p>
+              </div>
+              <div className="grid gap-2">
+                <div className="grid gap-1">
+                  <label>
+                  <p className="font-medium text-slate-700 pb-2">Email</p>
                   <Field
                     id="email"
                     name="email"
@@ -89,7 +78,8 @@ function LoginPage() {
                   {errors.email && touched.email && (
                     <p className="text-red-500">{errors.email}</p>
                   )}
-                </label>
+                  </label>
+                </div>
                 <label>
                   <p className="font-medium text-slate-700 pb-2">Password</p>
                   <Field
@@ -108,47 +98,66 @@ function LoginPage() {
                     <p className="text-red-500">{errors.password}</p>
                   )}
                 </label>
-                <div className="flex flex-row justify-between">
-                  <div>
-                    <label className="">
-                      <input
-                        type="checkbox"
-                        id="remember"
-                        className="w-4 h-4 mr-1 border-slate-200 focus:bg-indigo-600"
-                      />
-                      Remember me
-                    </label>
+
+                <Button className="mb-4 mt-2">Sign Up</Button>
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
                   </div>
-                  <div>
-                    <button className="font-medium text-primary-button-color">
-                      Forgot Password?
-                    </button>
+                  <div className=" relative flex justify-center text-sm uppercase">
+                    <Link to="/login" className="text-primary-button-color">
+                      Sign In
+                    </Link>
+                    <span className="bg-background px-2 text-muted-foreground ">
+                      Or continue with
+                    </span>
                   </div>
                 </div>
-                <Button type="submit">
-                  <span>Sign Up</span>
-                </Button>
-                <p className="text-center">
-                  Already registered{" "}
-                  <Link
-                    to="/login"
-                    className="text-primary-button-color font-medium inline-flex space-x-1 items-center"
+                <div className="my-5">
+                  <button
+                    className="w-full h-12 text-center border flex space-x-2 items-center justify-center opacity-90 border-slate-400 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
+                    disabled={authenticating}
+                    onClick={googleSignInClick}
                   >
-                    <span>Log In </span>
-                  </Link>
-                </p>
+                    <img
+                      src="https://www.svgrepo.com/show/355037/google.svg"
+                      className="w-6 h-6"
+                      alt=""
+                    />{" "}
+                    <span>Sign up</span>
+                  </button>
+                </div>
               </div>
-              {errorMessage && (
+              <p className="px-8 text-center text-sm text-muted-foreground">
+                By clicking continue, you agree to our{" "}
+                <Link
+                  to="/login"
+                  className="underline underline-offset-4 hover:text-primary"
+                >
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link
+                  to="/login"
+                  className="underline underline-offset-4 hover:text-primary"
+                >
+                  Privacy Policy
+                </Link>
+                .
+              </p>
+              {/* </form> */}
+            </div>
+            {errorMessage ||
+              (passwordErrorMessage && (
                 <div className="w-full mt-6 rounded border border-red-400">
                   <p className=" text-red-500 text-center py-2 font-medium">
-                    {errorMessage}
+                    {errorMessage || passwordErrorMessage}
                   </p>
                 </div>
-              )}
-            </Form>
-          )}
-        </Formik>
-      </div>
+              ))}
+          </Form>
+        )}
+      </Formik>
     </section>
   );
 }
