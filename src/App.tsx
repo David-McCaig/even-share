@@ -21,7 +21,13 @@ function App() {
   const userInfo = useAppSelector(selectUser);
 
   return (
-    <div className="w-full h-full bg-primary-bg-color text-primary-font-color">
+    <div
+      className={
+        !userInfo
+          ? `bg-gradient-to-t from-rose-100 to-teal-100`
+          : `w-full h-full bg-primary-bg-color text-primary-font-color`
+      }
+    >
       {userInfo && (
         <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
       )}
