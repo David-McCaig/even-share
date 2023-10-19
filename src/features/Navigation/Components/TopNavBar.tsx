@@ -101,16 +101,16 @@ export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
               <NavigationMenuTrigger
                 onPointerMove={(event) => event.preventDefault()}
                 onPointerLeave={(event) => event.preventDefault()}
-                className="mr-2 sm:mr-6 bg-primary-bg-color"
+                className="bg-primary-bg-color"
               >
                 {displayName}
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div
                   onClick={handleLogout}
-                  className="w-[8.5rem] h-6 cursor-pointer pl-4 "
+                  className="md:pt-2"
                 >
-                  <NavigationMenuLink>Log out</NavigationMenuLink>
+                  <NavigationMenuLink className=" md:px-4 ">Logout</NavigationMenuLink>
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>

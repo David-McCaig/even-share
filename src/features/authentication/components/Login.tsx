@@ -130,7 +130,7 @@ function LoginPage() {
                     </button>
                   </div>
                 </div>
-                <Button>
+                <Button type="submit">
                   <span>Login</span>
                 </Button>
                 <p className="text-center">

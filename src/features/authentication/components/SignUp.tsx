@@ -125,7 +125,7 @@ function LoginPage() {
                     </button>
                   </div>
                 </div>
-                <Button>
+                <Button type="submit">
                   <span>Sign Up</span>
                 </Button>
                 <p className="text-center">
