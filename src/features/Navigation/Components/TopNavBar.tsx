@@ -60,7 +60,7 @@ export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
   };
 
   return (
-    <nav className="h-16 flex justify-between m-auto   max-w-5xl items-center ">
+    <nav className="h-16 flex justify-between m-auto  max-w-5xl items-center">
       <div className="sm:hidden">
         <button
           onClick={openNavClick}

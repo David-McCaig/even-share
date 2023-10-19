@@ -23,14 +23,14 @@ function CreateGroupModal() {
   const [groupMemberEmails, setGroupMemberEmails] = useState([""]);
   const [open, setOpen] = useState(false);
 
-  const [setAddGroup] = useSetAddGroupMutation()
+  const [setAddGroup] = useSetAddGroupMutation();
 
   const openModalClick = () => {
-    setOpen(true)
+    setOpen(true);
     formik.values.groupName = "";
     formik.values.emails = [""];
     setGroupMemberEmails([""]);
-  }
+  };
 
   const addGroupMember = () => {
     setGroupMemberEmails([...groupMemberEmails, ""]);
@@ -70,9 +70,9 @@ function CreateGroupModal() {
     setAddGroup({
       user_group_email: emailArray,
       user_group_name: groupName,
-    })
+    });
     setGroupMemberEmails([""]);
-    setOpen(false)
+    setOpen(false);
   };
 
   return (
@@ -107,7 +107,7 @@ function CreateGroupModal() {
           <div className="grid gap-4 py-4">
             {groupMemberEmails.map((email, index) => (
               <div key={index}>
-                <div className="flex items-center gap-4" >
+                <div className="flex items-center gap-4">
                   <Label className="text-right">Email</Label>
                   <Input
                     name={`emails[${index}]`}
@@ -137,7 +137,7 @@ function CreateGroupModal() {
             ))}
           </div>
           <DialogFooter>
-            <Button type="button" onClick={addGroupMember}>
+            <Button type="button" className="mt-2 sm:mt-0" onClick={addGroupMember}>
               Add Group Member
             </Button>
             <Button type="submit">Create Group</Button>
