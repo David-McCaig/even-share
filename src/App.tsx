@@ -24,7 +24,7 @@ function App() {
     <div
       className={
         !userInfo
-          ? `bg-gradient-to-t from-rose-100 to-teal-100`
+          ? `w-full h-full bg-primary-bg-color text-primary-font-color`
           : `w-full h-full bg-primary-bg-color text-primary-font-color`
       }
     >
