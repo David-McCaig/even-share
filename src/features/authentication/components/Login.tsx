@@ -110,7 +110,7 @@ function LoginPage() {
                     <span className="w-full border-t" />
                   </div>
                   <div className=" relative flex justify-center text-sm uppercase">
-                    <Link to="/signup" className="text-primary-button-color">
+                    <Link to="/signup" className="text-primary-button-color bg-primary-bg-color pl-1.5">
                       Signup
                     </Link>
                     <span className="bg-background px-2 text-muted-foreground z-10 bg-primary-bg-color ">
