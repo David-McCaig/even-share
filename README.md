@@ -1,4 +1,4 @@
-## PartsBin
+## EvenShare
 
 EvenShare is a user-friendly application designed to streamline the process of splitting expenses with others. Users have the flexibility to create groups by simply adding the email addresses of their family or friends. Upon receiving an email invitation to join EvenShare, family and friends can easily sign up and become part of the group.
 
@@ -61,4 +61,12 @@ Start the server on the client side
 
 Now the app should be live! 
 
-For the firebase env variables please email me at davidmccaig1@gmail.com
+## 🧑‍🎓 Lessons Learned
+
+This was a really fun project to work on. I learnt how to use RTK query with Firebase. There’s not a whole lot of information out there at this point since the previous solution was to use Redux and thunks to fetch data with Firebase. Another fun problem to solve was figuring out how to set up pagination with RTK query which presented some challenges. Firebase has created this relatively easy to use pagination system that uses the full snapshot that Firebase sends you. This presented a bit of a challenge because RTK Query doesn’t like it when you send around non serialized data like a snapshot. There is a solution out there where you can use a middle wear with RTK query which essentially prevents the error message from showing but this solution is not recommended for Redux. In the end I set up variables outside of my slice that I was able to update. I think if I were to rebuild this project I would have probably set up a Node.js server on the backend with firestore. Currently I’m performing all of the calculations on the front end. By setting up Node.js on the backend I could move all calculations to the backend improving performance making the application more scalable. Other fun things I got to dive into with this project was thinking a little more about my bundle size. In the end the bundle size of the app was 1.3mb. Originally I was using Ant design icons which has a bundle size of about 744 kb’s. Unfortunately even if you’re only using a couple icons the tree shaking with webpack doesn’t work on this library. There are solutions to this issue using lazy loading but I opted to import individual svg’s since I was only using about 10 or so. All in all this reduced the bundle size a decent amount.
+
+## 🧭 Roadmap
+
+- Set up email notification using SendGrid.
+
+- Set up Stripe payements so users can pay eachother through the app.
