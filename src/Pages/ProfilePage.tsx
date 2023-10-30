@@ -2,9 +2,9 @@ import Profile from "../features/profile/index";
 
 function ProfilePage() {
   return (
-    <div className="w-full">
+    <section className="w-full">
       <Profile />
-    </div>
+    </section>
   );
 }
 

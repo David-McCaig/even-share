@@ -3,9 +3,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// TODO: Replace the following with your app's Firebase project configuration
-// See: https://firebase.google.com/docs/web/learn-more#config-object
-
 const firebaseConfig = {
   apiKey: 'AIzaSyCzKpSc68iGDFaGNP0VIvhYGab48loEkd4',
   authDomain: 'split-bill-427e2.firebaseapp.com',

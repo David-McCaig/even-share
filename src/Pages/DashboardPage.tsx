@@ -4,10 +4,10 @@ import Dashboard from "../features/dashboard/index"
 function DashboardPage() {
   
   return (
-    <div className="w-full bg-primary">
+    <main className="w-full bg-primary">
       <TopBar currentPage="Dashboard" />
       <Dashboard/>
-    </div>
+    </main>
   );
 }
 

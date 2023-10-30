@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useDispatchGroupID } from "../../features/groupexpense/hooks/useDispatchGroupID";
-import { usePagination } from "../../features/groupexpense/hooks/usePagination";
+import { usePagination } from "../../hooks/usePagination";
 import {
   useFetchExpensesForGroupQuery,
   useFetchPaginatedExpensesForGroupQuery,

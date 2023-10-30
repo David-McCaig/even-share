@@ -4,18 +4,19 @@ import { selectUser } from "../features/authentication/userSlice";
 import { useFetchUserGroupsQuery } from "../features/groupexpense/groupexpenseTableSlice";
 import { useFetchRecentActivityQuery } from "../features/recentactivity/recentActivitySlice";
 import { useFetchRecentActivityPaginationQuery } from "../features/recentactivity/recentActivitySlice";
-import { usePagination } from "../features/groupexpense/hooks/usePagination";
+import { usePagination } from "../hooks/usePagination";
 import { selectExpenseIcon } from "../utils/selectExpenseIcon";
+import { getFormattedDate } from "../utils/utils";
+import { UserGroup } from "../types";
 import ExpenseTableRow from "../features/groupexpense/Components/ExpenseTableRow";
 import BalanceSummary from "../features/balancesummary/index";
 import TopBar from "../Components/TopBar";
-import { getFormattedDate } from "../utils/utils";
-import { UserGroup } from "../types";
 import { Button } from "../Components/ui/button";
 
 function RecentActivityPage() {
   const { email, displayName } = useAppSelector(selectUser);
   const { data: groupId } = useFetchUserGroupsQuery(email);
+
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
 
   const {
@@ -44,8 +45,10 @@ function RecentActivityPage() {
     paginationFetch();
   };
 
+  //custom hook for pagination
   usePagination(recentActivityPagination || [], setExpensesArray);
 
+  //error handling
   if (recentActivityisError || paginationisError) {
     console.error(recentActivityError || paginationError);
     return (
@@ -58,14 +61,13 @@ function RecentActivityPage() {
   }
 
   return (
-    <div className="w-full">
-       <TopBar currentPage={"Recent Activity"} />
+    <section className="w-full">
+      <TopBar currentPage={"Recent Activity"} />
       <div className="lg:hidden">
         <BalanceSummary />
       </div>
       {expensesArray?.map((expense, i) => (
         <div key={i}>
-          
           <ExpenseTableRow
             expenseIcon={selectExpenseIcon(expense?.user_expense_description)}
             expenseDescription={expense?.user_expense_description}
@@ -91,7 +93,7 @@ function RecentActivityPage() {
           {isFetching ? "Loading..." : "Show more"}
         </Button>
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { UserGroup } from "../../../types";
+import { UserGroup } from "../types";
 
 
 export const usePagination = (nextGroupExpenses: UserGroup[], setNextGroupExpenses: React.Dispatch<React.SetStateAction<UserGroup[]>>) => {

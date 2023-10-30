@@ -105,8 +105,6 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
                   },
                 } as UserGroup);
               });
-
-              // expensesArray = [...expensesArray, ...nextExpenseArray];
               return { data: nextExpenseArray };
             } else {
               pagination = querySnapshot.docs[querySnapshot.docs.length - 1];
@@ -123,7 +121,6 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
                   },
                 } as UserGroup);
               });
-              // expensesArray = [...expensesArray, ...expenseArray];
               return { data: expenseArray };
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
