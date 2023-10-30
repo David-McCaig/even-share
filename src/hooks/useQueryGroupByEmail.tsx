@@ -4,7 +4,7 @@ import { db } from "../firebase/firebaseconfig"
 import { selectUser } from "../features/authentication/userSlice"
 
 
-
+//get all groups related to user
 export const useQueryGroupByEmail = () => {
     const userInfo = useAppSelector(selectUser)
     const userGroupRef = collection(db, "userGroups");
