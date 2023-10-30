@@ -50,10 +50,11 @@ function Index() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, groupExpensesData]);
 
-  const nextPageClick = () => {
+  // Handler for clicking the "Show more" button
+  const showMoreClick = () => {
     fetchNextPage();
   };
-
+  // Custom hook for handling pagination
   usePagination(nextGroupExpenses || [], setGroupExpenses);
 
   if (expensesIsError || nextExpenseIsError) {
@@ -97,7 +98,7 @@ function Index() {
         <div className="w-full flex justify-center mt-4">
           <Button
             className="bg-gray-200 w-40 text-black hover:bg-gray-300 "
-            onClick={nextPageClick}
+            onClick={showMoreClick}
           >
             {isFetching ? "Loading..." : "Show more"}
           </Button>

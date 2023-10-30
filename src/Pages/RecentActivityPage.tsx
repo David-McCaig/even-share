@@ -87,12 +87,13 @@ function RecentActivityPage() {
       ))}
       <div className="w-full flex justify-center mt-4">
         <Button
-          className="bg-gray-200 w-40 text-black hover:bg-gray-300 "
+          className="bg-gray-200 w-40 text-black hover:bg-gray-300"
           onClick={nextPageClick}
         >
           {isFetching ? "Loading..." : "Show more"}
         </Button>
       </div>
+      <div className="h-4"></div>
     </section>
   );
 }

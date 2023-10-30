@@ -21,6 +21,7 @@ import {
 } from "../../../Components/ui/dialog";
 
 function AddExpenseModal() {
+  // Create a timestamp for the current date and time
   const createdAt = {
     seconds: Timestamp.now().seconds,
     nanoseconds: Timestamp.now().nanoseconds,
@@ -70,12 +71,13 @@ function AddExpenseModal() {
         settledUp: false,
         createdAt,
       });
-      setOpen(false);
+      setOpen(false); // Close the modal after submission
     },
     validateOnChange: false,
     validateOnBlur: false,
   });
-
+  
+  // Handler for selecting a group from the dropdown menu
   const handleGroupChange = (selectedData: { id: string }) => {
     formik.setFieldValue("groupId", selectedData.id);
   };
