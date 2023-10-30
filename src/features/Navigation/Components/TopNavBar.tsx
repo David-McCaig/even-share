@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   useAppDispatch,
   useAppSelector,
@@ -86,10 +86,12 @@ export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
           </button>
         </aside>
       </div>
+      <Link to={"/"} >
       <img
         src={evenShareLogo}
         className="sm:ml-6 w-20 object-contain lg:ml-4"
       />
+      </Link>
       <div className="flex sm:gap-2 bg-primary-bg-color">
         <Avatar>
           <AvatarImage src={userDisplayImage} />

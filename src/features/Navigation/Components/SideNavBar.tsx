@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { useFetchUserGroupsQuery } from "../../groupexpense/groupexpenseTableSlice";
+import { useNavigateHome } from "./hooks/useNavigateHome";
 import { selectUser } from "../../authentication/userSlice";
 import  menuToggle  from "../../../assets/icons/expenseicons/menu-outline.svg";
 import CreateGroupModal from "./CreateGroupModal";
@@ -30,9 +32,13 @@ function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
   const userEmail = userInfo?.email;
   const { data } = useFetchUserGroupsQuery(userEmail);
 
+  const location = useLocation()?.pathname
+
   const closeNavClick = () => {
     !showNavBar && setShowNavBar(true);
   };
+  //navigate back to home page when user clicks evenShare logo
+  useNavigateHome(location,setActiveLink)
 
   return (
     <nav className="z-40">
@@ -51,7 +57,6 @@ function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
               <li>
                 <Link
                   className={`flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/" ? "text-primary-button-color" : "text-primary-font-color"}`}
-                  onClick={() => setActiveLink("/")}
                   to={"/"}
                 >
                   <DashboardIcon className="w-6 h-6 " />

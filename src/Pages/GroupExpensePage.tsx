@@ -3,7 +3,7 @@ import GroupExpenseComponent from "../features/groupexpense/index.tsx";
 function GroupExpensePage() {
 
   return (
-    <section>
+    <section className="w-full">
       <GroupExpenseComponent />
     </section>
   );
