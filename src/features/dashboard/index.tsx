@@ -5,12 +5,12 @@ function DashBoard() {
   const { totalUserExpensesData } = useCreateDataStructureForUserTotals();
 
   return (
-    <div className="w-full flex flex-col items-center ">
-      <div className="h-16 w-full flex justify-around items-center border-b-[.5px] border-slate-300 sm:px-6 xl:w-[32rem] ">
+    <main className="w-full flex flex-col items-center ">
+      <header className="h-16 w-full flex justify-around items-center border-b-[.5px] border-slate-300 sm:px-6 xl:w-[32rem] ">
         <h3 className="my-4 font-medium text-xl">
           Group Expense Contributions
         </h3>
-      </div>
+      </header>
       {totalUserExpensesData?.map((groupData) => (
         <div key={groupData.id}>
           <PieChart
@@ -34,7 +34,7 @@ function DashBoard() {
           />
         </div>
       ))}
-    </div>
+    </main>
   );
 }
 

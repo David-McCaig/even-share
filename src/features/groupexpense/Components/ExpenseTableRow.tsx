@@ -37,7 +37,7 @@ function ExpenseTableRow({
   };
 
   return (
-    <div className="">
+    <article className="">
       <div className="pr-4 bg-primary-bg-color text-primary-font-color border shadow-md dark:bg-gray-800 dark:border-gray-700 ">
         <div className="flow-root">
           <ul
@@ -85,7 +85,7 @@ function ExpenseTableRow({
           </ul>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 

@@ -70,7 +70,7 @@ function Index() {
 
   return (
     <>
-      <div className="w-full">
+      <article className="w-full">
         <TopBar currentPage={"Group"} />
         <div className="lg:hidden">
           <BalanceSummary />
@@ -103,7 +103,7 @@ function Index() {
             {isFetching ? "Loading..." : "Show more"}
           </Button>
         </div>
-      </div>{" "}
+      </article>{" "}
     </>
   );
 }
