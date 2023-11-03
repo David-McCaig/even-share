@@ -18,7 +18,7 @@ function BalanceSummaryAllGroups() {
   }
 
   return (
-    <>
+    <article>
       {Object.keys(groupedExpenses).map((groupName) => (
         <div key={groupName}>
           <h3 className="mt-2 ml-4 text-neutral-500 font-semibold text-lg mb-2">
@@ -35,7 +35,7 @@ function BalanceSummaryAllGroups() {
           )}
         </div>
       ))}
-    </>
+    </article>
   );
 }
 

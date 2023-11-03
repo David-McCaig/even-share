@@ -7,7 +7,7 @@ function BalanceSummaryGroup() {
     const { balanceArray } = useCalculateBalanceSummary(groupId);
 
   return (
-    <>
+    <article>
     {balanceArray?.map((expense, i) => (
       <div key={i}>
         <BalanceSummaryCard
@@ -16,7 +16,7 @@ function BalanceSummaryGroup() {
         />
       </div>
     ))}
-  </>
+  </article>
   )
 }
 

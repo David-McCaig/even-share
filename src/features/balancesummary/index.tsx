@@ -5,7 +5,7 @@ import BalanceSummaryAllGroups from "./Component/BalanceSummaryAllGroups";
 function Index() {
   const location = useLocation();
   return (
-    <>
+    <section>
       {location.pathname === "/recentactivity" || location.pathname === "/" || location.pathname === "/profile" ? (
         <>
           <BalanceSummaryAllGroups />
@@ -15,7 +15,7 @@ function Index() {
           <BalanceSummaryGroup />
         </>
       )}
-    </>
+    </section>
   );
 }
 
