@@ -19,6 +19,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../Components/ui/dialog";
+import {
+  addDoc,
+  collection,
+  getDocs
+} from "firebase/firestore";
+import { db } from "../../../firebase/firebaseconfig";
+import { query, where } from "firebase/firestore";
 
 function AddExpenseModal() {
   // Create a timestamp for the current date and time
@@ -29,7 +36,8 @@ function AddExpenseModal() {
 
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
-  useFetchUserGroupsQuery(userEmail);
+  const {data:userExpenseGroups} = useFetchUserGroupsQuery(userEmail);
+  console.log(userExpenseGroups)
 
   const [userExpenseName] = useState(userInfo.displayName);
 
@@ -62,6 +70,8 @@ function AddExpenseModal() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      const expenseGroupsArray = userExpenseGroups?.find((group) => group.id === values.groupId)?.user_group_email
+      
       const userExpenseAmountNumber = parseFloat(values.userExpenseAmount);
       setAddExpenseToGroup({
         groupId: values.groupId,
@@ -70,6 +80,7 @@ function AddExpenseModal() {
         userExpenseName,
         settledUp: false,
         createdAt,
+        expenseGroupsArray,
       });
       setOpen(false); // Close the modal after submission
     },

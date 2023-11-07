@@ -22,6 +22,8 @@ export interface UserGroup {
   user_expense_amount: number;
   user_expense_name: string;
   settled_up: boolean;
+  expenseGroupsArray:string[]
+  user_group_email:string[]
   created_at: {
     nanoseconds: number;
     seconds: number;

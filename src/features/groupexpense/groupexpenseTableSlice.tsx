@@ -177,6 +177,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
         userExpenseName,
         settledUp,
         createdAt,
+        expenseGroupsArray,
       }) {
         try {
           const loadingToast = toast.loading("Adding expense...");
@@ -189,6 +190,49 @@ export const scoresApi = firestoreApi.injectEndpoints({
             user_expense_name: userExpenseName,
             settled_up: settledUp,
             created_at: createdTimestamp,
+          });
+          console.log(expenseGroupsArray);
+
+          const postRecentExpenses = async (userEmail: string) => {
+            const userRef = collection(db, "recentExpenses");
+            const queryUser = query(
+              userRef,
+              where("user_email", "==", userEmail)
+            );
+            const userDocs = await getDocs(queryUser);
+
+            if (userDocs.docs[0]?.id === undefined) {
+              // Document doesn't exist, create a new document with user_email
+              const newUserDocRef = await addDoc(userRef, {
+                user_email: userEmail,
+              });
+              // Now, create the "expenses" subcollection and add the expense
+              const expensesRef = collection(newUserDocRef, "expenses");
+              await addDoc(expensesRef, {
+                user_expense_amount: userExpenseAmountNumber,
+                user_expense_description: userExpenseDescription,
+                user_expense_name: userExpenseName,
+                settled_up: settledUp,
+                created_at: createdTimestamp,
+              });
+            } else {
+              const expensesRef = collection(
+                db,
+                "recentExpenses",
+                userDocs.docs[0].id,
+                "expenses"
+              );
+              addDoc(expensesRef, {
+                user_expense_amount: userExpenseAmountNumber,
+                user_expense_description: userExpenseDescription,
+                user_expense_name: userExpenseName,
+                settled_up: settledUp,
+                created_at: createdTimestamp,
+              });
+            }
+          };
+          expenseGroupsArray.forEach((email: string) => {
+            postRecentExpenses(email);
           });
           toast.dismiss(loadingToast);
           toast.success("Expense added");
@@ -204,12 +248,12 @@ export const scoresApi = firestoreApi.injectEndpoints({
     deleteExpenseGroup: builder.mutation({
       async queryFn({ groupId, expenseId }) {
         try {
-          const loadingToast = toast.loading("Deleting expense...")
+          const loadingToast = toast.loading("Deleting expense...");
           await deleteDoc(
             doc(db, `userGroups/${groupId}/expenses/${expenseId}`)
           );
-          toast.dismiss(loadingToast)
-          toast.success("Expense deleted")
+          toast.dismiss(loadingToast);
+          toast.success("Expense deleted");
           return { data: null };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
