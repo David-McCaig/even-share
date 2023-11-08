@@ -2,6 +2,9 @@ import { MoreHorizontal } from "lucide-react";
 import { useParams } from "react-router";
 import { useDeleteExpenseGroupMutation } from "../groupexpenseTableSlice";
 import { Button } from "../../../Components/ui/button";
+import { useFetchUserGroupsQuery } from "../groupexpenseTableSlice";
+import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
+import { selectUser } from "../../authentication/userSlice";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,11 +32,15 @@ function ExpenseTableRow({
   expenseIcon,
 }: ExpenseTableRowProps) {
   const groupId = useParams()?.id;
+  const userEmail = useAppSelector(selectUser)?.email;
+
+  const {data:userExpenseGroups} = useFetchUserGroupsQuery(userEmail);
+  const expenseGroupsArray = userExpenseGroups?.find((group) => group.id === groupId)?.user_group_email
 
   const [deleteExpense] = useDeleteExpenseGroupMutation();
 
   const deleteExpenseClick = async () => {
-    deleteExpense({ groupId, expenseId });
+    deleteExpense({ groupId, expenseId, expenseGroupsArray });
   };
 
   return (

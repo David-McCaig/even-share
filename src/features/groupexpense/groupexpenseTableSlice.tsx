@@ -9,6 +9,7 @@ import {
   limit,
   orderBy,
   startAfter,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
 import { query, where, Timestamp } from "firebase/firestore";
@@ -178,20 +179,31 @@ export const scoresApi = firestoreApi.injectEndpoints({
         settledUp,
         createdAt,
         expenseGroupsArray,
+        recentActivityId,
       }) {
         try {
-          const loadingToast = toast.loading("Adding expense...");
-
           const { seconds, nanoseconds } = createdAt;
           const createdTimestamp = new Timestamp(seconds, nanoseconds);
-          await addDoc(collection(db, `userGroups/${groupId}/expenses`), {
+
+          const expenseData = {
             user_expense_amount: userExpenseAmountNumber,
             user_expense_description: userExpenseDescription,
             user_expense_name: userExpenseName,
             settled_up: settledUp,
             created_at: createdTimestamp,
+            delete_expense: false,
+          };
+
+          const loadingToast = toast.loading("Adding expense...");
+
+          const expenseRef = doc(
+            collection(db, `userGroups/${groupId}/expenses`),
+            recentActivityId
+          );
+
+          await setDoc(expenseRef, {
+            ...expenseData,
           });
-          console.log(expenseGroupsArray);
 
           const postRecentExpenses = async (userEmail: string) => {
             const userRef = collection(db, "recentExpenses");
@@ -199,21 +211,20 @@ export const scoresApi = firestoreApi.injectEndpoints({
               userRef,
               where("user_email", "==", userEmail)
             );
+
             const userDocs = await getDocs(queryUser);
 
             if (userDocs.docs[0]?.id === undefined) {
               // Document doesn't exist, create a new document with user_email
-              const newUserDocRef = await addDoc(userRef, {
+              const newUserDocRef = doc(userRef); // No custom ID for userDoc
+              await setDoc(newUserDocRef, {
                 user_email: userEmail,
               });
-              // Now, create the "expenses" subcollection and add the expense
+
+              // Now, create the "expenses" subcollection and add the expense with a custom ID
               const expensesRef = collection(newUserDocRef, "expenses");
-              await addDoc(expensesRef, {
-                user_expense_amount: userExpenseAmountNumber,
-                user_expense_description: userExpenseDescription,
-                user_expense_name: userExpenseName,
-                settled_up: settledUp,
-                created_at: createdTimestamp,
+              await setDoc(doc(expensesRef, recentActivityId), {
+                ...expenseData,
               });
             } else {
               const expensesRef = collection(
@@ -222,12 +233,8 @@ export const scoresApi = firestoreApi.injectEndpoints({
                 userDocs.docs[0].id,
                 "expenses"
               );
-              addDoc(expensesRef, {
-                user_expense_amount: userExpenseAmountNumber,
-                user_expense_description: userExpenseDescription,
-                user_expense_name: userExpenseName,
-                settled_up: settledUp,
-                created_at: createdTimestamp,
+              await setDoc(doc(expensesRef, recentActivityId), {
+                ...expenseData,
               });
             }
           };
@@ -246,12 +253,32 @@ export const scoresApi = firestoreApi.injectEndpoints({
       invalidatesTags: ["groupExpense", "recentActivity"],
     }),
     deleteExpenseGroup: builder.mutation({
-      async queryFn({ groupId, expenseId }) {
+      async queryFn({ groupId, expenseId, expenseGroupsArray }) {
         try {
           const loadingToast = toast.loading("Deleting expense...");
           await deleteDoc(
             doc(db, `userGroups/${groupId}/expenses/${expenseId}`)
           );
+          const deleteDocFromRecentExpenses = async (userEmail: string) => {
+            const userRef = collection(db, "recentExpenses");
+            const queryUser = query(
+              userRef,
+              where("user_email", "==", userEmail)
+            );
+            const userDocs = await getDocs(queryUser);
+
+            await deleteDoc(
+              doc(
+                db,
+                `recentExpenses/${userDocs.docs[0].id}/expenses/${expenseId}`
+              )
+            );
+          };
+
+          expenseGroupsArray.forEach((email: string) => {
+            deleteDocFromRecentExpenses(email);
+          });
+
           toast.dismiss(loadingToast);
           toast.success("Expense deleted");
           return { data: null };

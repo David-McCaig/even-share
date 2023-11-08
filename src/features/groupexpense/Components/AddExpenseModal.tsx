@@ -6,6 +6,7 @@ import { useSetAddExpenseToGroupMutation } from "../groupexpenseTableSlice";
 import { Timestamp } from "firebase/firestore";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { v4 as uuid } from "uuid"
 import DropDownMenu from "../../../Components/DropDownMenu";
 import { Button } from "../../../Components/ui/button";
 import { Input } from "../../../Components/ui/input";
@@ -22,6 +23,7 @@ import {
 
 
 function AddExpenseModal() {
+  const recentActivityId = uuid()
   // Create a timestamp for the current date and time
   const createdAt = {
     seconds: Timestamp.now().seconds,
@@ -31,7 +33,7 @@ function AddExpenseModal() {
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
   const {data:userExpenseGroups} = useFetchUserGroupsQuery(userEmail);
-  console.log(userExpenseGroups)
+ 
 
   const [userExpenseName] = useState(userInfo.displayName);
 
@@ -75,6 +77,7 @@ function AddExpenseModal() {
         settledUp: false,
         createdAt,
         expenseGroupsArray,
+        recentActivityId
       });
       setOpen(false); // Close the modal after submission
     },
