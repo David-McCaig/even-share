@@ -15,6 +15,7 @@ import RecentActivityPage from "./Pages/RecentActivityPage.tsx";
 import ProfilePage from "./Pages/ProfilePage.tsx";
 import BalanceSummaryColumn from "./features/balancesummary/Component/BalanceSummaryColumn.tsx";
 
+
 function App() {
   const [showNavBar, setShowNavBar] = useState<boolean>(true);
 

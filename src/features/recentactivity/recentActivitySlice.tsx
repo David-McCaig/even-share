@@ -24,16 +24,16 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
           collection(db, "recentExpenses"),
           where("user_email", "==", email)
         );
-
+        
         try {
           const querySnap = await getDocs(q);
-          console.log(querySnap.docs[0].id);
           const first = query(
             collection(db, `recentExpenses/${querySnap.docs[0].id}/expenses`),
             orderBy("created_at", "desc"),
             limit(9)
           );
           const querySnapshot = await getDocs(first);
+         
           pagination = querySnapshot.docs[querySnapshot.docs.length - 1];
           const expenseArray: UserGroups = [];
           querySnapshot?.forEach((doc) => {
@@ -48,7 +48,6 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
               },
             } as UserGroup);
           });
-          console.log(expenseArray);
 
           return { data: expenseArray };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -67,7 +67,6 @@ function Index() {
       </div>
     );
   }
-
   return (
     <>
       <article className="w-full">

@@ -25,7 +25,7 @@ function RecentActivityPage() {
     isError: recentActivityisError,
     error: recentActivityError,
   } = useFetchRecentActivityQuery(email);
-  console.log(email)
+ 
   const {
     data: recentActivityPagination,
     refetch: paginationFetch,
