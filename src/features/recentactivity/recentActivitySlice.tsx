@@ -30,7 +30,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
           console.log(querySnap.docs[0].id);
           const first = query(
             collection(db, `recentExpenses/${querySnap.docs[0].id}/expenses`),
-            orderBy("created_at", "asc"),
+            orderBy("created_at", "desc"),
             limit(9)
           );
           const querySnapshot = await getDocs(first);
@@ -70,13 +70,13 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
           try {
             if (!pagination) return { data: [] };
             const querySnap = await getDocs(q);
-            console.log(querySnap.docs[0].id);
+            
             const next = query(
               collection(
                 db,
                 `recentExpenses/${querySnap.docs[0].id}/expenses`
               ),
-              orderBy("created_at", "asc"),
+              orderBy("created_at", "desc"),
               startAfter(pagination),
               limit(4)
             );

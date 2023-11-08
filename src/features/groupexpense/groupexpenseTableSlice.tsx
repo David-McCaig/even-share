@@ -243,7 +243,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
           return { error: error.message };
         }
       },
-      invalidatesTags: ["groupExpense"],
+      invalidatesTags: ["groupExpense", "recentActivity"],
     }),
     deleteExpenseGroup: builder.mutation({
       async queryFn({ groupId, expenseId }) {
