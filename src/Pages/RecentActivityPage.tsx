@@ -24,15 +24,15 @@ function RecentActivityPage() {
     refetch: refetchRecentActivity,
     isError: recentActivityisError,
     error: recentActivityError,
-  } = useFetchRecentActivityQuery(groupId);
-
+  } = useFetchRecentActivityQuery(email);
+  console.log(email)
   const {
     data: recentActivityPagination,
     refetch: paginationFetch,
     isFetching,
     isError: paginationisError,
     error: paginationError,
-  } = useFetchRecentActivityPaginationQuery(groupId);
+  } = useFetchRecentActivityPaginationQuery(email);
 
   useEffect(() => {
     if (recentActivity) {

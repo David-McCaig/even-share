@@ -19,13 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../Components/ui/dialog";
-import {
-  addDoc,
-  collection,
-  getDocs
-} from "firebase/firestore";
-import { db } from "../../../firebase/firebaseconfig";
-import { query, where } from "firebase/firestore";
+
 
 function AddExpenseModal() {
   // Create a timestamp for the current date and time
