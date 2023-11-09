@@ -9,7 +9,8 @@ import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balanceSummarySl
 import { useFetchUserGroupsQuery } from "../../groupexpense/groupexpenseTableSlice";
 
 export const useCalculateAllBalanceSummary = () => {
-    const [allBalanceSummary, setAllBalanceSummary] = useState<(BalanceSummary)[]>([]);
+    const [allBalanceSummary, setAllBalanceSummary] = useState<BalanceSummary[]>([]);
+
     const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
 
     const user = useAppSelector(selectUser);
@@ -27,7 +28,8 @@ export const useCalculateAllBalanceSummary = () => {
             const userObject = createUserObject(currentGroupExpenses, user.displayName);
             const result = calculateOwes(userObject, user.displayName);
             const balanceSummaryStatement = generateBalanceSummaryStatement(result, currentGroupId, currentName);
-            setAllBalanceSummary(prev => [...prev, ...balanceSummaryStatement]);
+            setAllBalanceSummary((prevState) => [...prevState, ...balanceSummaryStatement]);
+
             // Move to the next group
             if (currentGroupIndex < (userGroups?.length || 0) - 1) {
                 setCurrentGroupIndex(prev => prev + 1);

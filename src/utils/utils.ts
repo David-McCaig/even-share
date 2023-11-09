@@ -1,16 +1,12 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { UserGroups } from "../types";
-import { People } from "../types.tsx"
+import { People, BalanceSummary } from "../types.tsx"
 
 interface Transaction {
   from: string;
   to: string;
   amount: number;
-}
-interface BalanceSummary {
-  userString: string;
-  userNumber: number;
 }
  
 export function cn(...inputs: ClassValue[]) {

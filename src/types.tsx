@@ -12,7 +12,7 @@ export interface AuthValues {
 export interface BalanceSummary {
   userString: string;
   userNumber: number;
-  groupId: string;
+  groupId?: any;
 }
 
 export interface UserGroup {
