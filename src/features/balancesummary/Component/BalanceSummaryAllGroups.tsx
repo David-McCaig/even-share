@@ -1,4 +1,3 @@
-import { Key } from "react";
 import { useCalculateAllBalanceSummary } from "../hooks/useCalculateAllBalanceSummary";
 import BalanceSummaryCard from "./BalanceSummaryCard";
 import { GroupExpenses } from "../../../types";
@@ -24,15 +23,14 @@ function BalanceSummaryAllGroups() {
           <h3 className="mt-2 ml-4 text-neutral-500 font-semibold text-lg mb-2">
             {groupName}
           </h3>
-          {groupedExpenses[groupName].map(
-            (expense: GroupExpenses, i: Key | null | undefined) => (
-              <BalanceSummaryCard
-                key={i}
-                userName={expense.userString}
-                userAmount={expense.userNumber || 0}
-              />
-            )
-          )}
+          {groupedExpenses[groupName].map((expense: GroupExpenses) => (
+            <div className="mb-2" key={expense?.groupId}>
+            <BalanceSummaryCard
+              userName={expense?.userString}
+              userAmount={expense?.userNumber || 0}
+            />
+            </div>
+          ))}
         </div>
       ))}
     </article>

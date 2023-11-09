@@ -25,7 +25,7 @@ function RecentActivityPage() {
     isError: recentActivityisError,
     error: recentActivityError,
   } = useFetchRecentActivityQuery(email);
- 
+
   const {
     data: recentActivityPagination,
     refetch: paginationFetch,
@@ -66,8 +66,8 @@ function RecentActivityPage() {
       <div className="lg:hidden">
         <BalanceSummary />
       </div>
-      {expensesArray?.map((expense, i) => (
-        <div key={i}>
+      {expensesArray?.map((expense) => (
+        <div key={expense.id}>
           <ExpenseTableRow
             expenseIcon={selectExpenseIcon(expense?.user_expense_description)}
             expenseDescription={expense?.user_expense_description}

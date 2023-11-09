@@ -12,6 +12,7 @@ export interface AuthValues {
 export interface BalanceSummary {
   userString: string;
   userNumber: number;
+  groupId: string;
 }
 
 export interface UserGroup {
@@ -40,6 +41,7 @@ export interface Values {
 export interface GroupExpenses {
   userString: string; 
   userNumber: number;
+  groupId: string
 }
 
 interface UserTotalsArray {
@@ -51,4 +53,15 @@ export interface UserGroupTotals {
 id: string;
 user_group_name:string;
 user_group_totals: UserTotalsArray[];
+}
+
+export interface People {
+  name: string;
+  expenses: number[];
+}
+
+export interface Transaction {
+  from: string;
+  to: string;
+  amount: number;
 }

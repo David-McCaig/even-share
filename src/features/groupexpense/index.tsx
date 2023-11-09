@@ -41,7 +41,7 @@ function Index() {
     isError: nextExpenseIsError,
     error: nextExpenseError,
   } = useFetchPaginatedExpensesForGroupQuery(id);
-
+      
   useEffect(() => {
     if (groupExpensesData) {
       setGroupExpenses(groupExpensesData);
@@ -52,7 +52,7 @@ function Index() {
 
   // Handler for clicking the "Show more" button
   const showMoreClick = () => {
-    fetchNextPage();
+    fetchNextPage(); 
   };
   // Custom hook for handling pagination
   usePagination(nextGroupExpenses || [], setGroupExpenses);

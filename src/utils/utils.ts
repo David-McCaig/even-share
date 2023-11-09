@@ -1,27 +1,13 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
-interface UserGroup {
-  id: string;
-  user_group_id: string;
-  user_group_name: string;
-  user_expense_description: string;
-  user_expense_amount: number;
-  user_expense_name: string;
-}
-
-type UserGroups = UserGroup[];
-
-interface People {
-  name: string;
-  expenses: number[];
-}
+import { UserGroups } from "../types";
+import { People } from "../types.tsx"
 
 interface Transaction {
   from: string;
   to: string;
   amount: number;
 }
-
 interface BalanceSummary {
   userString: string;
   userNumber: number;
@@ -102,17 +88,20 @@ export   function calculateOwes(people: People[], displayName: string) {
 
 export const generateBalanceSummaryStatement = <T extends Transaction>(
   transactions: T[],
-  id?:string,
+  id?:any,
   currentName?:string
 ): BalanceSummary[] => {
-  const results = transactions.map((transaction) =>
+  
+  const intId = parseInt(id)
+  
+  const results = transactions.map((transaction,i) =>
     transaction.from === "You"
       ? {
           userString: `${transaction.from?.split(" ")[0]} owe ${
             transaction.to
           }`,
           userNumber: parseInt(transaction.amount.toFixed(2)),
-          groupId: id,
+          groupId: intId ? intId+i : i,
           groupName: currentName,
         }
       : {
@@ -120,12 +109,12 @@ export const generateBalanceSummaryStatement = <T extends Transaction>(
             transaction.to
           }`,
           userNumber: parseInt(transaction.amount.toFixed(2)),
-          groupId: id,
+          groupId: intId ? intId+i : i,
           groupName: currentName,
         }
   );
 
-  return results.length > 0 ? results : [{userString: "All people are settled up", userNumber: 0, groupId: id,
+  return results.length > 0 ? results : [{userString: "All people are settled up", userNumber: 0, groupId: intId,
   groupName:currentName}];
 };
 

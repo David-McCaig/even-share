@@ -49,7 +49,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
         try {
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
-            orderBy("created_at", "asc"),
+            orderBy("created_at", "desc"),
             limit(9),
             where("settled_up", "==", false)
           );
@@ -86,7 +86,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
 
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
-            orderBy("created_at", "asc"),
+            orderBy("created_at", "desc"),
             limit(4),
             where("settled_up", "==", false),
             startAfter(groupSnapshotArray)
