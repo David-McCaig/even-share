@@ -15,43 +15,47 @@ import RecentActivityPage from "./Pages/RecentActivityPage.tsx";
 import ProfilePage from "./Pages/ProfilePage.tsx";
 import BalanceSummaryColumn from "./features/balancesummary/Component/BalanceSummaryColumn.tsx";
 
+
 function App() {
   const [showNavBar, setShowNavBar] = useState<boolean>(true);
 
   const userInfo = useAppSelector(selectUser);
 
   return (
-    <div className="w-full h-full bg-primary-bg-color text-primary-font-color">
-      {userInfo && <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />}
+    <div
+      className="w-full h-full bg-primary-bg-color text-primary-font-color">
+      {userInfo && (
+        <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
+      )}
       <div className="border-b-[.5px]"></div>
       <div className="flex m-auto h-full max-w-5xl">
         {userInfo && <SideNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />}
         <Routes>
           <Route
-            path="login"
-            element={userInfo ? <Navigate to="/app" /> : <Login />}
+            path="/login"
+            element={userInfo ? <Navigate to="/" /> : <Login />}
           />
           <Route
-            path="signup"
-            element={userInfo ? <Navigate to="/app" /> : <SignUp />}
+            path="/signup"
+            element={userInfo ? <Navigate to="/" /> : <SignUp />}
           />
           <Route
-            path="dashboard"
-            element={userInfo ? <Dashboard /> : <Navigate to="/app/login" />}
+            path="/"
+            element={userInfo ? <Dashboard /> : <Navigate to="/login" />}
           />
           <Route
-            path="group/:id"
-            element={userInfo ? <GroupExpense /> : <Navigate to="/app/login" />}
+            path="/group/:id"
+            element={userInfo ? <GroupExpense /> : <Navigate to="/login" />}
           />
           <Route
-            path="recentactivity"
+            path="/recentactivity"
             element={
-              userInfo ? <RecentActivityPage /> : <Navigate to="/app/login" />
+              userInfo ? <RecentActivityPage /> : <Navigate to="/login" />
             }
           />
           <Route
-            path="profile"
-            element={userInfo ? <ProfilePage /> : <Navigate to="/app/login" />}
+            path="/profile"
+            element={userInfo ? <ProfilePage /> : <Navigate to="/login" />}
           />
         </Routes>
         {userInfo && (
@@ -65,4 +69,3 @@ function App() {
 }
 
 export default App;
-
