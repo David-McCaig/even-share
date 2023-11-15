@@ -96,7 +96,7 @@ function SettleUpExpenseModal() {
                     </Avatar>
                   </div>
                   <h2 className="text-xl mt-4">
-                    {statement.userString.split("owes").join("paid")}
+                    {statement.userString.split("owe").join("paid")}
                   </h2>
                   <h2 className="text-xl mt-1">{"$" + statement.userNumber}</h2>
                 </div>
