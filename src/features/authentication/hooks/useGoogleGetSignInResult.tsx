@@ -14,7 +14,7 @@ export const useGoogleGetSignInResult = (
         setAuthenticating(true);
         const user = await getRedirectResult(auth)
         if(user) {
-          navigate('/')
+          navigate('/dashboard')
         }
       } catch (err) {
         console.log(err)
