@@ -6,7 +6,7 @@ function Index() {
   const location = useLocation();
   return (
     <section>
-      {location.pathname === "/recentactivity" || location.pathname === "/" || location.pathname === "/profile" ? (
+      {location.pathname === "/recentactivity" || location.pathname === "/dashboard" || location.pathname === "/profile" ? (
         <>
           <BalanceSummaryAllGroups />
         </>

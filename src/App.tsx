@@ -33,14 +33,14 @@ function App() {
         <Routes>
           <Route
             path="/login"
-            element={userInfo ? <Navigate to="/" /> : <Login />}
+            element={userInfo ? <Navigate to="/dashboard" /> : <Login />}
           />
           <Route
             path="/signup"
-            element={userInfo ? <Navigate to="/" /> : <SignUp />}
+            element={userInfo ? <Navigate to="/dashboard" /> : <SignUp />}
           />
           <Route
-            path="/"
+            path="/dashboard"
             element={userInfo ? <Dashboard /> : <Navigate to="/login" />}
           />
           <Route
@@ -69,3 +69,4 @@ function App() {
 }
 
 export default App;
+
