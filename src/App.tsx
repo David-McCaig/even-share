@@ -19,7 +19,7 @@ import BalanceSummaryColumn from "./features/balancesummary/Component/BalanceSum
 function App() {
   const [showNavBar, setShowNavBar] = useState<boolean>(true);
 
-  const userInfo = useAppSelector(selectUser)
+  const userInfo = useAppSelector(selectUser);
 
   return (
     <div
