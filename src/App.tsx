@@ -4,6 +4,7 @@ import { Navigate } from "react-router";
 import { Routes, Route } from "react-router";
 import { useAppSelector } from "./hooks/reduxTypeScriptHooks.tsx";
 import { selectUser } from "./features/authentication/userSlice.tsx";
+import LandingPage from "./Pages/LandingPage.tsx";
 import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
 import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx";
 import Dashboard from "./Pages/DashboardPage.tsx";
@@ -31,6 +32,7 @@ function App() {
       <div className="flex m-auto h-full max-w-5xl">
         {userInfo && <SideNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />}
         <Routes>
+          <Route path="/" element={<LandingPage/>} />
           <Route
             path="/login"
             element={userInfo ? <Navigate to="/dashboard" /> : <Login />}
