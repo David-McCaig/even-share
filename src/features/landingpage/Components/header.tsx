@@ -49,7 +49,7 @@ export default function Header() {
                   to="/login"
                   className="font-medium  w-36 text-gray-900 hover:text-gray-600 px-5 py-3 flex justify-center items-center transition duration-150 ease-in-out"
                 >
-                  Sign in
+                  Log in
                 </Link>
               </li>
               <li>

@@ -1,10 +1,8 @@
 import "../../../App.css"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import phonesImage from "/src/assets/images/phones.png"
 
 export default function Hero() {
-
-  const navigate = useNavigate();
 
   return (
     <section className="relative">
@@ -38,8 +36,8 @@ export default function Hero() {
               <p className="text-xl text-gray-600 mb-8" data-aos="zoom-y-out" data-aos-delay="150">Simplify splitting bills with Evenshare. Your stress free solution for shared expenses!</p>
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center" data-aos="zoom-y-out" data-aos-delay="300">
                 <div>
-                  <Link to="/signup">
-                  <button className="btn text-white bg-gradient-to-r from-[#14b8a6] to-blue-500 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0" onClick={()=> navigate("/signup")}>Start free trial</button>
+                  <Link to="/login">
+                  <button className="btn text-white bg-gradient-to-r from-[#14b8a6] to-blue-500 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0">Start free trial</button>
                   </Link>
                 </div>
               </div>

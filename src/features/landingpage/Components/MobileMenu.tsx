@@ -73,7 +73,7 @@ export default function MobileMenu() {
                 className="flex font-medium w-full h-12 text-gray-600 hover:text-gray-900 py-2 justify-center"
                 onClick={() => setMobileNavOpen(false)}
               >
-                Sign in
+                Log in
               </Link>
             </li>
             <li>

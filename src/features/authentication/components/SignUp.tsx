@@ -69,10 +69,6 @@ function LoginPage() {
                   <p className="text-sm text-muted-foreground">
                     Welcome to EvenShare! Please Sign up here
                   </p>
-                  <p className="text-sm text-muted-foreground text-red-600">
-                    Guest Login: <br />
-                    Email:steve@gmail.com <br /> Password:gKwJkvn7WYDuyxi
-                  </p>
                 </div>
                 <div className="grid gap-2">
                   <div className="grid gap-1">
@@ -110,7 +106,6 @@ function LoginPage() {
                       <p className="text-red-500">{errors.password}</p>
                     )}
                   </label>
-
                   <Button className="mb-4 mt-2">Sign Up</Button>
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
