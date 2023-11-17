@@ -23,11 +23,11 @@ export default function Header() {
 
   return (
     <header
-      className={` w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${
-        !top && location.pathname === "/" ? "sticky top-0 bg-primary-bg-color backdrop-blur-sm shadow-lg" : "bg-primary-bg-color backdrop-blur-sm"
+      className={` w-full md:bg-opacity-90 transition duration-300 ease-in-out ${
+        !top && location.pathname === "/" ? "sticky top-0 z-20 bg-primary-bg-color backdrop-blur-sm shadow-lg" : "bg-primary-bg-color backdrop-blur-sm"
       }`}
     >
-      <div className="max-w-6xl mx-auto px-5 sm:px-6">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6 ">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Site branding */}
           <div className="shrink-0 mr-4">
@@ -44,10 +44,13 @@ export default function Header() {
           <nav className="hidden md:flex md:grow">
             {/* Desktop sign in links */}
             <ul className="flex grow justify-end flex-wrap items-center">
-              <li className="mr-3">
-                <Button className="w-32 bg-primary-bg-color text-black hover:bg-primary-bg-color hover:text-slate-600 ">
-                  <Link to="/login">Log In</Link>
-                </Button>
+              <li className="mr-3 ">
+              <Link
+                  to="/login"
+                  className="font-medium  w-36 text-gray-900 hover:text-gray-600 px-5 py-3 flex justify-center items-center transition duration-150 ease-in-out"
+                >
+                  Sign in
+                </Link>
               </li>
               <li>
                 <Button className="w-32">
