@@ -1,5 +1,6 @@
 import "../../../App.css"
 import { Link, useNavigate } from "react-router-dom"
+import phonesImage from "/src/assets/images/phones.png"
 
 export default function Hero() {
 
@@ -48,7 +49,7 @@ export default function Hero() {
           {/* Hero image */}
           <div>
         <div className="relative flex justify-center mb-8" data-aos="zoom-y-out" data-aos-delay="450">
-        <img className='bg-gradient-to-t rounded-lg shadow-xl ' src="/src/assets/images/phones.png" width={800} height={800} alt='phones'/>
+        <img className='bg-gradient-to-t rounded-lg shadow-xl ' src={phonesImage} width={800} height={800} alt='phones'/>
         </div>
       </div>
         </div>
