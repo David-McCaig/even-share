@@ -55,7 +55,7 @@ export default function Features() {
               {/* Tabs buttons */}
               <div className="mb-8 md:mb-0">
                 <div
-                  className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
+                  className={`flex items-center cursor-pointer text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 1
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200 border-transparent"
@@ -66,7 +66,7 @@ export default function Features() {
                     setTab(1);
                   }}
                 >
-                  <div>
+                  <div >
                     <div className="font-bold leading-snug tracking-tight mb-1">
                       Track balances
                     </div>
@@ -80,7 +80,7 @@ export default function Features() {
                   </div>
                 </div>
                 <div
-                  className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
+                  className={`flex items-center cursor-pointer text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 2
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200 border-transparent"
@@ -105,7 +105,7 @@ export default function Features() {
                   </div>
                 </div>
                 <div
-                  className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
+                  className={`flex items-center cursor-pointer text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 3
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200 border-transparent"
@@ -129,7 +129,7 @@ export default function Features() {
                   </div>
                 </div>
                 <div
-                  className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
+                  className={`flex items-center cursor-pointer text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 4
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200 border-transparent"
