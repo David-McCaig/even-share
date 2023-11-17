@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import evenShare from "../../../assets/icons/output-onlinepngtools.png";
-import MobileMenu from "./mobile-menu";
+import MobileMenu from "./MobileMenu";
 import { Button } from "../../../Components/ui/button";
 
 export default function Header() {
