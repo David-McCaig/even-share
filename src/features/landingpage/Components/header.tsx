@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import evenShare from "../../../assets/icons/output-onlinepngtools.png";
 import MobileMenu from "./mobile-menu";
 import { Button } from "../../../Components/ui/button";
 
 export default function Header() {
+
+  const location = useLocation();
+
   const [top, setTop] = useState<boolean>(true);
   // detect whether user has scrolled the page down by 10px
   const scrollHandler = () => {
@@ -19,8 +23,8 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${
-        !top ? "bg-primary-bg-color backdrop-blur-sm shadow-lg" : ""
+      className={` w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${
+        !top && location.pathname === "/" ? "sticky top-0 bg-primary-bg-color backdrop-blur-sm shadow-lg" : "bg-primary-bg-color backdrop-blur-sm"
       }`}
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-6">

@@ -3,6 +3,7 @@ import { useGoogleSignIn } from "../hooks/useGoogleSignIn.js";
 import { useGoogleGetSignInResult } from "../hooks/useGoogleGetSignInResult.js";
 import { useSignInEmailPassword } from "../hooks/useSignInEmailPassword.js";
 import { useSignedinDispatchUserInfo } from "../hooks/useSignedinDispatchUserInfo.js";
+import { useScrollToTop } from "../../../hooks/useScrollToTop.tsx"
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
@@ -14,6 +15,8 @@ import Header from "../../landingpage/Components/header.tsx";
 function LoginPage() {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  useScrollToTop()
 
   // Validation schema using Yup
   const validationSchema = Yup.object().shape({
@@ -59,7 +62,7 @@ function LoginPage() {
       >
         {({ errors, touched }) => (
           <Form>
-            <div className="h-screen mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+            <div className="h-screen mx-auto pb-32 flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
               <div className="flex flex-col space-y-2 text-center">
                 <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
                 <p className="text-sm text-muted-foreground">
