@@ -3,7 +3,7 @@ import { useGoogleSignIn } from "../hooks/useGoogleSignIn";
 import { useGoogleGetSignInResult } from "../hooks/useGoogleGetSignInResult.js";
 import { useSignUpEmailPassword } from "../hooks/useSignUpEmailAndPassword.js";
 import { useSignedinDispatchUserInfo } from "../hooks/useSignedinDispatchUserInfo.js";
-import { useScrollToTop } from "../../../hooks/useScrollToTop.tsx"
+import { useScrollToTop } from "../../../hooks/useScrollToTop.tsx";
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
@@ -59,16 +59,19 @@ function LoginPage() {
       >
         {({ errors, touched }) => (
           <section className="w-full">
-             <Header />
+            <Header />
             <Form>
               <div className="h-screen mx-auto pb-32 flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-             
                 <div className="flex flex-col space-y-2 text-center">
                   <h1 className="text-2xl font-semibold tracking-tight">
                     Sign Up
                   </h1>
                   <p className="text-sm text-muted-foreground">
                     Welcome to EvenShare! Please Sign up here
+                  </p>
+                  <p className="text-sm text-muted-foreground text-red-600">
+                    Guest Login: <br />
+                    Email:steve@gmail.com <br /> Password:gKwJkvn7WYDuyxi
                   </p>
                 </div>
                 <div className="grid gap-2">

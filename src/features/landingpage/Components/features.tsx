@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useRef, useEffect } from "react";
 import { Transition } from "@headlessui/react";
 import {
@@ -28,7 +26,7 @@ export default function Features() {
   }, []);
 
   return (
-    <section className="relative bg-zinc-100 h-[88rem] lg:h-[54rem]">
+    <section className="relative bg-zinc-100 h-[85rem] sm:h-[88rem] lg:h-[54rem]">
       {/* Section background (needs .relative class on parent and next sibling elements) */}
       <div
         className="absolute inset-0 pointer-events-none mb-16"
@@ -56,13 +54,13 @@ export default function Features() {
             >
               {/* Tabs buttons */}
               <div className="mb-8 md:mb-0">
-                <a
+                <div
                   className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 1
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200 border-transparent"
                   }`}
-                  href="#0"
+                  
                   onClick={(e) => {
                     e.preventDefault();
                     setTab(1);
@@ -80,14 +78,14 @@ export default function Features() {
                   <div className="flex justify-center items-center w-9 h-9 bg-white rounded-full shadow flex-shrink-0 ml-3">
                     <BanknotesIcon className="p-1.5" />
                   </div>
-                </a>
-                <a
+                </div>
+                <div
                   className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 2
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200 border-transparent"
                   }`}
-                  href="#0"
+                  
                   onClick={(e) => {
                     e.preventDefault();
                     setTab(2);
@@ -105,14 +103,13 @@ export default function Features() {
                   <div className="flex justify-center items-center w-9 h-9 bg-white rounded-full shadow flex-shrink-0 ml-3">
                     <FolderIcon className="p-1.5" />
                   </div>
-                </a>
-                <a
+                </div>
+                <div
                   className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 3
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200 border-transparent"
                   }`}
-                  href="#0"
                   onClick={(e) => {
                     e.preventDefault();
                     setTab(3);
@@ -130,14 +127,13 @@ export default function Features() {
                   <div className="flex justify-center items-center w-9 h-9 bg-white rounded-full shadow flex-shrink-0 ml-3">
                     <PlusIcon className="p-1.5" />
                   </div>
-                </a>
-                <a
+                </div>
+                <div
                   className={`flex items-center text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 ${
                     tab !== 4
                       ? "bg-white shadow-md border-gray-200 hover:shadow-lg"
                       : "bg-gray-200 border-transparent"
                   }`}
-                  href="#0"
                   onClick={(e) => {
                     e.preventDefault();
                     setTab(4);
@@ -155,7 +151,7 @@ export default function Features() {
                   <div className="flex justify-center items-center w-9 h-9 bg-white rounded-full shadow flex-shrink-0 ml-3">
                     <ShieldCheckIcon className="p-1.5" />
                   </div>
-                </a>
+                </div>
               </div>
             </div>
 

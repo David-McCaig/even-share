@@ -1,6 +1,10 @@
 import "../../../App.css"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+
 export default function Hero() {
+
+  const navigate = useNavigate();
+
   return (
     <section className="relative">
 
@@ -34,7 +38,7 @@ export default function Hero() {
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center" data-aos="zoom-y-out" data-aos-delay="300">
                 <div>
                   <Link to="/signup">
-                  <a className="btn text-white bg-gradient-to-r from-[#14b8a6] to-blue-500 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0" href="/signup">Start free trial</a>
+                  <button className="btn text-white bg-gradient-to-r from-[#14b8a6] to-blue-500 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0" onClick={()=> navigate("/signup")}>Start free trial</button>
                   </Link>
                 </div>
               </div>
@@ -47,9 +51,7 @@ export default function Hero() {
         <img className='bg-gradient-to-t rounded-lg shadow-xl ' src="/src/assets/images/phones.png" width={800} height={800} alt='phones'/>
         </div>
       </div>
-
         </div>
-
       </div>
     </section>
   )

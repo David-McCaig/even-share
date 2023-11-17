@@ -24,7 +24,7 @@ function App() {
   const location = useLocation();
 
   return (
-    <div className="w-full h-full bg-primary-bg-color text-primary-font-color">
+    <div className="w-full h-full text-primary-font-color">
       {userInfo && (
         <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
       )}
