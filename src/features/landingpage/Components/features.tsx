@@ -26,7 +26,7 @@ export default function Features() {
   }, []);
 
   return (
-    <section className="relative bg-zinc-100 lg:h-[58rem]">
+    <section className="relative bg-zinc-100 lg:h-[56rem] xl:h-[54rem]">
       {/* Section background (needs .relative class on parent and next sibling elements) */}
       <div
         className="absolute inset-0 pointer-events-none mb-16"
@@ -156,7 +156,7 @@ export default function Features() {
             </div>
 
             {/* Tabs items */}
-            <div className="h-[23rem] sm:h-[30.5rem] md:h-[33rem] lg:h-[0rem] lg:mt-5 max-w-xl md:max-w-none md:w-full mx-auto md:col-span-5 lg:col-span-6 mb-8 md:mb-0 md:order-1">
+            <div className="h-[23rem] sm:h-[30.5rem] md:h-[33rem] lg:h-[0rem] lg:mt-9 xl:mt-6 max-w-xl md:max-w-none md:w-full mx-auto md:col-span-5 lg:col-span-6 mb-8 md:mb-0 md:order-1">
               <div className="transition-all">
                 <div
                   className="relative flex flex-col text-center lg:text-right"
