@@ -6,7 +6,7 @@ import {
 import { selectUser } from "../../authentication/userSlice";
 import { logout } from "../../authentication/userSlice";
 import { auth } from "../../../firebase/firebaseconfig";
-import  menuToggle  from "../../../assets/icons/expenseicons/menu-outline.svg";
+import menuToggle from "../../../assets/icons/expenseicons/menu-outline.svg";
 import evenShareLogo from "../../../assets/icons/output-onlinepngtools.png";
 import {
   Avatar,
@@ -68,7 +68,7 @@ export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
           className="inline-flex items-center p-2  text-sm  rounded-lg sm:hidden"
         >
           <span className="sr-only">Open sidebar</span>
-        <img src={menuToggle} className="w-12 h-12" alt="Open menu"  />
+          <img src={menuToggle} className="w-12 h-12" alt="Open menu" />
         </button>
         <aside
           className={
@@ -80,17 +80,18 @@ export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
           <button
             onClick={closeNavClick}
             type="button"
-            className="inline-flex items-center p-2 text-sm  rounded-lg sm:hidden"          >
+            className="inline-flex items-center p-2 text-sm  rounded-lg sm:hidden"
+          >
             <span className="sr-only">Open sidebar</span>
-            <img src={menuToggle} className="w-12 h-12" alt="Close menu"  />
+            <img src={menuToggle} className="w-12 h-12" alt="Close menu" />
           </button>
         </aside>
       </div>
-      <Link to={"/"} >
-      <img
-        src={evenShareLogo}
-        className="sm:ml-6 w-20 object-contain lg:ml-4"
-      />
+      <Link to={"/"}>
+        <img
+          src={evenShareLogo}
+          className="sm:ml-6 w-20 object-contain lg:ml-4"
+        />
       </Link>
       <div className="flex sm:gap-2 bg-primary-bg-color">
         <Avatar>
@@ -110,9 +111,11 @@ export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
               <NavigationMenuContent>
                 <div
                   onClick={handleLogout}
-                  className="md:pt-2"
+                  className="flex justify-center h-full items-center "
                 >
-                  <NavigationMenuLink className="md:px-4 cursor-pointer">Logout</NavigationMenuLink>
+                  <NavigationMenuLink className="md:px-4 cursor-pointer">
+                    Logout
+                  </NavigationMenuLink>
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
