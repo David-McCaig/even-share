@@ -26,7 +26,7 @@ export default function Features() {
   }, []);
 
   return (
-    <section className="relative bg-zinc-100 h-[88rem] sm:h-[88rem] lg:h-[54rem]">
+    <section className="relative bg-zinc-100  h-[96rem]  sm:h-[86rem]  lg:h-[53rem]">
       {/* Section background (needs .relative class on parent and next sibling elements) */}
       <div
         className="absolute inset-0 pointer-events-none mb-16"
@@ -179,10 +179,8 @@ export default function Features() {
                   >
                     <div className="relative inline-flex flex-col">
                       <img
-                        className="md:max-w-none mx-auto rounded-xl shadow-xl "
+                        className="md:max-w-none mx-auto rounded-xl shadow-xl w-72 sm:w-96 md:w-[26rem] lg:w-[28rem] "
                         src={FeaturesBg}
-                        width={450}
-                        height="400"
                         alt="Features bg"
                       />
                     </div>
