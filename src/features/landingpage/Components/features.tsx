@@ -28,7 +28,7 @@ export default function Features() {
   }, []);
 
   return (
-    <section className="relative bg-zinc-100 h-[54rem]">
+    <section className="relative bg-zinc-100 h-[88rem] lg:h-[54rem]">
       {/* Section background (needs .relative class on parent and next sibling elements) */}
       <div
         className="absolute inset-0 pointer-events-none mb-16"
