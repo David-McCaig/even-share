@@ -1,14 +1,20 @@
-import React from 'react'
-import Hero from './Components/hero'
-import Testimonials from './Components/Testimonials'
+// import "../../App.css"
+import React from "react";
+import Header from "./Components/header";
+import Hero from "./Components/hero";
+import Testimonials from "./Components/Testimonials";
+// Import Inter font directly
 
-function index() {
+// Set up Inter font configurations
+
+function Index() {
   return (
-    <div>
-      <Hero/>
-    <Testimonials/>
-    </div>
-  )
+    <>
+      <Header />
+      <Hero />
+      <Testimonials />
+    </>
+  );
 }
 
-export default index
+export default Index;

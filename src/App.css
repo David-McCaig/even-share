@@ -4,5 +4,22 @@
   padding: 2rem;
   text-align: center;
 } */
+/* Additional styles */
+@import './css/additional-styles/range-slider.css';
+@import './css/additional-styles/theme.css';
+@import './css/additional-styles/toggle-switch.css';
+@import './css/additional-styles/utility-patterns.css';
 
+@import 'tailwindcss/utilities';
+
+/* Additional Tailwind directives: https://tailwindcss.com/docs/functions-and-directives/#responsive */
+@layer utilities {
+    .rtl {
+        direction: rtl;
+    }
+}
+
+body {
+  @apply bg-[#fafafa];
+}
 

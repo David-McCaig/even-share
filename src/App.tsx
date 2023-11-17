@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState } from "react";
-import { Navigate } from "react-router";
+import { Navigate, useLocation } from "react-router";
 import { Routes, Route } from "react-router";
 import { useAppSelector } from "./hooks/reduxTypeScriptHooks.tsx";
 import { selectUser } from "./features/authentication/userSlice.tsx";
@@ -16,23 +16,31 @@ import RecentActivityPage from "./Pages/RecentActivityPage.tsx";
 import ProfilePage from "./Pages/ProfilePage.tsx";
 import BalanceSummaryColumn from "./features/balancesummary/Component/BalanceSummaryColumn.tsx";
 
-
 function App() {
   const [showNavBar, setShowNavBar] = useState<boolean>(true);
 
-  const userInfo = useAppSelector(selectUser)
+  const userInfo = useAppSelector(selectUser);
+
+  const location = useLocation();
 
   return (
-    <div
-      className="w-full h-full bg-primary-bg-color text-primary-font-color">
+    <div className="w-full h-full bg-primary-bg-color text-primary-font-color">
       {userInfo && (
         <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
       )}
       <div className="border-b-[.5px]"></div>
-      <div className="flex m-auto h-full max-w-5xl">
-        {userInfo && <SideNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />}
+      <div
+        className={
+          location.pathname === "/"
+            ? "m-auto h-full"
+            : "flex m-auto h-full max-w-5xl"
+        }
+      >
+        {userInfo && (
+          <SideNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
+        )}
         <Routes>
-          <Route path="/" element={<LandingPage/>} />
+          <Route path="/" element={<LandingPage />} />
           <Route
             path="/login"
             element={userInfo ? <Navigate to="/dashboard" /> : <Login />}
@@ -71,4 +79,3 @@ function App() {
 }
 
 export default App;
-
