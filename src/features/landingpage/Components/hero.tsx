@@ -1,5 +1,5 @@
 import "../../../App.css"
-
+import { Link } from "react-router-dom"
 export default function Hero() {
   return (
     <section className="relative">
@@ -30,10 +30,12 @@ export default function Hero() {
           <div className="text-center pb-12 md:pb-16">
             <h1 className="text-5xl md:text-[88px] font-extrabold leading-tighter tracking-tighter mb-4" data-aos="zoom-y-out">Stress less when it comes to bills <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-[#14b8a6]">EvenShare</span></h1>
             <div className="max-w-3xl mx-auto">
-              <p className="text-xl text-gray-600 mb-8" data-aos="zoom-y-out" data-aos-delay="150">Simplify Splitting Bills with Evenshare. Your Stress-Free Solution for Shared Expenses!</p>
+              <p className="text-xl text-gray-600 mb-8" data-aos="zoom-y-out" data-aos-delay="150">Simplify splitting bills with Evenshare. Your stress free solution for shared expenses!</p>
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center" data-aos="zoom-y-out" data-aos-delay="300">
                 <div>
+                  <Link to="/signup">
                   <a className="btn text-white bg-gradient-to-r from-[#14b8a6] to-blue-500 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0" href="/signup">Start free trial</a>
+                  </Link>
                 </div>
               </div>
             </div>

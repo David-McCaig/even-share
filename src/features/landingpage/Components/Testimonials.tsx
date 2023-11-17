@@ -27,7 +27,7 @@ export default function Testimonials() {
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
             <h2 className="h2 mb-4">Trusted by people all over the world</h2>
-            <p className="text-xl text-gray-600" data-aos="zoom-y-out">Evenshare is the go-to app for simplifying expense sharing. Experience a trusted solution that transcends borders and brings ease to collaborative finances worldwide</p>
+            <p className="text-xl text-gray-600" data-aos="zoom-y-out">Evenshare is the go to app for simplifying expense sharing. Experience a trusted solution that transcends borders and brings ease to collaborative finances worldwide</p>
           </div>
 
           {/* Items */}

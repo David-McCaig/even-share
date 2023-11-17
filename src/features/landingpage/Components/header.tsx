@@ -27,11 +27,13 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Site branding */}
           <div className="shrink-0 mr-4">
+            <Link to="/">
             <img
               className="sm:ml-6 w-20 object-contain lg:ml-4"
               src={evenShare}
               alt="EvenShare Logo"
             />
+            </Link>
           </div>
 
           {/* Desktop navigation */}

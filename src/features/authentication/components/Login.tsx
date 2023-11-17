@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { AuthValues } from "../../../types.tsx";
 import LoadingDots from "../../../Components/LoadingDots";
 import { Button } from "../../../Components/ui/button.tsx";
+import Header from "../../landingpage/Components/header.tsx";
 
 function LoginPage() {
   const [authenticating, setAuthenticating] = useState<boolean>(false);
@@ -41,6 +42,8 @@ function LoginPage() {
   }
 
   return (
+    <>
+    <Header/>
     <section className="px-4 w-full flex justify-center">
       {/* <form onSubmit={onSubmit}> */}
       <Formik
@@ -164,6 +167,7 @@ function LoginPage() {
         )}
       </Formik>
     </section>
+    </>
   );
 }
 
