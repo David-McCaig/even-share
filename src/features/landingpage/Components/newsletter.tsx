@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CalendarDaysIcon, HandRaisedIcon } from "@heroicons/react/24/outline";
+import { Button } from "../../../Components/ui/button";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
@@ -34,7 +35,7 @@ export default function Newsletter() {
               <label htmlFor="email-address" className="sr-only">
                 Email address
               </label>
-              <form onSubmit={submitEmail}>
+              <form className="w-full" onSubmit={submitEmail}>
                 <input
                   id="email-address"
                   onChange={(e) => setEmail(e.target.value)}
@@ -43,15 +44,15 @@ export default function Newsletter() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="min-w-0 mr-2 flex-auto rounded-md border-0 bg-white/5 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                  className="w-full sm:w-44 min-w-0 mr-2 flex-auto rounded-md border-0 bg-white/5 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                   placeholder="Enter your email"
                 />
-                <button
+                <Button
                   type="submit"
-                  className="flex-none rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                  className="mt-4 w-full sm:w-24 "
                 >
                   Subscribe
-                </button>
+                </Button>
                 {error && <p className="text-red-600">Please fill in email</p>}
                 {successMessage && (
                   <p className="text-green-600 mt-2">Thanks for Signing up! 🎉 </p>
