@@ -26,7 +26,7 @@ export default function Features() {
   }, []);
 
   return (
-    <section className="relative bg-zinc-100  h-[96rem]  sm:h-[86rem]  lg:h-[53rem]">
+    <section className="relative bg-zinc-100 lg:h-[58rem]">
       {/* Section background (needs .relative class on parent and next sibling elements) */}
       <div
         className="absolute inset-0 pointer-events-none mb-16"
@@ -156,7 +156,7 @@ export default function Features() {
             </div>
 
             {/* Tabs items */}
-            <div className="max-w-xl md:max-w-none md:w-full mx-auto md:col-span-5 lg:col-span-6 mb-8 md:mb-0 md:order-1">
+            <div className="h-[23rem] sm:h-[30.5rem] md:h-[33rem] lg:h-[0rem] lg:mt-5 max-w-xl md:max-w-none md:w-full mx-auto md:col-span-5 lg:col-span-6 mb-8 md:mb-0 md:order-1">
               <div className="transition-all">
                 <div
                   className="relative flex flex-col text-center lg:text-right"
@@ -201,10 +201,8 @@ export default function Features() {
                   >
                     <div className="relative inline-flex flex-col">
                       <img
-                        className="md:max-w-none mx-auto rounded-xl shadow-xl"
+                        className="md:max-w-none mx-auto rounded-xl shadow-xl w-72 sm:w-96 md:w-[26rem] lg:w-[28rem]"
                         src={GroupExpense}
-                        width={450}
-                        height="400"
                         alt="Features bg"
                       />
                     </div>
@@ -225,10 +223,8 @@ export default function Features() {
                   >
                     <div className="relative inline-flex flex-col">
                       <img
-                        className="md:max-w-none mx-auto rounded-xl shadow-xl"
+                        className="md:max-w-none mx-auto rounded-xl shadow-xl w-72 sm:w-96 md:w-[26rem] lg:w-[28rem]"
                         src={AddExpense}
-                        width={450}
-                        height="400"
                         alt="Features bg"
                       />
                     </div>
@@ -248,10 +244,8 @@ export default function Features() {
                   >
                     <div className="relative inline-flex flex-col">
                       <img
-                        className="md:max-w-none mx-auto rounded-xl shadow-xl"
+                        className="md:max-w-none mx-auto rounded-xl shadow-xl w-72 sm:w-96 md:w-[26rem] lg:w-[28rem]"
                         src={SettleUP}
-                        width={450}
-                        height="400"
                         alt="Features bg"
                       />
                     </div>
