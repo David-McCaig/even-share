@@ -10,7 +10,6 @@ export const usePagination = (
       nextGroupExpenses[nextGroupExpenses.length]?.id !==
       nextGroupExpenses[nextGroupExpenses.length - 1]?.id
     ) {
-      console.log("test");
       setNextGroupExpenses((prevExpense: UserGroup[]) => [
         ...prevExpense,
         ...nextGroupExpenses,

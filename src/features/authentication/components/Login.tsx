@@ -115,10 +115,10 @@ function LoginPage() {
                       <p className="text-red-500">{errors.password}</p>
                     )}
                   </label>
-                  <Button className=" mt-2" onClick={guestLoginClick}>
+                  <Button className=" mt-2" type="submit" onClick={guestLoginClick}>
                     Guest Login
                   </Button>
-                  <Button className="mb-4 mt-2">Log in</Button>
+                  <Button className="mb-4 mt-2" type="submit">Log in</Button>
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                       <span className="w-full border-t" />

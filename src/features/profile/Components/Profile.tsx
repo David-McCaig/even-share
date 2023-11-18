@@ -26,8 +26,8 @@ function Profile() {
   // Initialize Formik
   const formik = useFormik({
     initialValues: {
-      userName: userInfo.displayName,
-      userEmail: userInfo.email,
+      userName: userInfo?.displayName ? userInfo?.displayName : "",
+      userEmail: userInfo?.email,
     },
     validationSchema: validationSchema,
     onSubmit: async (values: Values) => {

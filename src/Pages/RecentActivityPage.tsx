@@ -15,7 +15,7 @@ import { Button } from "../Components/ui/button";
 
 function RecentActivityPage() {
   const { email, displayName } = useAppSelector(selectUser);
-  const { data: groupId } = useFetchUserGroupsQuery(email);
+  const { data: expenseGroup } = useFetchUserGroupsQuery(email);
 
   const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
 
@@ -37,9 +37,8 @@ function RecentActivityPage() {
   useEffect(() => {
     if (recentActivity) {
       setExpensesArray(recentActivity);
-      refetchRecentActivity();
     }
-  }, [groupId, recentActivity, refetchRecentActivity]);
+  }, [expenseGroup, recentActivity, refetchRecentActivity]);
 
   const nextPageClick = async () => {
     paginationFetch();
@@ -47,9 +46,9 @@ function RecentActivityPage() {
 
   //custom hook for pagination
   usePagination(recentActivityPagination || [], setExpensesArray);
-
+  
   //error handling
-  if (recentActivityisError || paginationisError) {
+  if (recentActivityisError && expenseGroup?.length !== 0) {
     console.error(recentActivityError || paginationError);
     return (
       <div className="w-full h-screen flex justify-center items-center">
@@ -60,6 +59,19 @@ function RecentActivityPage() {
     );
   }
 
+  if (paginationisError && expenseGroup?.length !== 0) {
+    console.error(recentActivityError || paginationError);
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <div className="text-red-500 text-2xl">
+          <p>"Server Error, Please try again later"</p>
+        </div>
+      </div>
+    );
+  }
+
+
+
   return (
     <section className="w-full">
       <TopBar currentPage={"Recent Activity"} />
@@ -67,7 +79,7 @@ function RecentActivityPage() {
         <BalanceSummary />
       </div>
       {expensesArray?.map((expense) => (
-        <div key={expense.id}>
+        <div key={expense?.id}>
           <ExpenseTableRow
             expenseIcon={selectExpenseIcon(expense?.user_expense_description)}
             expenseDescription={expense?.user_expense_description}
