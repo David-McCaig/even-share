@@ -87,7 +87,7 @@ export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
           </button>
         </aside>
       </div>
-      <Link to={"/"}>
+      <Link to={"/dashboard"}>
         <img
           src={evenShareLogo}
           className="sm:ml-6 w-20 object-contain lg:ml-4"
