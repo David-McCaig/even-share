@@ -13,7 +13,7 @@ import ProfilePage from "./Pages/ProfilePage";
 interface RouteObject {
   id: number;
   path: string;
-  element: ReactNode;
+  element: ReactNode; 
 }
 
 type RoutesObject = (userInfo: boolean) => RouteObject[];
