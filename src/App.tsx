@@ -1,25 +1,21 @@
 import "./App.css";
 import { useState } from "react";
-import { Navigate, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { Routes, Route } from "react-router";
 import { useAppSelector } from "./hooks/reduxTypeScriptHooks.tsx";
 import { selectUser } from "./features/authentication/userSlice.tsx";
-import LandingPage from "./Pages/LandingPage.tsx";
 import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
 import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx";
-import Dashboard from "./Pages/DashboardPage.tsx";
 import BalanceSummary from "./features/balancesummary/index.tsx";
-import GroupExpense from "./Pages/GroupExpensePage.tsx";
-import Login from "./Pages/LoginPage.tsx";
-import SignUp from "./Pages/SignUpPage.tsx";
-import RecentActivityPage from "./Pages/RecentActivityPage.tsx";
-import ProfilePage from "./Pages/ProfilePage.tsx";
 import BalanceSummaryColumn from "./features/balancesummary/Component/BalanceSummaryColumn.tsx";
+import routeObject from "./routesObject.tsx";
 
 function App() {
   const [showNavBar, setShowNavBar] = useState<boolean>(true);
 
   const userInfo = useAppSelector(selectUser);
+
+  const routesObject = routeObject(userInfo);
 
   const location = useLocation();
 
@@ -40,33 +36,9 @@ function App() {
           <SideNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
         )}
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route
-            path="/login"
-            element={userInfo ? <Navigate to="/dashboard" /> : <Login />}
-          />
-          <Route
-            path="/signup"
-            element={userInfo ? <Navigate to="/dashboard" /> : <SignUp />}
-          />
-          <Route
-            path="/dashboard"
-            element={userInfo ? <Dashboard /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/group/:id"
-            element={userInfo ? <GroupExpense /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/recentactivity"
-            element={
-              userInfo ? <RecentActivityPage /> : <Navigate to="/login" />
-            }
-          />
-          <Route
-            path="/profile"
-            element={userInfo ? <ProfilePage /> : <Navigate to="/login" />}
-          />
+          {routesObject.map((route) => (
+            <Route key={route?.id} path={route?.path} element={route?.element} />
+          ))}
         </Routes>
         {userInfo && (
           <BalanceSummaryColumn>
