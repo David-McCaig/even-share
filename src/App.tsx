@@ -8,14 +8,14 @@ import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
 import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx";
 import BalanceSummary from "./features/balancesummary/index.tsx";
 import BalanceSummaryColumn from "./features/balancesummary/Component/BalanceSummaryColumn.tsx";
-import routeObject from "./routesObject.tsx";
+import routes from "./routes.tsx";
 
 function App() {
   const [showNavBar, setShowNavBar] = useState<boolean>(true);
 
   const userInfo = useAppSelector(selectUser);
 
-  const routesObject = routeObject(userInfo);
+  const routesObject = routes(userInfo);
 
   const location = useLocation();
 

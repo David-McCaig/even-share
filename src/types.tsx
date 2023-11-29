@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 export interface SelectedType {
   id: string;
   user_group_name: string;
@@ -65,3 +66,11 @@ export interface Transaction {
   to: string;
   amount: number;
 }
+
+interface RouteObject {
+  id: number;
+  path: string;
+  element: ReactNode; 
+}
+
+export type RoutesObject = (userInfo: boolean) => RouteObject[];
