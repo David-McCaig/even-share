@@ -1,10 +1,8 @@
-// import "../../App.css"
-import React from "react";
-import Header from "./Components/Header";
-import Hero from "./Components/Hero";
-import Features from "./Components/features";
-import Testimonials from "./Components/Testimonials";
-import NewsLetter from "./Components/Newsletter"
+import Header from "./Components/header.tsx";
+import Hero from "./Components/hero.tsx";
+import Features from "./Components/features.tsx";
+import Testimonials from "./Components/Testimonials.tsx";
+import NewsLetter from "./Components/newsletter.tsx";
 // Import Inter font directly
 
 // Set up Inter font configurations

@@ -10,7 +10,7 @@ import * as Yup from "yup";
 import { AuthValues } from "../../../types.tsx";
 import LoadingDots from "../../../Components/LoadingDots";
 import { Button } from "../../../Components/ui/button.tsx";
-import Header from "../../landingpage/Components/Header.tsx";
+import Header from "../../landingpage/Components/header.tsx";
 // ../../landingpage/Components/Header.tsx
 
 function LoginPage() {
