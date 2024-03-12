@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CalendarDaysIcon, HandRaisedIcon } from "@heroicons/react/24/outline";
 import { Button } from "../../../Components/ui/button";
 
-export default function Newsletter() {
+function Newsletter() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
@@ -108,3 +108,5 @@ export default function Newsletter() {
     </section>
   );
 }
+
+export default Newsletter
