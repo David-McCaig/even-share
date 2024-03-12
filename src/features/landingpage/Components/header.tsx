@@ -5,7 +5,7 @@ import evenShare from "../../../assets/icons/output-onlinepngtools.png";
 import MobileMenu from "./MobileMenu";
 import { Button } from "../../../Components/ui/button";
 
-export default function Header() {
+function Header() {
 
   const location = useLocation();
 
@@ -66,3 +66,5 @@ export default function Header() {
     </header>
   );
 }
+
+export default Header;

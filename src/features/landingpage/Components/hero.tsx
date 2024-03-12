@@ -2,7 +2,7 @@ import "../../../App.css"
 import { Link } from "react-router-dom"
 import phonesImage from "/src/assets/images/phones.png"
 
-export default function Hero() {
+function Hero() {
 
   return (
     <section className="relative">
@@ -55,3 +55,5 @@ export default function Hero() {
     </section>
   )
 }
+
+export default Hero;
