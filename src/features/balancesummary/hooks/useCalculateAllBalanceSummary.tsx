@@ -26,6 +26,7 @@ export const useCalculateAllBalanceSummary = () => {
     useEffect(() => {
         if (currentGroupExpenses) {
             const userObject = createUserObject(currentGroupExpenses, user.displayName);
+            console.log(userObject);
             const result = calculateOwes(userObject, user.displayName);
             const balanceSummaryStatement = generateBalanceSummaryStatement(result, currentGroupId, currentName);
             setAllBalanceSummary((prevState) => [...prevState, ...balanceSummaryStatement]);
