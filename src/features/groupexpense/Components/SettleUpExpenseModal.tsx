@@ -13,7 +13,7 @@ import {
   updateDoc,
   getDocs,
 } from "firebase/firestore";
-import { toast }  from "react-hot-toast"
+import { toast } from "react-hot-toast";
 import arrowRight from "../../../assets/icons/expenseicons/arrow-forward-outline.svg";
 import { Avatar, AvatarFallback } from "../../../Components/ui/avatar";
 import { Button } from "../../../Components/ui/button";
@@ -46,7 +46,7 @@ function SettleUpExpenseModal() {
     // Create the query to find documents with settled_up as false
     const queryExpenses = query(expensesRef, where("settled_up", "==", false));
     try {
-      const loadingToast = toast.loading("Settling up expenses")
+      const loadingToast = toast.loading("Settling up expenses");
       // Get the documents that match the query
       const querySnapshot = await getDocs(queryExpenses);
       // Iterate over the documents in the query snapshot and update settled_up to true
@@ -58,14 +58,24 @@ function SettleUpExpenseModal() {
       });
       refetchExpensesForGroup();
       refetchBalanceSummary();
-      toast.dismiss(loadingToast)
-      toast.success("Expenses settled up")
+      toast.dismiss(loadingToast);
+      toast.success("Expenses settled up");
       setOpen(false);
     } catch (error) {
       console.error("Error updating settled_up:", error);
     }
   };
 
+  const changeOweToPaied = (string: string) => {
+    const array = string.split(" ");
+
+    if (array[1] === "owes" || array[1] === "owe") {
+      array[1] = "paid";
+      return array.join(" ");
+    }
+  };
+
+  console.log(balanceArray[0]?.userString);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -96,7 +106,7 @@ function SettleUpExpenseModal() {
                     </Avatar>
                   </div>
                   <h2 className="text-xl mt-4">
-                    {statement.userString.split("owe").join("paid")}
+                    {changeOweToPaied(statement.userString)}
                   </h2>
                   <h2 className="text-xl mt-1">{"$" + statement.userNumber}</h2>
                 </div>
