@@ -56,7 +56,8 @@ function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
               <li></li>
               <li>
                 <Link
-                  className={`flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/" ? "text-primary-button-color" : "text-primary-font-color"}`}
+                  className={`flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/dashboard" ? "text-primary-button-color" : "text-primary-font-color"}`}
+                  onClick={() => setActiveLink("/dashboard")}
                   to={"/dashboard"}
                 >
                   <DashboardIcon className="w-6 h-6 " />
