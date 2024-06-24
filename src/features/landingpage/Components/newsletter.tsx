@@ -60,7 +60,7 @@ function Newsletter() {
               </form>
             </div>
           </div>
-          <dl className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:pt-2">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:pt-2">
             <div className="flex flex-col items-start">
               <div className="rounded-md bg-white/5 p-2 ring-1 ring-white/10">
                 <CalendarDaysIcon
@@ -68,13 +68,13 @@ function Newsletter() {
                   aria-hidden="true"
                 />
               </div>
-              <dt className="mt-4 font-semibold text-gray-800">
+              <div className="mt-4 font-semibold text-gray-800">
                 Weekly articles
-              </dt>
-              <dd className="mt-2 leading-7 text-gray-800">
+              </div>
+              <div className="mt-2 leading-7 text-gray-800">
                 Explore a Wealth of Wisdom: Dive into our weekly articles and
                 unlock a treasure trove of insights with Evenshare.
-              </dd>
+              </div>
             </div>
             <div className="flex flex-col items-start">
               <div className="rounded-md bg-white/5 p-2 ring-1 ring-white/10">
@@ -83,14 +83,14 @@ function Newsletter() {
                   aria-hidden="true"
                 />
               </div>
-              <dt className="mt-4 font-semibold text-gray-900">No spam</dt>
-              <dd className="mt-2 leading-7 text-gray-800">
+              <div className="mt-4 font-semibold text-gray-900">No spam</div>
+              <div className="mt-2 leading-7 text-gray-800">
                 Quality Content, Zero Spam: Subscribe to our newsletter for
                 weekly articles that promise valuable insights without the
                 clutter.
-              </dd>
+              </div>
             </div>
-          </dl>
+          </div>
         </div>
       </div>
       <div
@@ -109,4 +109,5 @@ function Newsletter() {
   );
 }
 
-export default Newsletter
+export default Newsletter;
+

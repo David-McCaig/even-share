@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import evenShare from "../../../assets/icons/output-onlinepngtools.png";
-import MobileMenu from "./MobileMenu"
+import MobileMenu from "./mobilemenu"
 import { Button } from "../../../Components/ui/button";
 
 function Header() {
@@ -53,9 +53,11 @@ function Header() {
                 </Link>
               </li>
               <li>
-                <Button className="w-32">
-                  <Link to="/signup">Sign Up</Link>
+              <Link to="/signup">
+                <Button className="w-32 !text-white">
+                 Sign Up
                 </Button>
+                </Link>
               </li>
             </ul>
           </nav>

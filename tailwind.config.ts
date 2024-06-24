@@ -21,11 +21,11 @@ module.exports = {
         current: 'currentColor',
         "primary-bg-color": "#fafafa",
         "primary-font-color": "#262626",
-        "primary-button-color": "#0d9488",
+        "primary-button-color": "#115e59",
         
         "secondary-bg-color": "#f5f5f4",
         "secondary-font-color": "#a3a3a3",
-        "secondary-button-color": "#14b8a6",
+        "secondary-button-color": "#0f766e",
         
         gray: {
           100: '#FBFBFB',
