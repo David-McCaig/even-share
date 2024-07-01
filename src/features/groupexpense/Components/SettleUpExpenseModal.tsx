@@ -75,7 +75,6 @@ function SettleUpExpenseModal() {
     }
   };
 
-  console.log(balanceArray[0]?.userString);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>

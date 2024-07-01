@@ -1,5 +1,5 @@
 import { Providers } from "../../../firebase/firebaseproviders";
-import { getAuth, signInWithRedirect } from "firebase/auth";
+import { getAuth, signInWithPopup } from "firebase/auth";
 
 export const useGoogleSignIn = (
   setAuthenticating: React.Dispatch<React.SetStateAction<boolean>>,
@@ -13,7 +13,7 @@ export const useGoogleSignIn = (
   
     try {
       // await auth.signInWithRedirect(Providers.google);
-      await signInWithRedirect(auth, Providers)
+      await signInWithPopup(auth, Providers)
     } catch (errorMessage) {
       setErrorMessage((errorMessage as Error).message);
     } finally {
