@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useDispatchGroupID } from "../../features/groupexpense/hooks/useDispatchGroupID";
 import { usePagination } from "../../hooks/usePagination";
 import {
   useFetchExpensesForGroupQuery,
   useFetchUserGroupsQuery,
-  useFetchPaginatedExpensesForGroupQuery,
+  useLazyFetchPaginatedExpensesForGroupQuery,
 } from "./groupexpenseTableSlice";
 import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../features/authentication/userSlice";
@@ -17,7 +16,6 @@ import { Button } from "../../Components/ui/button";
 import TopBar from "../../Components/TopBar";
 import BalanceSummary from "../../features/balancesummary/index";
 import ExpenseTableRow from "../../features/groupexpense/Components/ExpenseTableRow";
-import { UserGroup } from "../../types";
 
 type UrlParams = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,42 +29,22 @@ function Index() {
   const group = groups?.find(group => group.id === id);
   const { data: balanceExpenses } = useFetchExpensesForBalanceSummaryGroupQuery(id);
   const contributions = totalUserExpenses(balanceExpenses) || [];
-  const [groupExpenses, setGroupExpenses] = useState<UserGroup[]>([]);
   useDispatchGroupID(id);
 
   const {
-    data: groupExpensesData,
+    currentData: groupExpensesData,
     isLoading,
-    refetch,
     isError: expensesIsError,
     error: expensesError,
   } = useFetchExpensesForGroupQuery(id);
 
-  const {
-    data: nextGroupExpenses,
-    refetch: fetchNextPage,
-    isFetching,
-    isError: nextExpenseIsError,
-    error: nextExpenseError,
-  } = useFetchPaginatedExpensesForGroupQuery(id);
-      
-  useEffect(() => {
-    if (groupExpensesData) {
-      setGroupExpenses(groupExpensesData);
-      refetch();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, groupExpensesData]);
+  const [fetchNextPage] = useLazyFetchPaginatedExpensesForGroupQuery();
+  const { expenses: groupExpenses, hasMore, isFetching, error: pageError, showMore } = usePagination(
+    id ?? "", groupExpensesData, request => fetchNextPage(request).unwrap()
+  );
 
-  // Handler for clicking the "Show more" button
-  const showMoreClick = () => {
-    fetchNextPage(); 
-  };
-  // Custom hook for handling pagination
-  usePagination(nextGroupExpenses || [], setGroupExpenses);
-
-  if (expensesIsError || nextExpenseIsError) {
-    console.error(expensesError || nextExpenseError);
+  if (expensesIsError) {
+    console.error(expensesError);
     return (
       <div className="w-full h-screen flex justify-center items-center">
         <div className="text-red-500 text-2xl">
@@ -107,14 +85,16 @@ function Index() {
         ))}
         {!groupExpenses?.length && <p className="empty-state" role="status">{isLoading ? "Loading expenses…" : "No expenses yet. Add the first one to get started."}</p>}
         </div></section>
-        <div className="pagination-actions">
+        {pageError && <p role="alert">Unable to load more expenses. Please try again.</p>}
+        {hasMore && <div className="pagination-actions">
           <Button
             variant="ghost"
-            onClick={showMoreClick}
+            onClick={showMore}
+            disabled={isFetching}
           >
             {isFetching ? "Loading..." : "Show more"}
           </Button>
-        </div>
+        </div>}
       </article>{" "}
     </>
   );

@@ -1,5 +1,5 @@
 import { firestoreApi } from "../../firestoreApi";
-import { UserGroups, UserGroup } from "../../types";
+import { UserGroups, UserGroup, ExpensePageRequest } from "../../types";
 import {
   addDoc,
   collection,
@@ -9,14 +9,12 @@ import {
   limit,
   orderBy,
   startAfter,
+  documentId,
   setDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
 import { query, where, Timestamp } from "firebase/firestore";
-import { DocumentData, DocumentSnapshot } from "firebase/firestore";
 import { toast } from "react-hot-toast";
-
-let groupSnapshotArray: DocumentSnapshot<DocumentData> | null = null;
 
 export const scoresApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -45,17 +43,15 @@ export const scoresApi = firestoreApi.injectEndpoints({
 
     fetchExpensesForGroup: builder.query<UserGroups, void | string>({
       async queryFn(urlId) {
-        groupSnapshotArray = null;
         try {
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("created_at", "desc"),
-            limit(9),
+            orderBy(documentId(), "desc"),
+            limit(10),
             where("settled_up", "==", false)
           );
           const querySnapshot = await getDocs(billQuery);
-          groupSnapshotArray =
-            querySnapshot.docs[querySnapshot.docs.length - 1];
           const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
             const data = doc.data();
@@ -79,22 +75,19 @@ export const scoresApi = firestoreApi.injectEndpoints({
       },
       providesTags: ["groupExpense"],
     }),
-    fetchPaginatedExpensesForGroup: builder.query<UserGroups, void | string>({
-      async queryFn(urlId) {
+    fetchPaginatedExpensesForGroup: builder.query<UserGroups, ExpensePageRequest>({
+      async queryFn({ id: urlId, after }) {
         try {
-          if (!groupSnapshotArray) return { data: [] };
-
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("created_at", "desc"),
-            limit(4),
+            orderBy(documentId(), "desc"),
+            limit(5),
             where("settled_up", "==", false),
-            startAfter(groupSnapshotArray)
+            startAfter(new Timestamp(after.created_at.seconds, after.created_at.nanoseconds), after.id)
           );
 
           const querySnapshot = await getDocs(billQuery);
-          groupSnapshotArray =
-            querySnapshot.docs[querySnapshot.docs.length - 1];
           const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
             const data = doc.data();
@@ -296,7 +289,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
 export const {
   useFetchUserGroupsQuery,
   useFetchExpensesForGroupQuery,
-  useFetchPaginatedExpensesForGroupQuery,
+  useLazyFetchPaginatedExpensesForGroupQuery,
   useFetchUserExpensesQuery,
   useSetAddExpenseToGroupMutation,
   useSetAddGroupMutation,

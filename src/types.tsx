@@ -67,3 +67,8 @@ export interface Transaction {
   to: string;
   amount: number;
 }
+
+export interface ExpensePageRequest {
+  id: string;
+  after: Pick<UserGroup, "id" | "created_at">;
+}
