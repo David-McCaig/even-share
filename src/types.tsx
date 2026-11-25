@@ -24,6 +24,7 @@ export interface UserGroup {
   user_expense_description: string;
   user_expense_amount: number;
   user_expense_name: string;
+  user_expense_email?: string;
   settled_up: boolean;
   expenseGroupsArray:string[]
   user_group_email:string[]

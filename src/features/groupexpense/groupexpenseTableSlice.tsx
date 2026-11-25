@@ -169,6 +169,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
         userExpenseAmountNumber,
         userExpenseDescription,
         userExpenseName,
+        userExpenseEmail,
         settledUp,
         createdAt,
         expenseGroupsArray,
@@ -182,6 +183,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
             user_expense_amount: userExpenseAmountNumber,
             user_expense_description: userExpenseDescription,
             user_expense_name: userExpenseName,
+            user_expense_email: userExpenseEmail,
             settled_up: settledUp,
             created_at: createdTimestamp,
             delete_expense: false,
@@ -231,9 +233,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
               });
             }
           };
-          expenseGroupsArray.forEach((email: string) => {
-            postRecentExpenses(email);
-          });
+          await Promise.all(expenseGroupsArray.map((email: string) => postRecentExpenses(email)));
           toast.dismiss(loadingToast);
           toast.success("Expense added");
           return { data: null };
@@ -268,9 +268,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
             );
           };
 
-          expenseGroupsArray.forEach((email: string) => {
-            deleteDocFromRecentExpenses(email);
-          });
+          await Promise.all(expenseGroupsArray.map((email: string) => deleteDocFromRecentExpenses(email)));
 
           toast.dismiss(loadingToast);
           toast.success("Expense deleted");

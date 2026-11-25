@@ -44,7 +44,6 @@ function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
             ))}
             <CreateGroupModal />
           </div>
-          <NavLink to="/profile" onClick={closeNav}><User size={19} />Profile</NavLink>
         </nav>
         <DropdownMenu>
         <DropdownMenuTrigger asChild>

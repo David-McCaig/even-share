@@ -44,9 +44,10 @@ function SettleUpExpenseModal() {
   const { refetch: refetchBalanceSummary } =
     useFetchExpensesForBalanceSummaryGroupQuery(groupId);
 
-  const { balanceArray } = useCalculateBalanceSummary(groupId);
+  const { balanceArray, balanceError, isLoading } = useCalculateBalanceSummary(groupId);
 
   const settleUpClick = async () => {
+    if (balanceError || isLoading) return;
     const userGroupsRef = collection(db, "userGroups");
     const expensesRef = collection(userGroupsRef, groupId, "expenses");
     // Create the query to find documents with settled_up as false
@@ -96,7 +97,7 @@ function SettleUpExpenseModal() {
             </DialogDescription>
           </DialogHeader>
           <div className="settlement-payments">
-            {balanceArray[0]?.userString !== "All people are settled up" ? (
+            {balanceError ? <p role="alert">{balanceError}</p> : isLoading ? <p role="status">Loading balances…</p> : balanceArray[0]?.userString !== "All people are settled up" ? (
               balanceArray?.map((statement, i) => (
                 <div key={i} className="settlement-payment">
                   <div className="settlement-avatars" aria-hidden="true">
@@ -128,7 +129,7 @@ function SettleUpExpenseModal() {
 
           <DialogFooter>
             <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
-            <Button className="modal-primary" onClick={settleUpClick}>
+            <Button className="modal-primary" disabled={!!balanceError || isLoading} onClick={settleUpClick}>
               Record settlement
             </Button>
           </DialogFooter>

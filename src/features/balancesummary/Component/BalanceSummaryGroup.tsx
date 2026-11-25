@@ -7,7 +7,7 @@ import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balanceSummarySl
 
 function BalanceSummaryGroup() {
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
-  const { balanceArray } = useCalculateBalanceSummary(groupId);
+  const { balanceArray, balanceError, isLoading } = useCalculateBalanceSummary(groupId);
   const { isFetching, isError } = useFetchExpensesForBalanceSummaryGroupQuery(groupId);
   const user = useAppSelector(selectUser);
   const { data: groups } = useFetchUserGroupsQuery(user.email);
@@ -16,7 +16,7 @@ function BalanceSummaryGroup() {
   return (
     <article className="group-balance-summary">
       <div className="section-heading"><h2>Your Balance</h2></div>
-      <div className="balance-breakdown-list">{isError ? <p>Unavailable</p> : isFetching || !balanceArray.length ? <p role="status">Loading…</p> : <BalanceGroup name={name} balances={balanceArray} />}</div>
+      <div className="balance-breakdown-list">{balanceError || isError ? <p role="alert">{balanceError || "Unavailable"}</p> : isLoading || isFetching ? <p role="status">Loading…</p> : <BalanceGroup name={name} balances={balanceArray} />}</div>
     </article>
   );
 }

@@ -3,7 +3,7 @@ import type { BalanceSummary } from "../../../types";
 import BalanceGroup from "./BalanceGroup";
 
 function BalanceSummaryAllGroups({ overview = false }: { overview?: boolean }) {
-  const { allBalanceSummary } = useCalculateAllBalanceSummary();
+  const { allBalanceSummary, balanceErrors } = useCalculateAllBalanceSummary();
   const grouped = allBalanceSummary.reduce<Record<string, BalanceSummary[]>>((groups, balance) => {
     const key = balance.sourceGroupId || balance.groupName || "Shared balances";
     (groups[key] ??= []).push(balance);
@@ -17,7 +17,8 @@ function BalanceSummaryAllGroups({ overview = false }: { overview?: boolean }) {
         <p className="balance-breakdown-description">By group &amp; friend</p>
         <div className="balance-breakdown-list">
           {Object.entries(grouped).map(([id, balances]) => <BalanceGroup key={id} name={balances[0].groupName || "Shared balances"} balances={balances} />)}
-          {!allBalanceSummary.length && <p className="balance-neutral">No shared balances yet.</p>}
+          {Object.entries(balanceErrors).map(([id, error]) => <p key={id} role="alert">{error}</p>)}
+          {!allBalanceSummary.length && !Object.keys(balanceErrors).length && <p className="balance-neutral">No shared balances yet.</p>}
         </div>
       </section>
     </div>

@@ -19,12 +19,12 @@ function GroupCards({ groups, compact = false }: { groups: UserGroup[]; compact?
   </div>;
 }
 function PersonalBalance({ groupId }: { groupId: string }) {
-  const { balanceArray } = useCalculateBalanceSummary(groupId);
+  const { balanceArray, balanceError, isLoading } = useCalculateBalanceSummary(groupId);
   const { isFetching, isError } = useFetchExpensesForBalanceSummaryGroupQuery(groupId);
   const { owed, owing } = getPersonalBalance(balanceArray);
   return <div className="group-personal-balance">
     <span>Your Balance</span>
-    {isError ? <span>Unavailable</span> : isFetching || !balanceArray.length ? <span role="status">Loading…</span> : <BalanceTotals owed={owed} owing={owing} />}
+    {balanceError || isError ? <span role="alert">{balanceError || "Unavailable"}</span> : isLoading || isFetching ? <span role="status">Loading…</span> : <BalanceTotals owed={owed} owing={owing} />}
   </div>;
 }
 export default GroupCards;

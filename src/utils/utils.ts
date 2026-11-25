@@ -13,70 +13,60 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const createUserObject = (groupData: UserGroups, displayName: string) => {
-  const expenseData: { name: string; expenses: number[] }[] = [];
-  groupData?.filter((expense) => {
-    if (expenseData.length === 0) {
-      expenseData.push({
-        name: expense.user_expense_name,
-        expenses: [expense.user_expense_amount],
-      });
-    } else {
-      const userExists = expenseData.find(
-        (user) => user.name === expense.user_expense_name
-      );
-      if (userExists) {
-        userExists.expenses.push(expense.user_expense_amount);
-      } else {
-        expenseData.push({
-          name: expense.user_expense_name,
-          expenses: [expense.user_expense_amount],
-        });
-      }
-    }
+// Membership, rather than payment history, determines who shares group expenses.
+export const createUserObject = (
+  groupData: UserGroups,
+  displayName: string,
+  memberEmails: string[],
+  currentUserEmail: string,
+): People[] => {
+  const normalize = (value: string) => value.trim().toLowerCase();
+  const currentEmail = normalize(currentUserEmail);
+  const emails = [...new Set(memberEmails.map(normalize).filter(Boolean))];
+  const members = emails.map(email => {
+    const localName = email.split("@")[0];
+    return { email, name: localName.charAt(0).toUpperCase() + localName.slice(1), expenses: [] as number[] };
   });
-  expenseData.find((info) => {
-    if (info.name === displayName) {
-      info.name = "You";
+
+  for (const expense of groupData) {
+    const payerEmail = expense.user_expense_email && normalize(expense.user_expense_email);
+    // Older expenses only stored a display name. Accept only a unique matching member.
+    const payerName = normalize(expense.user_expense_name);
+    const matches = members.filter(member => payerEmail
+      ? member.email === payerEmail
+      : member.email === payerName || member.email.split("@")[0] === payerName ||
+        (member.email === currentEmail && normalize(displayName) === payerName));
+    if (matches.length !== 1) {
+      throw new Error(`Cannot identify the payer for “${expense.user_expense_description || expense.user_expense_name}”. Review this expense’s member details.`);
     }
-  });
-  return expenseData;
-};
-
-export   function calculateOwes(people: People[], displayName: string) {
-  const numPeople = people.length;
-
-  const totalExpenses = people.map((person) =>
-    person.expenses.reduce((acc: number, expense: number) => acc + expense, 0)
-  );
-
-  const totalExpenseSum = totalExpenses.reduce(
-    (acc: number, total: number) => acc + total,
-    0
-  );
-  const averageExpense = totalExpenseSum / numPeople;
-  const balances = new Array(numPeople).fill(0);
-  for (let i = 0; i < numPeople; i++) {
-    balances[i] = totalExpenses[i] - averageExpense;
+    matches[0].expenses.push(expense.user_expense_amount);
+    matches[0].name = expense.user_expense_name;
   }
 
-  const transactions: Transaction[] = [];
+  return members.map(member => ({
+    name: member.email === currentEmail ? "You" :
+      member.name === "You" || members.some(other => other.email !== member.email && other.name === member.name)
+        ? member.email : member.name,
+    expenses: member.expenses,
+  }));
+};
 
-  for (let i = 0; i < numPeople; i++) {
-    if (balances[i] < 0) {
-      for (let j = 0; j < numPeople; j++) {
-        if (balances[j] > 0) {
-          const transferAmount = Math.min(Math.abs(balances[i]), balances[j]);
-          balances[i] += transferAmount;
-          balances[j] -= transferAmount;
-          transactions.push({
-            from:
-              people[i].name === displayName ? "You" : people[i].name,
-            to: people[j].name === displayName ? "You" : people[j].name,
-            amount: transferAmount,
-          });
-        }
-      }
+export function calculateOwes(people: People[]): Transaction[] {
+  if (!people.length) return [];
+  const totals = people.map(person => person.expenses.reduce((sum, expense) => sum + Math.round(expense * 100), 0));
+  const total = totals.reduce((sum, paid) => sum + paid, 0);
+  const share = Math.floor(total / people.length);
+  const remainder = total % people.length;
+  // Allocate leftover cents in member order so every cent has exactly one owner.
+  const balances = totals.map((paid, index) => paid - share - (index < remainder ? 1 : 0));
+  const transactions: Transaction[] = [];
+  for (let i = 0; i < people.length; i++) {
+    for (let j = 0; balances[i] < 0 && j < people.length; j++) {
+      if (balances[j] <= 0) continue;
+      const cents = Math.min(-balances[i], balances[j]);
+      balances[i] += cents;
+      balances[j] -= cents;
+      transactions.push({ from: people[i].name, to: people[j].name, amount: cents / 100 });
     }
   }
   return transactions;
@@ -93,18 +83,18 @@ export const generateBalanceSummaryStatement = <T extends Transaction>(
   const results = transactions.map((transaction,i) =>
     transaction.from === "You"
       ? {
-          userString: `${transaction.from?.split(" ")[0]} owe ${
+          userString: `${transaction.from} owe ${
             transaction.to
           }`,
-          userNumber: parseInt(transaction.amount.toFixed(2)),
+          userNumber: Number(transaction.amount.toFixed(2)),
           groupId: intId ? intId+i : i,
           groupName: currentName,
         }
       : {
-          userString: `${transaction.from?.split(" ")[0]} owes ${
+          userString: `${transaction.from} owes ${
             transaction.to
           }`,
-          userNumber: parseInt(transaction.amount.toFixed(2)),
+          userNumber: Number(transaction.amount.toFixed(2)),
           groupId: intId ? intId+i : i,
           groupName: currentName,
         }
@@ -120,16 +110,16 @@ export const generateBalanceSettleUpStatement = <T extends Transaction>(
   const results = transactions.map((transaction) =>
     transaction.from === "You"
       ? {
-          userString: `${transaction.from?.split(" ")[0]} paied ${
+          userString: `${transaction.from} paied ${
             transaction.to
           }`,
-          userNumber: parseInt(transaction.amount.toFixed(2)),
+          userNumber: Number(transaction.amount.toFixed(2)),
         }
       : {
-          userString: `${transaction.from?.split(" ")[0]} paied ${
+          userString: `${transaction.from} paied ${
             transaction.to
           }`,
-          userNumber: parseInt(transaction.amount.toFixed(2)),
+          userNumber: Number(transaction.amount.toFixed(2)),
         }
   );
 

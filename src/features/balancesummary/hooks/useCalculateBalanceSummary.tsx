@@ -1,24 +1,23 @@
-import { useEffect, useState } from "react";
-import { createUserObject } from "../../../utils/utils";
-import { calculateOwes } from "../../../utils/utils";
-import { generateBalanceSummaryStatement } from "../../../utils/utils";
-import { BalanceSummary } from "../../../types";
+import { useMemo } from "react";
+import { createUserObject, calculateOwes, generateBalanceSummaryStatement } from "../../../utils/utils";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balanceSummarySlice";
+import { useFetchUserGroupsQuery } from "../../groupexpense/groupexpenseTableSlice";
 
-export const useCalculateBalanceSummary = (id:string) => {
-    const [balanceArray, setBalanceArray] = useState<(BalanceSummary)[]>([]);
-    const { data } = useFetchExpensesForBalanceSummaryGroupQuery(id);
+export const useCalculateBalanceSummary = (id: string) => {
     const user = useAppSelector(selectUser);
-    useEffect(() => {
-        if(data) {
-            const userObject = createUserObject(data, user.displayName);
-            const result = calculateOwes(userObject, user.displayName);
-            const balanceSummaryStatement = generateBalanceSummaryStatement(result)
-            setBalanceArray(balanceSummaryStatement as (BalanceSummary)[]);
+    const { currentData: data, isFetching, isError } = useFetchExpensesForBalanceSummaryGroupQuery(id, { skip: !id });
+    const { data: groups, isError: groupsError } = useFetchUserGroupsQuery(user.email);
+    const group = groups?.find(group => group.id === id);
+    return useMemo(() => {
+        if (isError || groupsError) return { balanceArray: [], balanceError: "Unable to load this group’s balances.", isLoading: false };
+        if (!data || !group || isFetching) return { balanceArray: [], balanceError: "", isLoading: true };
+        try {
+            const people = createUserObject(data, user.displayName || "", group.user_group_email, user.email);
+            return { balanceArray: generateBalanceSummaryStatement(calculateOwes(people)), balanceError: "", isLoading: false };
+        } catch (error) {
+            return { balanceArray: [], balanceError: (error as Error).message, isLoading: false };
         }
-      }, [data, user.displayName]);
-    return { balanceArray }
-}
-
+    }, [data, group, isFetching, isError, groupsError, user.displayName, user.email]);
+};
