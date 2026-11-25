@@ -17,26 +17,28 @@ export const useCalculateAllBalanceSummary = () => {
     const { data: userGroups } = useFetchUserGroupsQuery(user.email);
     const currentGroupId = userGroups?.[currentGroupIndex]?.id;
     const currentName = userGroups?.[currentGroupIndex]?.user_group_name;
-    const { data: currentGroupExpenses } = useFetchExpensesForBalanceSummaryGroupQuery(currentGroupId);
+    const { currentData: currentGroupExpenses } = useFetchExpensesForBalanceSummaryGroupQuery(currentGroupId, { skip: !currentGroupId });
     useEffect(() => {
         setAllBalanceSummary([]);
         setCurrentGroupIndex(0);
-    }, []); 
+    }, [user.email]);
 
     useEffect(() => {
-        if (currentGroupExpenses) {
+        if (currentGroupExpenses && currentGroupId) {
             const userObject = createUserObject(currentGroupExpenses, user.displayName);
             const result = calculateOwes(userObject, user.displayName);
             const balanceSummaryStatement = generateBalanceSummaryStatement(result, currentGroupId, currentName);
-            setAllBalanceSummary((prevState) => [...prevState, ...balanceSummaryStatement]);
+            setAllBalanceSummary((prevState) => [
+                ...prevState.filter(balance => balance.sourceGroupId !== currentGroupId),
+                ...balanceSummaryStatement.map(balance => ({ ...balance, sourceGroupId: currentGroupId })),
+            ]);
 
             // Move to the next group
             if (currentGroupIndex < (userGroups?.length || 0) - 1) {
                 setCurrentGroupIndex(prev => prev + 1);
             }
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentGroupExpenses]);
+    }, [currentGroupExpenses, currentGroupId, currentName, currentGroupIndex, userGroups?.length, user.displayName]);
     return { allBalanceSummary };
 };
 

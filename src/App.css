@@ -130,7 +130,17 @@ body {
 .balance-totals > div { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; }
 .balance-totals dt { color: #52615e; font-size: 13px; }
 .balance-totals dd { font-size: 18px; font-weight: 600; letter-spacing: -.03em; }
-.group-balance-totals:has(+ div) { border-bottom: 1px solid #eeedf3; padding-bottom: 20px; margin-bottom: 8px; }
+.balance-breakdown-description { margin-top: -10px; color: var(--muted); font-size: 12px; }
+.balance-breakdown-list { display: flex; flex-direction: column; gap: 28px; margin-top: 24px; }
+.balance-breakdown-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.balance-breakdown-heading h3 { font-family: 'Geist', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0; overflow-wrap: anywhere; }
+.balance-breakdown-heading > span { flex-shrink: 0; font-size: 12px; font-weight: 500; }
+.balance-breakdown-group .balance-row { gap: 12px; padding: 16px; background: white; border: 1px solid #d8e1ea; border-radius: 12px; box-shadow: 0 2px 3px rgb(15 23 42 / 3%); }
+.balance-breakdown-group .balance-row + .balance-row { margin-top: 12px; }
+.balance-breakdown-group .balance-avatar { width: 36px; height: 36px; font-size: 12px; }
+.balance-breakdown-group .balance-person { display: flex; flex-direction: column; gap: 3px; font-size: 13px; font-weight: 500; }
+.balance-breakdown-group .balance-person small { font-size: 11px; font-weight: 500; }
+.balance-breakdown-group .balance-row > strong { font-size: 18px; letter-spacing: -.03em; }
 .balance-positive { color: var(--positive); }
 .balance-negative { color: var(--negative); }
 .balance-neutral { color: var(--muted); }
@@ -175,12 +185,9 @@ body {
 .expense-amount { font-size: 14px; font-weight: 600; white-space: nowrap; }
 .all-transactions-link { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; margin: 8px 0 4px; border-radius: 8px; font-size: 12px; color: var(--accent); background: #fafafd; }
 .all-transactions-link:hover { background: #edf5f1; }
-.balance-summary-column { width: 280px; flex-shrink: 0; position: sticky; top: 32px; padding-top: 92px; }
+.balance-summary-column { width: 320px; flex-shrink: 0; position: sticky; top: 32px; padding-top: 92px; border-left: 1px solid #e2e5ee; padding-left: 24px; }
 .balance-summary-column .balance-list { display: flex; flex-direction: column; }
 .balance-summary-column .balance-groups .friends-balances > .balance-list { gap: 16px; }
-.balance-summary-column .balance-row { gap: 8px; }
-.balance-summary-column .balance-avatar { width: 28px; height: 28px; font-size: 11px; }
-.balance-summary-column .balance-row > strong { font-size: 13px; }
 .mobile-balance-summary { display: none; }
 .group-page-heading, .activity-page-heading { margin: 4px 0 36px; }
 .group-page-heading h2, .activity-page-heading h2 { font-size: 32px; font-weight: 600; margin: 6px 0; }
@@ -198,7 +205,7 @@ body {
   .app-topnav { padding-right: 28px; padding-left: 28px; }
   .app-layout { gap: 24px; padding-right: 28px; padding-left: 28px; }
   .dashboard-columns { grid-template-columns: 1fr; }
-  .balance-summary-column { width: 240px; }
+  .balance-summary-column { width: 280px; }
   .page-topbar { flex-wrap: wrap; }
 }
 @media (max-width: 1023px) {
@@ -272,9 +279,8 @@ body {
     gap: 32px;
     align-items: start;
   }
-  .dashboard-content > .balance-overview,
   .dashboard-content > .dashboard-columns { display: contents; }
-  .dashboard-content .net-balance-card { grid-column: 2; grid-row: 1; }
+  .dashboard-content > .balance-overview { grid-column: 2; grid-row: 1 / span 2; align-self: stretch; border-left: 1px solid #e2e5ee; padding-left: 24px; margin-bottom: 0; }
   .dashboard-content .dashboard-groups { grid-column: 1; grid-row: 1; }
   .dashboard-content .dashboard-activity { grid-column: 1; grid-row: 2; }
 }
@@ -346,6 +352,4 @@ body {
 @media (min-width: 1024px) {
   .dashboard-content .net-balance-card { margin-bottom: 0; }
   .app-layout:has(.dashboard-content) .page-topbar { min-height: 48px; margin-bottom: 8px; }
-  .dashboard-content .balance-row { padding: 10px 0; }
-  .dashboard-content .balance-list { gap: 12px; }
 }

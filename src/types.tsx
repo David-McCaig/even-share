@@ -12,6 +12,8 @@ export interface AuthValues {
 export interface BalanceSummary {
   userString: string;
   userNumber: number;
+  groupName?: string;
+  sourceGroupId?: string;
   groupId?: any;
 }
 
