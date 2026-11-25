@@ -1,6 +1,7 @@
 import { firestoreApi } from "../../firestoreApi";
 import {
   query,
+  documentId,
   collection,
   getDocs,
   orderBy,
@@ -14,9 +15,27 @@ import { DocumentData, DocumentSnapshot } from "firebase/firestore";
 
 let pagination: DocumentSnapshot<DocumentData> | null = null;
 
+// Recent activity stores the same expense ID as its source group, but no group metadata.
+async function attachExpenseGroups(expenses: UserGroups, email: string): Promise<UserGroups> {
+  if (!expenses.length) return expenses;
+  try {
+    const groups = await getDocs(query(collection(db, "userGroups"), where("user_group_email", "array-contains", email)));
+    const matches = await Promise.all(groups.docs.map(async group => {
+      const groupExpenses = await getDocs(query(collection(db, `userGroups/${group.id}/expenses`), where(documentId(), "in", expenses.map(expense => expense.id))));
+      return groupExpenses.docs.map(expense => [expense.id, { user_group_id: group.id, user_group_name: group.data().user_group_name }] as const);
+    }));
+    const groupByExpense = new Map(matches.flat());
+    return expenses.map(expense => ({ ...expense, ...groupByExpense.get(expense.id) }));
+  } catch (error) {
+    console.error("Unable to load activity group names:", error);
+    return expenses;
+  }
+}
+
+
 export const recentActivityApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
-    fetchRecentActivity: builder.query<UserGroups, UserGroups | void>({
+    fetchRecentActivity: builder.query<UserGroups, string>({
       async queryFn(email) {
         pagination = null;
 
@@ -49,7 +68,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
             } as UserGroup);
           });
 
-          return { data: expenseArray };
+          return { data: await attachExpenseGroups(expenseArray, email) };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error(error.message);
@@ -59,7 +78,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
       providesTags: ["recentActivity"],
     }),
 
-    fetchRecentActivityPagination: builder.query<UserGroups, UserGroups | void>(
+    fetchRecentActivityPagination: builder.query<UserGroups, string>(
       {
         async queryFn(email) {
           const q = query(
@@ -95,7 +114,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
                 },
               } as UserGroup);
             });
-            return { data: expenseArray };
+            return { data: await attachExpenseGroups(expenseArray, email) };
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {

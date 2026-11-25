@@ -1,40 +1,18 @@
 import { useCalculateAllBalanceSummary } from "../hooks/useCalculateAllBalanceSummary";
-import BalanceSummaryCard from "./BalanceSummaryCard";
-import { GroupExpenses } from "../../../types";
+import { getPersonalBalance } from "../../../utils/utils";
+import BalanceTotals from "./BalanceTotals";
 
-function BalanceSummaryAllGroups() {
+function BalanceSummaryAllGroups({ overview = false }: { overview?: boolean }) {
   const { allBalanceSummary } = useCalculateAllBalanceSummary();
-  const groupedExpenses = groupExpensesByGroupName(allBalanceSummary);
-
-  function groupExpensesByGroupName(expenses) {
-    return expenses.reduce((acc, expense) => {
-      if (!acc[expense.groupName]) {
-        acc[expense.groupName] = [];
-      }
-      acc[expense.groupName].push(expense);
-      return acc;
-    }, {});
-  }
+  const { owed, owing } = getPersonalBalance(allBalanceSummary);
 
   return (
-    <article>
-      {Object.keys(groupedExpenses).map((groupName) => (
-        <div key={groupName}>
-          <h3 className="mt-2 ml-4 text-neutral-500 font-semibold text-lg mb-2">
-            {groupName}
-          </h3>
-          {groupedExpenses[groupName].map((expense: GroupExpenses) => (
-            <div className="mb-2" key={expense?.groupId}>
-            <BalanceSummaryCard
-              userName={expense?.userString}
-              userAmount={expense?.userNumber || 0}
-            />
-            </div>
-          ))}
-        </div>
-      ))}
-    </article>
+    <div className={overview ? "balance-overview" : "balance-groups"}>
+      <section className="net-balance-card">
+        <div className="section-heading"><h2>Your Balance</h2></div>
+        <BalanceTotals owed={owed} owing={owing} showZeroBalances />
+      </section>
+    </div>
   );
 }
-
 export default BalanceSummaryAllGroups;

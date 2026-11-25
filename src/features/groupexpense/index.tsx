@@ -4,11 +4,14 @@ import { useDispatchGroupID } from "../../features/groupexpense/hooks/useDispatc
 import { usePagination } from "../../hooks/usePagination";
 import {
   useFetchExpensesForGroupQuery,
+  useFetchUserGroupsQuery,
   useFetchPaginatedExpensesForGroupQuery,
 } from "./groupexpenseTableSlice";
 import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../features/authentication/userSlice";
-import { getFormattedDate } from "../../utils/utils";
+import PieChart from "../dashboard/Components/PieChart";
+import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balancesummary/balanceSummarySlice";
+import { getFormattedDate, totalUserExpenses } from "../../utils/utils";
 import { selectExpenseIcon } from "../../utils/selectExpenseIcon";
 import { Button } from "../../Components/ui/button";
 import TopBar from "../../Components/TopBar";
@@ -24,11 +27,16 @@ type UrlParams = {
 function Index() {
   const id = useParams<UrlParams>()?.id;
   const user = useAppSelector(selectUser);
+  const { data: groups } = useFetchUserGroupsQuery(user.email);
+  const group = groups?.find(group => group.id === id);
+  const { data: balanceExpenses } = useFetchExpensesForBalanceSummaryGroupQuery(id);
+  const contributions = totalUserExpenses(balanceExpenses) || [];
   const [groupExpenses, setGroupExpenses] = useState<UserGroup[]>([]);
   useDispatchGroupID(id);
 
   const {
     data: groupExpensesData,
+    isLoading,
     refetch,
     isError: expensesIsError,
     error: expensesError,
@@ -69,11 +77,14 @@ function Index() {
   }
   return (
     <>
-      <article className="w-full">
-        <TopBar currentPage={"Group"} />
-        <div className="lg:hidden">
+      <article className="w-full group-expenses-page">
+        <TopBar currentPage={group?.user_group_name || "Group"} />
+        <header className="group-page-heading"><p className="eyebrow">Shared expenses</p><h2>{group?.user_group_name || "Group"}</h2><p>{group?.user_group_email?.length ?? 0} members <span aria-hidden="true">·</span> Every shared moment, accounted for.</p></header>
+        {balanceExpenses && <div className="group-contributions"><PieChart groupName="Group contributions" chartData={{ labels: contributions.map(data => `${data.user_expense_name} $${data.user_expense_amount.toFixed(2)}`), datasets: [{ data: contributions.map(data => data.user_expense_amount) }] }} /></div>}
+        <div className="mobile-balance-summary">
           <BalanceSummary />
         </div>
+        <section className="expense-list-section"><div className="section-heading"><h2>Expenses</h2></div><div className="expense-list">
         {groupExpenses?.map((expense) => (
           <div key={expense.id}>
             <ExpenseTableRow
@@ -83,7 +94,7 @@ function Index() {
                 expense?.created_at?.seconds,
                 expense?.created_at?.nanoseconds
               )}
-              expenseAmount={`$${expense.user_expense_amount}`}
+              expenseAmount={`$${expense.user_expense_amount.toFixed(2)}`}
               expenseId={expense.id}
               billPaidBy={
                 user.displayName === expense?.user_expense_name
@@ -94,9 +105,11 @@ function Index() {
             />
           </div>
         ))}
-        <div className="w-full flex justify-center mt-4">
+        {!groupExpenses?.length && <p className="empty-state" role="status">{isLoading ? "Loading expenses…" : "No expenses yet. Add the first one to get started."}</p>}
+        </div></section>
+        <div className="pagination-actions">
           <Button
-            className="bg-gray-200 w-40 text-black hover:bg-gray-300 "
+            variant="ghost"
             onClick={showMoreClick}
           >
             {isFetching ? "Loading..." : "Show more"}

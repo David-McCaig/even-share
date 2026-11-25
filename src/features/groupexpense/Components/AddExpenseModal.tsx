@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useFetchUserGroupsQuery } from "../groupexpenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
@@ -10,7 +11,7 @@ import { v4 as uuid } from "uuid"
 import DropDownMenu from "../../../Components/DropDownMenu";
 import { Button } from "../../../Components/ui/button";
 import { Input } from "../../../Components/ui/input";
-import { Label } from "@radix-ui/react-dropdown-menu";
+import { Label } from "../../../Components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "../../../Components/ui/dialog";
 
 
@@ -93,19 +95,20 @@ function AddExpenseModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={OpenModalClick}>Add Expense</Button>
+        <Button className="add-expense-trigger" onClick={OpenModalClick}><Plus size={16} aria-hidden="true" /><span>Add Expense</span></Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[480px]">
         <form onSubmit={formik.handleSubmit}>
           <DialogHeader>
+            <span className="modal-icon"><Plus size={22} aria-hidden="true" /></span>
             <DialogTitle>Add Expense</DialogTitle>
             <DialogDescription>
-              You can add an expense to the group here.
+              Add a shared expense. We’ll work out who owes what.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Description</Label>
+          <div className="modal-fields">
+            <div className="modal-field">
+              <Label htmlFor="userExpenseDescription">Description</Label>
               <Input
                 id="userExpenseDescription"
                 name="userExpenseDescription"
@@ -113,7 +116,7 @@ function AddExpenseModal() {
                 type="text"
                 onChange={formik.handleChange}
                 value={formik.values.userExpenseDescription}
-                placeholder="Enter a Description"
+                placeholder="e.g. Dinner, groceries, or a taxi"
                 className="col-span-3"
               />
             </div>
@@ -123,12 +126,13 @@ function AddExpenseModal() {
                 {formik.errors.userExpenseDescription}
               </div>
             ) : null}
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Price</Label>
+            <div className="modal-field">
+              <Label htmlFor="userExpenseAmount">Amount</Label>
               <Input
                 id="userExpenseAmount"
                 name="userExpenseAmount"
                 type="number"
+                inputMode="decimal"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.userExpenseAmount}
@@ -149,7 +153,8 @@ function AddExpenseModal() {
           ) : null}
 
           <DialogFooter>
-            <Button type="submit">Add Expense</Button>
+            <DialogClose asChild><Button type="button" variant="outline">Cancel</Button></DialogClose>
+            <Button className="modal-primary" type="submit">Add Expense</Button>
           </DialogFooter>
         </form>
       </DialogContent>

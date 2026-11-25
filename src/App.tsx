@@ -20,16 +20,16 @@ function App() {
   const location = useLocation();
 
   return (
-    <div className="w-full h-full text-primary-font-color">
+    <div className={userInfo ? "app-shell" : "w-full h-full text-primary-font-color"}>
       {userInfo && (
         <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
       )}
-      <div className="border-b-[.5px]"></div>
+
       <div
         className={
           location.pathname === "/"
             ? "m-auto h-full"
-            : "flex m-auto h-full max-w-5xl"
+            : userInfo ? "app-layout" : "flex m-auto h-full max-w-5xl"
         }
       >
         {userInfo && (
@@ -40,7 +40,7 @@ function App() {
             <Route key={route?.id} path={route?.path} element={route?.element} />
           ))}
         </Routes>
-        {userInfo && (
+        {userInfo && location.pathname !== "/dashboard" && (
           <BalanceSummaryColumn>
             <BalanceSummary />
           </BalanceSummaryColumn>

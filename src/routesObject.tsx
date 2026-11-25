@@ -5,6 +5,7 @@ import { Navigate } from "react-router";
 import LandingPage from "./Pages/LandingPage";
 import Login from "./Pages/LoginPage";
 import SignUp from "./Pages/SignUpPage";
+import GroupsPage from "./Pages/GroupsPage";
 import Dashboard from "./Pages/DashboardPage";
 import GroupExpense from "./Pages/GroupExpensePage";
 import RecentActivityPage from "./Pages/RecentActivityPage";
@@ -25,6 +26,7 @@ const routeObject: RoutesObject = (userInfo) => [
   { id:4, path: "/dashboard", element: userInfo ? <Dashboard /> : <Navigate to="/login" /> },
   { id:5, path: "/group/:id", element: userInfo ? <GroupExpense /> : <Navigate to="/login" /> },
   { id:6, path: "/recentactivity", element: userInfo ? <RecentActivityPage /> : <Navigate to="/login" /> },
+  { id:8, path: "/groups", element: userInfo ? <GroupsPage /> : <Navigate to="/login" /> },
   { id:7, path: "/profile", element: userInfo ? <ProfilePage /> : <Navigate to="/login" /> },
 ];
 

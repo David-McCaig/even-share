@@ -16,6 +16,7 @@ import {
 
 interface ExpenseTableRowProps {
   expenseDescription: string;
+  groupName?: string;
   expenseDate: string;
   expenseAmount: string;
   expenseId: string | undefined;
@@ -25,6 +26,7 @@ interface ExpenseTableRowProps {
 
 function ExpenseTableRow({
   expenseDescription,
+  groupName,
   expenseDate,
   expenseAmount,
   expenseId,
@@ -44,56 +46,15 @@ function ExpenseTableRow({
   };
 
   return (
-    <article className="">
-      <div className="pr-4 bg-primary-bg-color text-primary-font-color border shadow-md dark:bg-gray-800 dark:border-gray-700 ">
-        <div className="flow-root">
-          <ul
-            role="list"
-            className="divide-y divide-gray-200 dark:divide-gray-700"
-          >
-            <li className="py-3 sm:py-4">
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0"></div>
-                {expenseIcon}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate dark:text-white">
-                    {expenseDescription}
-                  </p>
-                  <p className="text-sm text-secondary-font-color truncate dark:text-gray-400">
-                    {expenseDate}
-                  </p>
-                </div>
-                <div className="w-20 flex flex-col text-base font-semibold dark:text-white">
-                  <p className="text-secondary-font-color">{billPaidBy}</p>
-                  <p>{expenseAmount}</p>
-                </div>
-                {groupId ? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={deleteExpenseClick}>
-                        Delete
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>Update</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : (
-                  <div className="w-4"></div>
-                )}
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+    <article className="expense-row">
+      <span className="expense-icon" aria-hidden="true">{expenseIcon}</span>
+      <div className="expense-description"><h3>{expenseDescription}</h3><p>{groupName && <><span className="expense-group-name">{groupName}</span> <span aria-hidden="true">·</span> </>}{billPaidBy} <span aria-hidden="true">·</span> {expenseDate}</p></div>
+      <strong className="expense-amount">{expenseAmount}</strong>
+      {groupId && <DropdownMenu>
+        <DropdownMenuTrigger asChild><Button variant="ghost" className="h-8 w-8 p-0"><span className="sr-only">Actions for {expenseDescription}</span><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
+        <DropdownMenuContent align="end"><DropdownMenuLabel>Actions</DropdownMenuLabel><DropdownMenuSeparator /><DropdownMenuItem onClick={deleteExpenseClick}>Delete</DropdownMenuItem><DropdownMenuItem>Update</DropdownMenuItem></DropdownMenuContent>
+      </DropdownMenu>}
     </article>
   );
 }
-
 export default ExpenseTableRow;

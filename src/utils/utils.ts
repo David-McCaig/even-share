@@ -179,3 +179,9 @@ export const totalUserExpenses = (expenses) => {
   }, []);
 }
 
+
+export function getPersonalBalance(statements: BalanceSummary[]) {
+  const owed = statements.filter(statement => statement.userString.endsWith("owes You")).reduce((sum, statement) => sum + statement.userNumber, 0);
+  const owing = statements.filter(statement => statement.userString.startsWith("You owe ")).reduce((sum, statement) => sum + statement.userNumber, 0);
+  return { owed, owing, net: owed - owing };
+}

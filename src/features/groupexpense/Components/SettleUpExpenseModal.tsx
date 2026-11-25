@@ -1,3 +1,7 @@
+import { Link } from "react-router-dom";
+import { selectUser } from "../../authentication/userSlice";
+import { useFetchUserGroupsQuery } from "../groupexpenseTableSlice";
+import { CheckCircle2, ArrowRight, Users } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "react-router";
 import { useFetchExpensesForGroupQuery } from "../groupexpenseTableSlice";
@@ -14,7 +18,6 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { toast } from "react-hot-toast";
-import arrowRight from "../../../assets/icons/expenseicons/arrow-forward-outline.svg";
 import { Avatar, AvatarFallback } from "../../../Components/ui/avatar";
 import { Button } from "../../../Components/ui/button";
 import {
@@ -25,11 +28,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "../../../Components/ui/dialog";
 
 function SettleUpExpenseModal() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const user = useAppSelector(selectUser);
+  const { data: groups, isLoading: groupsLoading, isError: groupsError } = useFetchUserGroupsQuery(user.email);
 
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,60 +84,66 @@ function SettleUpExpenseModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="ml-2">Settle up</Button>
+        <Button variant="outline" className="settle-expense-trigger"><CheckCircle2 size={16} aria-hidden="true" /><span>Settle Up</span></Button>
       </DialogTrigger>
       {location.pathname == `/group/${groupId}` ? (
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
+            <span className="modal-icon"><CheckCircle2 size={22} aria-hidden="true" /></span>
             <DialogTitle>Settle Up</DialogTitle>
             <DialogDescription>
-              If you have settled up outside of EvenShare, you can record it
-              here
+              Already paid outside EvenShare? Record the payments below to settle this group’s expenses.
             </DialogDescription>
+          </DialogHeader>
+          <div className="settlement-payments">
             {balanceArray[0]?.userString !== "All people are settled up" ? (
               balanceArray?.map((statement, i) => (
-                <div key={i} className="flex flex-col items-center mt-4">
-                  <div className="flex justify-center items-center gap-3 mt-4">
-                    <Avatar className="w-20 h-20">
+                <div key={i} className="settlement-payment">
+                  <div className="settlement-avatars" aria-hidden="true">
+                    <Avatar className="w-9 h-9">
                       <AvatarFallback>
-                        {statement?.userString?.split(" ")[0]}
+                        {statement?.userString?.split(" ")[0]?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <img src={arrowRight} className="w-8" />
-                    <Avatar className="w-20 h-20">
+                    <ArrowRight size={16} />
+                    <Avatar className="w-9 h-9">
                       <AvatarFallback>
-                        {statement?.userString?.split(" ")[2]}
+                        {statement?.userString?.split(" ")[2]?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                   </div>
-                  <h2 className="text-xl mt-4">
+                  <span className="settlement-payment-name">
                     {changeOweToPaied(statement.userString)}
-                  </h2>
-                  <h2 className="text-xl mt-1">{"$" + statement.userNumber}</h2>
+                  </span>
+                  <strong>${statement.userNumber.toFixed(2)}</strong>
                 </div>
               ))
             ) : (
-              <div className="flex flex-col items-center mt-4">
-                <h2 className="text-xl my-8 ">{balanceArray[0]?.userString}</h2>
+              <div className="settlement-empty">
+                <CheckCircle2 size={28} aria-hidden="true" />
+                <p>{balanceArray[0]?.userString}</p>
               </div>
             )}
-          </DialogHeader>
+          </div>
 
-          <DialogFooter style={{ justifyContent: "center", width: "100%" }}>
-            <Button style={{ width: "100%" }} onClick={settleUpClick}>
-              Settle up expenses
+          <DialogFooter>
+            <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
+            <Button className="modal-primary" onClick={settleUpClick}>
+              Record settlement
             </Button>
           </DialogFooter>
         </DialogContent>
       ) : (
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
-            <div className="mx-3">
-              <DialogDescription className="text-lg">
-                Please navigate to the group you would like to settle up with.
-              </DialogDescription>
-            </div>
+            <span className="modal-icon"><CheckCircle2 size={22} aria-hidden="true" /></span>
+            <DialogTitle>Settle Up</DialogTitle>
+            <DialogDescription>Choose a group to review its balances before recording a settlement.</DialogDescription>
           </DialogHeader>
+          <div className="settlement-group-list">
+            {groupsLoading ? <p role="status">Loading your groups…</p> : groupsError ? <p role="alert">Unable to load your groups. Please try again later.</p> : !groups?.length ? <p>Create a group and add shared expenses to get started.</p> : groups.map(group => <Link className="settlement-group-option" key={group.id} to={`/group/${group.id}`}><Users size={20} aria-hidden="true" /><span>{group.user_group_name}<small>{group.user_group_email?.length ?? 0} members</small></span><ArrowRight size={18} aria-hidden="true" /></Link>)}
+          </div>
+          <DialogFooter><DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose></DialogFooter>
         </DialogContent>
       )}
     </Dialog>

@@ -21,6 +21,7 @@ function RecentActivityPage() {
 
   const {
     data: recentActivity,
+    isLoading,
     refetch: refetchRecentActivity,
     isError: recentActivityisError,
     error: recentActivityError,
@@ -73,21 +74,24 @@ function RecentActivityPage() {
 
 
   return (
-    <section className="w-full">
+    <section className="w-full recent-activity-page">
       <TopBar currentPage={"Recent Activity"} />
-      <div className="lg:hidden">
+      <div className="mobile-balance-summary">
         <BalanceSummary />
       </div>
+      <header className="activity-page-heading"><p className="eyebrow">Your shared story</p><h2>Recent Activity</h2><p>A clear view of what’s been shared.</p></header>
+      <div className="expense-list">
       {expensesArray?.map((expense) => (
         <div key={expense?.id}>
           <ExpenseTableRow
+            groupName={expense.user_group_name || "Group unavailable"}
             expenseIcon={selectExpenseIcon(expense?.user_expense_description)}
             expenseDescription={expense?.user_expense_description}
             expenseDate={getFormattedDate(
               expense?.created_at?.seconds,
               expense?.created_at?.nanoseconds
             )}
-            expenseAmount={`$${expense?.user_expense_amount}`}
+            expenseAmount={`$${expense?.user_expense_amount.toFixed(2)}`}
             expenseId={expense?.id}
             billPaidBy={
               displayName === expense?.user_expense_name
@@ -97,9 +101,11 @@ function RecentActivityPage() {
           />
         </div>
       ))}
-      <div className="w-full flex justify-center mt-4">
+      {!expensesArray?.length && <p className="empty-state" role="status">{isLoading ? "Loading activity…" : "Your shared expenses will appear here."}</p>}
+      </div>
+      <div className="pagination-actions">
         <Button
-          className="bg-gray-200 w-40 text-black hover:bg-gray-300"
+          variant="ghost"
           onClick={nextPageClick}
         >
           {isFetching ? "Loading..." : "Show more"}

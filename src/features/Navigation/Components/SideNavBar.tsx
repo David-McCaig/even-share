@@ -1,24 +1,11 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
+import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
+import { LayoutDashboard, History, Users, User, X, BarChart3, LogOut } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { useFetchUserGroupsQuery } from "../../groupexpense/groupexpenseTableSlice";
-import { useNavigateHome } from "./hooks/useNavigateHome";
-import { selectUser } from "../../authentication/userSlice";
-import  menuToggle  from "../../../assets/icons/expenseicons/menu-outline.svg";
+import { selectUser, logout } from "../../authentication/userSlice";
+import { auth } from "../../../firebase/firebaseconfig";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../Components/ui/dropdown-menu";
 import CreateGroupModal from "./CreateGroupModal";
-import {
-  DashboardIcon,
-  ActivityLogIcon,
-  GroupIcon,
-  PersonIcon
-} from "@radix-ui/react-icons";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../../../Components/ui/accordion";
 
 type NavBarProps = {
   showNavBar: boolean;
@@ -26,99 +13,59 @@ type NavBarProps = {
 };
 
 function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
-  const [activeLink, setActiveLink] = useState("/");
-
-  const userInfo = useAppSelector(selectUser);
-  const userEmail = userInfo?.email;
-  const { data } = useFetchUserGroupsQuery(userEmail);
-
-  const location = useLocation()?.pathname
-
-  const closeNavClick = () => {
-    !showNavBar && setShowNavBar(true);
+  const user = useAppSelector(selectUser);
+  const { data: groups } = useFetchUserGroupsQuery(user?.email);
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    auth.signOut().then(() => { dispatch(logout()); navigate("/login"); })
+      .catch(error => console.error("Error signing out:", error));
   };
-  //navigate back to home page when user clicks evenShare logo
-  useNavigateHome(location,setActiveLink)
+  const closeNav = () => setShowNavBar(true);
 
   return (
-    <nav className="z-40">
-      <div className="sticky top-24 sm:top-0">
-        <aside
-          className={
-            showNavBar
-              ? `fixed top-16 sm:static left-0 w-64 rounded-medium  transition-transform -translate-x-full sm:translate-x-0  `
-              : "fixed top-0 left-0 sm:static w-64 h-screen transition-transform  sm:translate-x-0"
-          }
-        >
-          <div className="bg-primary-bg-color  h-screen pt-2 overflow-y-auto dark:bg-gray-800 rounded-xl shadow-lg sm:pt-0">
-            <ul className="space-y-2 font-medium">
-            <img src={menuToggle} onClick={closeNavClick} className="w-12 h-12 ml-1 sm:hidden"/>
-              <li></li>
-              <li>
-                <Link
-                  className={`flex items-center p-2 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/dashboard" ? "text-primary-button-color" : "text-primary-font-color"}`}
-                  onClick={() => setActiveLink("/dashboard")}
-                  to={"/dashboard"}
-                >
-                  <DashboardIcon className="w-6 h-6 " />
-                  <span className="ml-3 text-2xl">Dashboard</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className={`flex items-center p-2  rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/recentactivity" ? "text-primary-button-color" : ""}`}
-                  onClick={() => setActiveLink("/recentactivity")}
-                  to={"/recentactivity"}
-                >
-                  <ActivityLogIcon className="w-6 h-6" />
-                  <span className="flex-1 ml-3 whitespace-nowrap text-2xl">
-                    Recent Activity
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Accordion type="single" collapsible>
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>
-                      <GroupIcon className="w-7 h-7 mr-2" /> Group{" "}
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="text-lg">
-                        <CreateGroupModal />
-                      </div>
-                      {data?.map((group) => (
-                        <div key={group.id}>
-                          <Link 
-                          className={`${activeLink === "/group/" + group.id ? "text-primary-button-color" : ""}`}
-                          to={"/group/" + group.id}
-                          onClick={() => setActiveLink("/group/" + group.id)}
-                          >
-                            {group.user_group_name}
-                          </Link>
-                        </div>
-                      ))}
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </li>
-              <li>
-                <Link 
-                className={`flex items-center p-2  rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${activeLink === "/profile" ? "text-primary-button-color" : "text-primary-font-color"}`}
-                to={"/profile"}
-                onClick={() => setActiveLink("/profile")}
-                >
-                <PersonIcon className="w-6 h-6" />
-                  <span className="flex-1 ml-3 whitespace-nowrap mt-1 text-2xl">
-                    Profile
-                  </span>
-                </Link>
-              </li>
-            </ul>
+    <>
+      {!showNavBar && <button className="sidebar-scrim" aria-label="Close navigation" onClick={closeNav} />}
+      <aside id="app-sidebar" className={`app-sidebar ${!showNavBar ? "is-open" : ""}`} aria-label="Sidebar">
+        <Link to="/dashboard" className="app-brand" onClick={closeNav}>
+          <BarChart3 size={27} strokeWidth={1.7} /> <span>evenshare</span>
+        </Link>
+        <button className="sidebar-close" onClick={closeNav} aria-label="Close navigation"><X size={20} /></button>
+        <nav aria-label="Main navigation" className="sidebar-links">
+          <NavLink to="/dashboard" onClick={closeNav}><LayoutDashboard size={19} />Dashboard</NavLink>
+          <NavLink to="/recentactivity" onClick={closeNav}><History size={19} />Recent Activity</NavLink>
+          <NavLink to="/groups" onClick={closeNav} className="sidebar-group-heading"><Users size={19} /><span>Groups</span><span className="nav-count">{groups?.length ?? 0}</span></NavLink>
+          <div className="sidebar-groups">
+            {groups?.map(group => (
+              <NavLink key={group.id} to={`/group/${group.id}`} onClick={closeNav}>
+                <span className="group-dot" /> <span className="truncate">{group.user_group_name}</span>
+              </NavLink>
+            ))}
+            <CreateGroupModal />
           </div>
-        </aside>
-      </div>
-    </nav>
+          <NavLink to="/profile" onClick={closeNav}><User size={19} />Profile</NavLink>
+        </nav>
+        <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+        <button type="button" className="sidebar-account" aria-label="Open account menu">
+          <span className="user-initial">{(user?.displayName || user?.email || "U").slice(0, 1).toUpperCase()}</span>
+          <span className="min-w-0"><strong className="block truncate">{user?.displayName || "Your account"}</strong><small className="block truncate">{user?.email}</small></span>
+        </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="top" align="start">
+          <DropdownMenuItem onClick={() => { closeNav(); navigate("/profile"); }}><User className="mr-2 h-4 w-4" />Profile</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4" />Log out</DropdownMenuItem>
+        </DropdownMenuContent>
+        </DropdownMenu>
+      </aside>
+      <nav className="mobile-navigation" aria-label="Mobile navigation">
+        <NavLink to="/dashboard" onClick={closeNav}><LayoutDashboard size={21} /><span>Dashboard</span></NavLink>
+        <NavLink to="/recentactivity" onClick={closeNav}><History size={21} /><span>Activity</span></NavLink>
+        <NavLink to="/groups" className={pathname.startsWith("/group/") ? "active" : undefined} onClick={closeNav}><Users size={21} /><span>Groups</span></NavLink>
+        <NavLink to="/profile" onClick={closeNav}><User size={21} /><span>Profile</span></NavLink>
+      </nav>
+    </>
   );
 }
-
 export default NavBar;
