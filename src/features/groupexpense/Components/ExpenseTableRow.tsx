@@ -17,6 +17,7 @@ import {
 interface ExpenseTableRowProps {
   expenseDescription: string;
   groupName?: string;
+  settledUp?: boolean;
   expenseDate: string;
   expenseAmount: string;
   expenseId: string | undefined;
@@ -27,6 +28,7 @@ interface ExpenseTableRowProps {
 function ExpenseTableRow({
   expenseDescription,
   groupName,
+  settledUp,
   expenseDate,
   expenseAmount,
   expenseId,
@@ -48,7 +50,7 @@ function ExpenseTableRow({
   return (
     <article className="expense-row">
       <span className="expense-icon" aria-hidden="true">{expenseIcon}</span>
-      <div className="expense-description"><h3>{expenseDescription}</h3><p>{groupName && <><span className="expense-group-name">{groupName}</span> <span aria-hidden="true">·</span> </>}{billPaidBy} <span aria-hidden="true">·</span> {expenseDate}</p></div>
+      <div className="expense-description"><h3>{expenseDescription}</h3><p>{groupName && <><span className="expense-group-name">{groupName}</span> <span aria-hidden="true">·</span> </>}{billPaidBy} <span aria-hidden="true">·</span> {expenseDate}{settledUp && <> <span aria-hidden="true">·</span> Settled</>}</p></div>
       <strong className="expense-amount">{expenseAmount}</strong>
       {groupId && <DropdownMenu>
         <DropdownMenuTrigger asChild><Button variant="ghost" className="h-8 w-8 p-0"><span className="sr-only">Actions for {expenseDescription}</span><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>

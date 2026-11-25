@@ -50,6 +50,7 @@ function RecentActivityPage() {
       {expensesArray?.map((expense) => (
         <div key={expense?.id}>
           <ExpenseTableRow
+            settledUp={expense.settled_up}
             groupName={expense.user_group_name || "Group unavailable"}
             expenseIcon={selectExpenseIcon(expense?.user_expense_description)}
             expenseDescription={expense?.user_expense_description}

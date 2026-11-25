@@ -4,6 +4,7 @@ import {
   addDoc,
   collection,
   getDocs,
+  getDoc,
   deleteDoc,
   doc,
   limit,
@@ -11,6 +12,7 @@ import {
   startAfter,
   documentId,
   setDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
 import { query, where, Timestamp } from "firebase/firestore";
@@ -243,7 +245,35 @@ export const scoresApi = firestoreApi.injectEndpoints({
           return { error: error.message };
         }
       },
-      invalidatesTags: ["groupExpense"],
+      invalidatesTags: ["groupExpense", "recentActivity"],
+    }),
+    settleGroupExpenses: builder.mutation<null, { groupId: string; memberEmails: string[] }>({
+      async queryFn({ groupId, memberEmails }) {
+        try {
+          const expenses = await getDocs(query(collection(db, `userGroups/${groupId}/expenses`), where("settled_up", "==", false)));
+          const recentUsers = await Promise.all([...new Set(memberEmails)].map(email =>
+            getDocs(query(collection(db, "recentExpenses"), where("user_email", "==", email)))));
+          const batch = writeBatch(db);
+          for (const expense of expenses.docs) {
+            batch.update(expense.ref, { settled_up: true });
+          }
+          // These copies back Recent Activity; update them in the same atomic commit.
+          for (const users of recentUsers) {
+            for (const user of users.docs) {
+              const copies = await Promise.all(expenses.docs.map(expense =>
+                getDoc(doc(user.ref, "expenses", expense.id))));
+              for (const copy of copies) {
+                if (copy.exists()) batch.update(copy.ref, { settled_up: true });
+              }
+            }
+          }
+          await batch.commit();
+          return { data: null };
+        } catch (error) {
+          return { error: (error as Error).message };
+        }
+      },
+      invalidatesTags: (_result, error) => error ? [] : ["groupExpense", "balanceSummary", "recentActivity"],
     }),
     deleteExpenseGroup: builder.mutation({
       async queryFn({ groupId, expenseId, expenseGroupsArray }) {
@@ -279,7 +309,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
           return { error: error.message };
         }
       },
-      invalidatesTags: ["groupExpense"],
+      invalidatesTags: ["groupExpense", "recentActivity"],
     }),
   }),
 });
@@ -292,4 +322,5 @@ export const {
   useSetAddExpenseToGroupMutation,
   useSetAddGroupMutation,
   useDeleteExpenseGroupMutation,
+  useSettleGroupExpensesMutation,
 } = scoresApi;

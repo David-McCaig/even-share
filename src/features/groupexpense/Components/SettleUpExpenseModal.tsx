@@ -4,19 +4,9 @@ import { useFetchUserGroupsQuery } from "../groupexpenseTableSlice";
 import { CheckCircle2, ArrowRight, Users } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "react-router";
-import { useFetchExpensesForGroupQuery } from "../groupexpenseTableSlice";
-import { useFetchExpensesForBalanceSummaryGroupQuery } from "../../balancesummary/balanceSummarySlice";
+import { useSettleGroupExpensesMutation } from "../groupexpenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { useCalculateBalanceSummary } from "../../balancesummary/hooks/useCalculateBalanceSummary";
-import { db } from "../../../firebase/firebaseconfig";
-import {
-  collection,
-  query,
-  where,
-  doc,
-  updateDoc,
-  getDocs,
-} from "firebase/firestore";
 import { toast } from "react-hot-toast";
 import { Avatar, AvatarFallback } from "../../../Components/ui/avatar";
 import { Button } from "../../../Components/ui/button";
@@ -38,38 +28,22 @@ function SettleUpExpenseModal() {
   const { data: groups, isLoading: groupsLoading, isError: groupsError } = useFetchUserGroupsQuery(user.email);
 
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { refetch: refetchExpensesForGroup } =
-    useFetchExpensesForGroupQuery(groupId);
-  const { refetch: refetchBalanceSummary } =
-    useFetchExpensesForBalanceSummaryGroupQuery(groupId);
+  const [settleGroup, { isLoading: isSettling }] = useSettleGroupExpensesMutation();
 
   const { balanceArray, balanceError, isLoading } = useCalculateBalanceSummary(groupId);
 
   const settleUpClick = async () => {
-    if (balanceError || isLoading) return;
-    const userGroupsRef = collection(db, "userGroups");
-    const expensesRef = collection(userGroupsRef, groupId, "expenses");
-    // Create the query to find documents with settled_up as false
-    const queryExpenses = query(expensesRef, where("settled_up", "==", false));
+    const group = groups?.find(group => group.id === groupId);
+    if (balanceError || isLoading || isSettling || !group) return;
+    const loadingToast = toast.loading("Settling up expenses");
     try {
-      const loadingToast = toast.loading("Settling up expenses");
-      // Get the documents that match the query
-      const querySnapshot = await getDocs(queryExpenses);
-      // Iterate over the documents in the query snapshot and update settled_up to true
-      querySnapshot.forEach(async (docSnapshot) => {
-        const docRef = doc(expensesRef, docSnapshot.id);
-        await updateDoc(docRef, {
-          settled_up: true,
-        });
-      });
-      refetchExpensesForGroup();
-      refetchBalanceSummary();
-      toast.dismiss(loadingToast);
+      await settleGroup({ groupId, memberEmails: group.user_group_email }).unwrap();
       toast.success("Expenses settled up");
       setOpen(false);
-    } catch (error) {
-      console.error("Error updating settled_up:", error);
+    } catch {
+      toast.error("Unable to settle expenses. Please try again.");
+    } finally {
+      toast.dismiss(loadingToast);
     }
   };
 
@@ -129,8 +103,8 @@ function SettleUpExpenseModal() {
 
           <DialogFooter>
             <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
-            <Button className="modal-primary" disabled={!!balanceError || isLoading} onClick={settleUpClick}>
-              Record settlement
+            <Button className="modal-primary" disabled={!!balanceError || isLoading || isSettling} onClick={settleUpClick}>
+              {isSettling ? "Saving…" : "Record settlement"}
             </Button>
           </DialogFooter>
         </DialogContent>

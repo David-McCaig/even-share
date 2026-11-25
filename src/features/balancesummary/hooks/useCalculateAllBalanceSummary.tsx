@@ -1,59 +1,28 @@
-import { useEffect, useState } from "react";
-import { createUserObject } from "../../../utils/utils";
-import { calculateOwes } from "../../../utils/utils";
-import { generateBalanceSummaryStatement } from "../../../utils/utils";
-import { BalanceSummary } from "../../../types";
-import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
-import { selectUser } from "../../authentication/userSlice";
-import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balanceSummarySlice";
-import { useFetchUserGroupsQuery } from "../../groupexpense/groupexpenseTableSlice";
+import { useMemo } from "react";
+import { createUserObject, calculateOwes, generateBalanceSummaryStatement } from "../../../utils/utils";
+import type { BalanceSummary } from "../../../types";
+import { useGroupExpenses } from "./useGroupExpenses";
 
 export const useCalculateAllBalanceSummary = () => {
-    const [allBalanceSummary, setAllBalanceSummary] = useState<BalanceSummary[]>([]);
-
-    const [balanceErrors, setBalanceErrors] = useState<Record<string, string>>({});
-
-    const [currentGroupIndex, setCurrentGroupIndex] = useState(0);
-
-    const user = useAppSelector(selectUser);
-    const { data: userGroups } = useFetchUserGroupsQuery(user.email);
-    const currentGroupId = userGroups?.[currentGroupIndex]?.id;
-    const currentGroup = userGroups?.[currentGroupIndex];
-    const currentName = currentGroup?.user_group_name;
-    const { currentData: currentGroupExpenses } = useFetchExpensesForBalanceSummaryGroupQuery(currentGroupId, { skip: !currentGroupId });
-    useEffect(() => {
-        setAllBalanceSummary([]);
-        setBalanceErrors({});
-        setCurrentGroupIndex(0);
-    }, [user.email]);
-
-    useEffect(() => {
-        if (currentGroupExpenses && currentGroupId && currentGroup) {
-          try {
-            const userObject = createUserObject(currentGroupExpenses, user.displayName || "", currentGroup.user_group_email, user.email);
-            const result = calculateOwes(userObject);
-            const balanceSummaryStatement = generateBalanceSummaryStatement(result, currentGroupId, currentName);
-            setAllBalanceSummary((prevState) => [
-                ...prevState.filter(balance => balance.sourceGroupId !== currentGroupId),
-                ...balanceSummaryStatement.map(balance => ({ ...balance, sourceGroupId: currentGroupId })),
-            ]);
-
-            setBalanceErrors(previous => {
-                const next = { ...previous };
-                delete next[currentGroupId];
-                return next;
-            });
-          } catch (error) {
-            setAllBalanceSummary(previous => previous.filter(balance => balance.sourceGroupId !== currentGroupId));
-            setBalanceErrors(previous => ({ ...previous, [currentGroupId]: `${currentName}: ${(error as Error).message}` }));
-          }
-
-            // Move to the next group
-            if (currentGroupIndex < (userGroups?.length || 0) - 1) {
-                setCurrentGroupIndex(prev => prev + 1);
-            }
-        }
-    }, [currentGroupExpenses, currentGroupId, currentName, currentGroupIndex, userGroups?.length, currentGroup, user.displayName, user.email]);
+  const { user, groups, queries } = useGroupExpenses();
+  return useMemo(() => {
+    const allBalanceSummary: BalanceSummary[] = [];
+    const balanceErrors: Record<string, string> = {};
+    groups?.forEach((group, index) => {
+      const result = queries[index];
+      if (result?.isError) {
+        balanceErrors[group.id] = `${group.user_group_name}: Unable to load balances.`;
+        return;
+      }
+      if (!result?.data) return;
+      try {
+        const people = createUserObject(result.data, user.displayName || "", group.user_group_email, user.email);
+        allBalanceSummary.push(...generateBalanceSummaryStatement(calculateOwes(people), group.id, group.user_group_name)
+          .map(balance => ({ ...balance, sourceGroupId: group.id })));
+      } catch (error) {
+        balanceErrors[group.id] = `${group.user_group_name}: ${(error as Error).message}`;
+      }
+    });
     return { allBalanceSummary, balanceErrors };
+  }, [groups, queries, user.displayName, user.email]);
 };
-
