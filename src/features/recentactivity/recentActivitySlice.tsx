@@ -20,7 +20,7 @@ async function attachExpenseGroups(expenses: UserGroups, email: string): Promise
     const groups = await getDocs(query(collection(db, "userGroups"), where("user_group_email", "array-contains", email)));
     const matches = await Promise.all(groups.docs.map(async group => {
       const groupExpenses = await getDocs(query(collection(db, `userGroups/${group.id}/expenses`), where(documentId(), "in", expenses.map(expense => expense.id))));
-      return groupExpenses.docs.map(expense => [expense.id, { user_group_id: group.id, user_group_name: group.data().user_group_name }] as const);
+      return groupExpenses.docs.map(expense => [expense.id, { user_group_id: group.id, user_group_name: group.data().user_group_name, settled_up: expense.data().settled_up }] as const);
     }));
     const groupByExpense = new Map(matches.flat());
     return expenses.map(expense => ({ ...expense, ...groupByExpense.get(expense.id) }));

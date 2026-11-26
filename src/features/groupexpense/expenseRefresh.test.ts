@@ -39,12 +39,15 @@ vi.mock('firebase/firestore', () => {
     addDoc: vi.fn(), deleteDoc: vi.fn(async ({ path }: { path: string }) => { database.docs.delete(path); }),
     writeBatch: () => {
       const updates: Array<{ path: string; data: Record<string, unknown> }> = [];
+      const deletes: string[] = [];
       return {
         update: ({ path }: { path: string }, data: Record<string, unknown>) => updates.push({ path, data }),
+        delete: ({ path }: { path: string }) => deletes.push(path),
         commit: async () => {
           database.commitStarted = true;
           await database.commitGate;
           updates.forEach(({ path, data }) => database.docs.set(path, { ...database.docs.get(path), ...data }));
+          deletes.forEach(path => database.docs.delete(path));
         },
       };
     },
@@ -58,6 +61,8 @@ import { scoresApi } from './groupexpenseTableSlice';
 import { recentActivityApi as balanceApi } from '../balancesummary/balanceSummarySlice';
 import { recentActivityApi as activityApi } from '../recentactivity/recentActivitySlice';
 import BalanceSummaryAllGroups from '../balancesummary/Component/BalanceSummaryAllGroups';
+import ExpenseList from '../../Components/ExpenseList';
+import type { UserGroup } from '../../types';
 
 const email = 'steve@gmail.com';
 const members = ['lisa@gmail.com', email, 'owen@gmail.com'];
@@ -140,4 +145,86 @@ test('failed settlement writes preserve balances and return an error', async () 
   await expect(request.unwrap()).rejects.toBe('Write denied');
   expect(balance()).toHaveLength(1);
   expect(activity()?.[0].settled_up).toBe(false);
+});
+
+test('the shared list shows actions without a group route, and settled or unresolved expenses are read-only', async () => {
+  await subscribe();
+  const hotel = activity()!.find(item => item.id === 'hotel')!;
+  const renderList = (items: UserGroup[], groupId?: string) => renderToStaticMarkup(createElement(Provider, {
+    store, children: createElement(ExpenseList, { expenses: items, groupId, showGroupName: true, emptyMessage: 'No expenses.' }),
+  }));
+  const outstanding = renderList([hotel]);
+  expect(outstanding).toContain('Actions for Hotel');
+  expect(outstanding).toContain('Travel');
+  expect(outstanding).not.toContain('Update');
+  expect(outstanding).not.toContain('expense-settled-pill');
+  const settled = renderList([{ ...hotel, settled_up: true }]);
+  expect(settled).toContain('expense-settled-pill');
+  expect(settled).toContain('Settled');
+  expect(settled).not.toContain('Actions for');
+  const unresolved = { ...hotel, user_group_id: '' };
+  expect(renderList([unresolved])).not.toContain('Actions for');
+  expect(renderList([unresolved], 'travel')).toContain('Actions for Hotel');
+  const payer = renderList([{ ...hotel, user_expense_name: 'Steve', user_expense_email: 'lisa@gmail.com' }]);
+  expect(payer).not.toContain('You paid');
+});
+
+test('deleting an activity expense removes its source and every copy, then refreshes balances and lists', async () => {
+  await subscribe();
+  await store.dispatch(scoresApi.endpoints.fetchExpensesForGroup.initiate('travel'));
+  const hotel = activity()!.find(item => item.id === 'hotel')!;
+  expect(hotel.user_group_id).toBe('travel');
+  let release!: () => void;
+  database.commitGate = new Promise<void>(resolve => { release = resolve; });
+  const request = store.dispatch(scoresApi.endpoints.deleteExpenseGroup.initiate({
+    groupId: hotel.user_group_id, expenseId: hotel.id, expenseGroupsArray: members,
+  }));
+  await vi.waitFor(() => expect(database.commitStarted).toBe(true));
+  expect(database.docs.has('userGroups/travel/expenses/hotel')).toBe(true);
+  release();
+  await request.unwrap();
+  await vi.waitFor(() => {
+    expect(balance()).toEqual([]);
+    expect(activity()).toEqual([]);
+    expect(scoresApi.endpoints.fetchExpensesForGroup.select('travel')(store.getState()).data).toEqual([]);
+  });
+  members.forEach((_, index) => expect(database.docs.has(`recentExpenses/user${index}/expenses/hotel`)).toBe(false));
+  expect(database.docs.has('userGroups/travel/expenses/hotel')).toBe(false);
+  expect(database.docs.has('userGroups/living/expenses/rent')).toBe(true);
+});
+
+test('a settled source cannot be deleted even when an activity copy is stale', async () => {
+  database.docs.get('userGroups/travel/expenses/hotel')!.settled_up = true;
+  await subscribe();
+  expect(activity()?.[0].settled_up).toBe(true);
+  const request = store.dispatch(scoresApi.endpoints.deleteExpenseGroup.initiate({
+    groupId: 'travel', expenseId: 'hotel', expenseGroupsArray: members,
+  }));
+  await expect(request.unwrap()).rejects.toBe('Settled expenses cannot be deleted.');
+  expect(database.commitStarted).toBe(false);
+  expect(database.docs.has('userGroups/travel/expenses/hotel')).toBe(true);
+  members.forEach((_, index) => expect(database.docs.has(`recentExpenses/user${index}/expenses/hotel`)).toBe(true));
+});
+
+test('a failed deletion preserves the source, activity copies, and balance', async () => {
+  await subscribe();
+  database.commitGate = Promise.reject(new Error('Write denied'));
+  const request = store.dispatch(scoresApi.endpoints.deleteExpenseGroup.initiate({
+    groupId: 'travel', expenseId: 'hotel', expenseGroupsArray: members,
+  }));
+  await expect(request.unwrap()).rejects.toBe('Write denied');
+  expect(database.docs.has('userGroups/travel/expenses/hotel')).toBe(true);
+  members.forEach((_, index) => expect(database.docs.has(`recentExpenses/user${index}/expenses/hotel`)).toBe(true));
+  expect(balance()).toHaveLength(1);
+});
+
+test('deletion handles members with no activity parent and removes copies from duplicate parents', async () => {
+  database.docs.delete('recentExpenses/user2');
+  database.docs.delete('recentExpenses/user2/expenses/hotel');
+  database.docs.set('recentExpenses/duplicate', { user_email: email });
+  database.docs.set('recentExpenses/duplicate/expenses/hotel', expense('Lisa', 480));
+  await store.dispatch(scoresApi.endpoints.deleteExpenseGroup.initiate({
+    groupId: 'travel', expenseId: 'hotel', expenseGroupsArray: members,
+  })).unwrap();
+  expect([...database.docs.keys()].some(path => path.endsWith('/expenses/hotel'))).toBe(false);
 });

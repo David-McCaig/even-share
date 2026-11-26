@@ -1,61 +1,41 @@
-import { MoreHorizontal } from "lucide-react";
-import { useParams } from "react-router";
-import { useDeleteExpenseGroupMutation } from "../groupexpenseTableSlice";
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "../../../Components/ui/button";
-import { useFetchUserGroupsQuery } from "../groupexpenseTableSlice";
-import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
-import { selectUser } from "../../authentication/userSlice";
+import { getFormattedDate } from "../../../utils/utils";
+import { selectExpenseIcon } from "../../../utils/selectExpenseIcon";
+import type { UserGroup } from "../../../types";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../../Components/ui/dropdown-menu";
 
 interface ExpenseTableRowProps {
-  expenseDescription: string;
+  expense: UserGroup;
   groupName?: string;
-  settledUp?: boolean;
-  expenseDate: string;
-  expenseAmount: string;
-  expenseId: string | undefined;
-  billPaidBy: string | string[];
-  expenseIcon: JSX.Element | string | undefined;
+  paidBy: string;
+  onDelete?: () => void;
+  isDeleting: boolean;
 }
 
 function ExpenseTableRow({
-  expenseDescription,
+  expense,
   groupName,
-  settledUp,
-  expenseDate,
-  expenseAmount,
-  expenseId,
-  billPaidBy,
-  expenseIcon,
+  paidBy,
+  onDelete,
+  isDeleting,
 }: ExpenseTableRowProps) {
-  const groupId = useParams()?.id;
-  const userEmail = useAppSelector(selectUser)?.email;
-
-  const {data:userExpenseGroups} = useFetchUserGroupsQuery(userEmail);
-  const expenseGroupsArray = userExpenseGroups?.find((group) => group.id === groupId)?.user_group_email
-
-  const [deleteExpense] = useDeleteExpenseGroupMutation();
-
-  const deleteExpenseClick = async () => {
-    deleteExpense({ groupId, expenseId, expenseGroupsArray });
-  };
-
   return (
     <article className="expense-row">
-      <span className="expense-icon" aria-hidden="true">{expenseIcon}</span>
-      <div className="expense-description"><h3>{expenseDescription}</h3><p>{groupName && <><span className="expense-group-name">{groupName}</span> <span aria-hidden="true">·</span> </>}{billPaidBy} <span aria-hidden="true">·</span> {expenseDate}{settledUp && <> <span aria-hidden="true">·</span> Settled</>}</p></div>
-      <strong className="expense-amount">{expenseAmount}</strong>
-      {groupId && <DropdownMenu>
-        <DropdownMenuTrigger asChild><Button variant="ghost" className="h-8 w-8 p-0"><span className="sr-only">Actions for {expenseDescription}</span><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
-        <DropdownMenuContent align="end"><DropdownMenuLabel>Actions</DropdownMenuLabel><DropdownMenuSeparator /><DropdownMenuItem onClick={deleteExpenseClick}>Delete</DropdownMenuItem><DropdownMenuItem>Update</DropdownMenuItem></DropdownMenuContent>
+      <span className="expense-icon" aria-hidden="true">{selectExpenseIcon(expense.user_expense_description)}</span>
+      <div className="expense-description"><h3>{expense.user_expense_description}</h3><p>{groupName && <><span className="expense-group-name">{groupName}</span> <span aria-hidden="true">·</span> </>}{paidBy} <span aria-hidden="true">·</span> {getFormattedDate(expense.created_at.seconds, expense.created_at.nanoseconds)}{expense.settled_up && <span className="expense-settled-pill">Settled</span>}</p></div>
+      <strong className="expense-amount">${expense.user_expense_amount.toFixed(2)}</strong>
+      <div className="expense-actions">
+      {expense.settled_up === false && onDelete && <DropdownMenu>
+        <DropdownMenuTrigger asChild><Button variant="ghost" className="h-8 w-8 p-0" disabled={isDeleting}><span className="sr-only">Actions for {expense.user_expense_description}</span><MoreHorizontal className="h-4 w-4" /></Button></DropdownMenuTrigger>
+        <DropdownMenuContent align="end"><DropdownMenuItem disabled={isDeleting} onSelect={onDelete}><Trash2 className="mr-2 h-4 w-4" aria-hidden="true" />Delete</DropdownMenuItem></DropdownMenuContent>
       </DropdownMenu>}
+      </div>
     </article>
   );
 }

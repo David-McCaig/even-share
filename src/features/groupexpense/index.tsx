@@ -10,12 +10,11 @@ import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../features/authentication/userSlice";
 import PieChart from "../dashboard/Components/PieChart";
 import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balancesummary/balanceSummarySlice";
-import { getFormattedDate, totalUserExpenses } from "../../utils/utils";
-import { selectExpenseIcon } from "../../utils/selectExpenseIcon";
+import { totalUserExpenses } from "../../utils/utils";
 import { Button } from "../../Components/ui/button";
 import TopBar from "../../Components/TopBar";
 import BalanceSummary from "../../features/balancesummary/index";
-import ExpenseTableRow from "../../features/groupexpense/Components/ExpenseTableRow";
+import ExpenseList from "../../Components/ExpenseList";
 
 type UrlParams = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,29 +62,9 @@ function Index() {
         <div className="mobile-balance-summary">
           <BalanceSummary />
         </div>
-        <section className="expense-list-section"><div className="section-heading"><h2>Expenses</h2></div><div className="expense-list">
-        {groupExpenses?.map((expense) => (
-          <div key={expense.id}>
-            <ExpenseTableRow
-              expenseIcon={selectExpenseIcon(expense?.user_expense_description)}
-              expenseDescription={expense?.user_expense_description}
-              expenseDate={getFormattedDate(
-                expense?.created_at?.seconds,
-                expense?.created_at?.nanoseconds
-              )}
-              expenseAmount={`$${expense.user_expense_amount.toFixed(2)}`}
-              expenseId={expense.id}
-              billPaidBy={
-                user.displayName === expense?.user_expense_name
-                  ? "You paid"
-                  : expense?.user_expense_name?.split(" ")?.slice(0, 1) +
-                    " paid"
-              }
-            />
-          </div>
-        ))}
-        {!groupExpenses?.length && <p className="empty-state" role="status">{isLoading ? "Loading expenses…" : "No expenses yet. Add the first one to get started."}</p>}
-        </div></section>
+        <section className="expense-list-section"><div className="section-heading"><h2>Expenses</h2></div>
+          <ExpenseList expenses={groupExpenses} groupId={id} isLoading={isLoading} emptyMessage="No expenses yet. Add the first one to get started." />
+        </section>
         {pageError && <p role="alert">Unable to load more expenses. Please try again.</p>}
         {hasMore && <div className="pagination-actions">
           <Button

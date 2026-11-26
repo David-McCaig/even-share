@@ -5,7 +5,6 @@ import {
   collection,
   getDocs,
   getDoc,
-  deleteDoc,
   doc,
   limit,
   orderBy,
@@ -275,38 +274,31 @@ export const scoresApi = firestoreApi.injectEndpoints({
       },
       invalidatesTags: (_result, error) => error ? [] : ["groupExpense", "balanceSummary", "recentActivity"],
     }),
-    deleteExpenseGroup: builder.mutation({
+    deleteExpenseGroup: builder.mutation<null, { groupId: string; expenseId: string; expenseGroupsArray: string[] }>({
       async queryFn({ groupId, expenseId, expenseGroupsArray }) {
+        const loadingToast = toast.loading("Deleting expense...");
         try {
-          const loadingToast = toast.loading("Deleting expense...");
-          await deleteDoc(
-            doc(db, `userGroups/${groupId}/expenses/${expenseId}`)
-          );
-          const deleteDocFromRecentExpenses = async (userEmail: string) => {
-            const userRef = collection(db, "recentExpenses");
-            const queryUser = query(
-              userRef,
-              where("user_email", "==", userEmail)
-            );
-            const userDocs = await getDocs(queryUser);
-
-            await deleteDoc(
-              doc(
-                db,
-                `recentExpenses/${userDocs.docs[0].id}/expenses/${expenseId}`
-              )
-            );
-          };
-
-          await Promise.all(expenseGroupsArray.map((email: string) => deleteDocFromRecentExpenses(email)));
-
-          toast.dismiss(loadingToast);
+          if (!groupId || !expenseId || !expenseGroupsArray?.length) throw new Error("Unable to identify this expense’s group.");
+          const expenseRef = doc(db, `userGroups/${groupId}/expenses/${expenseId}`);
+          const expense = await getDoc(expenseRef);
+          if (!expense.exists()) throw new Error("This expense no longer exists.");
+          if (expense.data().settled_up !== false) throw new Error("Settled expenses cannot be deleted.");
+          const recentUsers = await Promise.all([...new Set(expenseGroupsArray)].map(email =>
+            getDocs(query(collection(db, "recentExpenses"), where("user_email", "==", email)))));
+          const batch = writeBatch(db);
+          batch.delete(expenseRef);
+          for (const users of recentUsers) {
+            for (const user of users.docs) batch.delete(doc(user.ref, "expenses", expenseId));
+          }
+          await batch.commit();
           toast.success("Expense deleted");
           return { data: null };
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          console.error(error.message);
-          return { error: error.message };
+        } catch (error) {
+          const message = (error as Error).message;
+          toast.error(message);
+          return { error: message };
+        } finally {
+          toast.dismiss(loadingToast);
         }
       },
       invalidatesTags: ["groupExpense", "recentActivity"],
