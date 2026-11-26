@@ -6,7 +6,7 @@ import { useLazyFetchRecentActivityPaginationQuery } from "../features/recentact
 import { usePagination } from "../hooks/usePagination";
 import ExpenseList from "../Components/ExpenseList";
 import BalanceSummary from "../features/balancesummary/index";
-import TopBar from "../Components/TopBar";
+import PageHeader from "../Components/PageHeader";
 import { Button } from "../Components/ui/button";
 
 function RecentActivityPage() {
@@ -40,7 +40,7 @@ function RecentActivityPage() {
 
   return (
     <section className="w-full recent-activity-page">
-      <TopBar currentPage={"Recent Activity"} />
+      <PageHeader currentPage={"Recent Activity"} />
       <div className="mobile-balance-summary">
         <BalanceSummary />
       </div>

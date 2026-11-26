@@ -1,10 +1,8 @@
 import type { ReactNode } from "react";
-import type { ChartData } from "chart.js";
 import { Plane, Home, Users } from "lucide-react";
 
-// Keep the existing chart interface while presenting contributions as a compact bar.
-function PieChart({ chartData, groupName, subtitle, personalBalance, compact = false }: { chartData: ChartData<"pie", number[], string>; groupName: string; subtitle?: string; personalBalance?: ReactNode; compact?: boolean }) {
-  const amounts = chartData.datasets[0]?.data ?? [];
+function GroupContributionsCard({ contributions, groupName, subtitle, personalBalance, compact = false }: { contributions: { name: string; amount: number }[]; groupName: string; subtitle?: string; personalBalance?: ReactNode; compact?: boolean }) {
+  const amounts = contributions.map(contribution => contribution.amount);
   const total = amounts.reduce((sum, amount) => sum + amount, 0);
   const colors = ["#008578", "#b65f40", "#8295b6", "#059669", "#b69c61"];
   const GroupIcon = /travel|trip|holiday|vacation/i.test(groupName) ? Plane : /home|house|living|rent/i.test(groupName) ? Home : Users;
@@ -17,11 +15,11 @@ function PieChart({ chartData, groupName, subtitle, personalBalance, compact = f
         {amounts.map((amount, index) => <span key={index} style={{ width: `${total > 0 ? amount / total * 100 : 0}%`, backgroundColor: colors[index % colors.length] }} />)}
       </div>
       <figcaption className="contribution-legend">
-        {chartData.labels?.map((label, index) => <span key={`${label}-${index}`}><i style={{ backgroundColor: colors[index % colors.length] }} />{compact ? <span className="contribution-member"><span>{label}</span><span>${(amounts[index] ?? 0).toFixed(2)}</span></span> : label}</span>)}
+        {contributions.map(({ name, amount }, index) => <span key={`${name}-${index}`}><i style={{ backgroundColor: colors[index % colors.length] }} />{compact ? <span className="contribution-member"><span>{name}</span><span>${amount.toFixed(2)}</span></span> : `${name} $${amount.toFixed(2)}`}</span>)}
       </figcaption>
       {personalBalance}
       {!compact && <span className="group-card-footer">View group <span aria-hidden="true">→</span></span>}
     </figure>
   );
 }
-export default PieChart;
+export default GroupContributionsCard;

@@ -3,9 +3,9 @@ import { BarChart3, Menu } from "lucide-react";
 import AddExpenseModal from "../../groupexpense/Components/AddExpenseModal";
 import SettleUpExpenseModal from "../../groupexpense/Components/SettleUpExpenseModal";
 
-type NavBarProps = { showNavBar: boolean; setShowNavBar: (value: boolean) => void };
+type AppHeaderProps = { showNavBar: boolean; setShowNavBar: (value: boolean) => void };
 
-export default function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
+export default function AppHeader({ showNavBar, setShowNavBar }: AppHeaderProps) {
   return (
     <header className="app-topnav">
       <div className="topnav-brand">

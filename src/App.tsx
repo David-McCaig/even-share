@@ -4,8 +4,8 @@ import { useLocation } from "react-router";
 import { Routes, Route } from "react-router";
 import { useAppSelector } from "./hooks/reduxTypeScriptHooks.tsx";
 import { selectUser } from "./features/authentication/userSlice.tsx";
-import TopNavBar from "./features/Navigation/Components/TopNavBar.tsx";
-import SideNavBar from "./features/Navigation/Components/SideNavBar.tsx";
+import AppHeader from "./features/Navigation/Components/AppHeader.tsx";
+import AppNavigation from "./features/Navigation/Components/AppNavigation.tsx";
 import BalanceSummary from "./features/balancesummary/index.tsx";
 import BalanceSummaryColumn from "./features/balancesummary/Component/BalanceSummaryColumn.tsx";
 import routeObject from "./routesObject.tsx";
@@ -28,7 +28,7 @@ function App() {
   return (
     <div className={userInfo ? "app-shell" : "w-full h-full text-primary-font-color"}>
       {userInfo && (
-        <TopNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
+        <AppHeader showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
       )}
 
       <div
@@ -39,7 +39,7 @@ function App() {
         }
       >
         {userInfo && (
-          <SideNavBar showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
+          <AppNavigation showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
         )}
         <Routes>
           {routesObject.map((route) => (

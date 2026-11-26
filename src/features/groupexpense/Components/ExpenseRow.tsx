@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "../../../Components/ui/dropdown-menu";
 
-interface ExpenseTableRowProps {
+interface ExpenseRowProps {
   expense: UserGroup;
   groupName?: string;
   paidBy: string;
@@ -18,13 +18,13 @@ interface ExpenseTableRowProps {
   isDeleting: boolean;
 }
 
-function ExpenseTableRow({
+function ExpenseRow({
   expense,
   groupName,
   paidBy,
   onDelete,
   isDeleting,
-}: ExpenseTableRowProps) {
+}: ExpenseRowProps) {
   return (
     <article className="expense-row">
       <span className="expense-icon" aria-hidden="true">{selectExpenseIcon(expense.user_expense_description)}</span>
@@ -39,4 +39,4 @@ function ExpenseTableRow({
     </article>
   );
 }
-export default ExpenseTableRow;
+export default ExpenseRow;

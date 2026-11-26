@@ -7,12 +7,12 @@ import { auth } from "../../../firebase/firebaseconfig";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../Components/ui/dropdown-menu";
 import CreateGroupModal from "./CreateGroupModal";
 
-type NavBarProps = {
+type AppNavigationProps = {
   showNavBar: boolean;
   setShowNavBar: (value: boolean) => void;
 };
 
-function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
+function AppNavigation({ showNavBar, setShowNavBar }: AppNavigationProps) {
   const user = useAppSelector(selectUser);
   const { data: groups } = useFetchUserGroupsQuery(user?.email);
   const { pathname } = useLocation();
@@ -67,4 +67,4 @@ function NavBar({ showNavBar, setShowNavBar }: NavBarProps) {
     </>
   );
 }
-export default NavBar;
+export default AppNavigation;

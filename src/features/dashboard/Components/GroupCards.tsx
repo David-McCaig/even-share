@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCreateDataStructureForUserTotals } from "../hooks/useCreateDataStructureForUserTotals";
-import PieChart from "./PieChart";
+import GroupContributionsCard from "./GroupContributionsCard";
 import { useCalculateBalanceSummary } from "../../balancesummary/hooks/useCalculateBalanceSummary";
 import { useFetchExpensesForBalanceSummaryGroupQuery } from "../../balancesummary/balanceSummarySlice";
 import { getPersonalBalance } from "../../../utils/utils";
@@ -13,7 +13,7 @@ function GroupCards({ groups, compact = false }: { groups: UserGroup[]; compact?
     {groups.map(group => {
       const contributions = totalUserExpensesData.find(data => data.id === group.id);
       return <Link key={group.id} to={`/group/${group.id}`} className="group-card-link">
-        <PieChart compact={compact} personalBalance={<PersonalBalance groupId={group.id} />} subtitle={`${group.user_group_email?.length ?? 0} members`} groupName={group.user_group_name} chartData={{ labels: contributions?.user_group_totals.map(data => compact ? data.user_expense_name : `${data.user_expense_name} $${data.user_expense_amount.toFixed(2)}`) ?? [], datasets: [{ data: contributions?.user_group_totals.map(data => data.user_expense_amount) ?? [] }] }} />
+        <GroupContributionsCard compact={compact} personalBalance={<PersonalBalance groupId={group.id} />} subtitle={`${group.user_group_email?.length ?? 0} members`} groupName={group.user_group_name} contributions={contributions?.user_group_totals.map(data => ({ name: data.user_expense_name, amount: data.user_expense_amount })) ?? []} />
       </Link>;
     })}
   </div>;

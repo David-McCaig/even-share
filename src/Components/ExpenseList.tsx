@@ -1,7 +1,7 @@
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
 import { useDeleteExpenseGroupMutation, useFetchUserGroupsQuery } from "../features/groupexpense/groupexpenseTableSlice";
-import ExpenseTableRow from "../features/groupexpense/Components/ExpenseTableRow";
+import ExpenseRow from "../features/groupexpense/Components/ExpenseRow";
 import type { UserGroup } from "../types";
 
 interface ExpenseListProps {
@@ -25,7 +25,7 @@ export default function ExpenseList({ expenses, groupId, showGroupName = false, 
       const paidByYou = expense.user_expense_email
         ? expense.user_expense_email.trim().toLowerCase() === user.email.trim().toLowerCase()
         : expense.user_expense_name === user.displayName;
-      return <ExpenseTableRow
+      return <ExpenseRow
         key={`${sourceGroupId}-${expense.id}`}
         expense={expense}
         groupName={showGroupName ? group?.user_group_name || expense.user_group_name || "Group unavailable" : undefined}

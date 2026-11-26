@@ -1,4 +1,4 @@
-import TopBar from "../Components/TopBar";
+import PageHeader from "../Components/PageHeader";
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
 import { useFetchUserGroupsQuery } from "../features/groupexpense/groupexpenseTableSlice";
@@ -10,7 +10,7 @@ function GroupsPage() {
   const user = useAppSelector(selectUser);
   const { data: groups, isLoading, isError } = useFetchUserGroupsQuery(user.email);
   return <main className="groups-overview-page">
-    <TopBar currentPage="Groups" />
+    <PageHeader currentPage="Groups" />
     <div className="mobile-balance-summary"><BalanceSummary /></div>
     <header className="groups-page-heading"><div><h2>Groups</h2><p>You are part of {groups?.length ?? 0} groups</p></div><CreateGroupModal /></header>
     {isLoading ? <p className="empty-state" role="status">Loading your groups…</p> : isError ? <p className="empty-state" role="alert">Unable to load your groups. Please try again later.</p> : groups?.length ? <GroupCards groups={groups} compact /> : <div className="empty-state">Create your first group to start sharing expenses.</div>}

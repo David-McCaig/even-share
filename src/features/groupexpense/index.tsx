@@ -8,11 +8,11 @@ import {
 } from "./groupexpenseTableSlice";
 import { useAppSelector } from "../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../features/authentication/userSlice";
-import PieChart from "../dashboard/Components/PieChart";
+import GroupContributionsCard from "../dashboard/Components/GroupContributionsCard";
 import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balancesummary/balanceSummarySlice";
 import { totalUserExpenses } from "../../utils/utils";
 import { Button } from "../../Components/ui/button";
-import TopBar from "../../Components/TopBar";
+import PageHeader from "../../Components/PageHeader";
 import BalanceSummary from "../../features/balancesummary/index";
 import ExpenseList from "../../Components/ExpenseList";
 
@@ -56,9 +56,9 @@ function Index() {
   return (
     <>
       <article className="w-full group-expenses-page">
-        <TopBar currentPage={group?.user_group_name || "Group"} />
+        <PageHeader currentPage={group?.user_group_name || "Group"} />
         <header className="group-page-heading"><p className="eyebrow">Shared expenses</p><h2>{group?.user_group_name || "Group"}</h2><p>{group?.user_group_email?.length ?? 0} members <span aria-hidden="true">·</span> Every shared moment, accounted for.</p></header>
-        {balanceExpenses && <div className="group-contributions"><PieChart groupName="Group contributions" chartData={{ labels: contributions.map(data => `${data.user_expense_name} $${data.user_expense_amount.toFixed(2)}`), datasets: [{ data: contributions.map(data => data.user_expense_amount) }] }} /></div>}
+        {balanceExpenses && <div className="group-contributions"><GroupContributionsCard groupName="Group contributions" contributions={contributions.map(data => ({ name: data.user_expense_name, amount: data.user_expense_amount }))} /></div>}
         <div className="mobile-balance-summary">
           <BalanceSummary />
         </div>

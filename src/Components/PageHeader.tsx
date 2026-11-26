@@ -1,8 +1,8 @@
-interface TopBarProps {
+interface PageHeaderProps {
   currentPage: string;
 }
 
-function TopBar({ currentPage }: TopBarProps) {
+function PageHeader({ currentPage }: PageHeaderProps) {
   return (
     <div className="page-topbar">
       <div className="page-breadcrumb"><span>Home</span><span aria-hidden="true">›</span><h1>{currentPage}</h1></div>
@@ -10,4 +10,4 @@ function TopBar({ currentPage }: TopBarProps) {
   );
 }
 
-export default TopBar;
+export default PageHeader;
