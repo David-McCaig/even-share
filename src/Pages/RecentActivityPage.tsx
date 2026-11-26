@@ -6,7 +6,6 @@ import { useLazyFetchRecentActivityPaginationQuery } from "../features/recentact
 import { usePagination } from "../hooks/usePagination";
 import ExpenseList from "../Components/ExpenseList";
 import BalanceSummary from "../features/balancesummary/index";
-import PageHeader from "../Components/PageHeader";
 import { Button } from "../Components/ui/button";
 
 function RecentActivityPage() {
@@ -40,8 +39,7 @@ function RecentActivityPage() {
 
   return (
     <section className="w-full recent-activity-page">
-      <PageHeader currentPage={"Recent Activity"} />
-      <header className="activity-page-heading"><p className="eyebrow">Your shared story</p><h2>Recent Activity</h2><p>A clear view of what’s been shared.</p></header>
+      <header className="activity-page-heading"><p className="eyebrow">Your shared story</p><h1>Recent Activity</h1><p>A clear view of what’s been shared.</p></header>
       <ExpenseList expenses={expensesArray} showGroupName isLoading={isLoading} emptyMessage="Your shared expenses will appear here." />
       {pageError && <p role="alert">Unable to load more activity. Please try again.</p>}
       {hasMore && <div className="pagination-actions">

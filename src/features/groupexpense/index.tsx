@@ -12,7 +12,7 @@ import GroupContributionsCard from "../dashboard/Components/GroupContributionsCa
 import { useFetchExpensesForBalanceSummaryGroupQuery } from "../balancesummary/balanceSummarySlice";
 import { totalUserExpenses } from "../../utils/utils";
 import { Button } from "../../Components/ui/button";
-import PageHeader from "../../Components/PageHeader";
+import { Link } from "react-router-dom";
 import BalanceSummary from "../../features/balancesummary/index";
 import ExpenseList from "../../Components/ExpenseList";
 
@@ -56,8 +56,8 @@ function Index() {
   return (
     <>
       <article className="w-full group-expenses-page">
-        <PageHeader currentPage={group?.user_group_name || "Group"} />
-        <header className="group-page-heading"><p className="eyebrow">Shared expenses</p><h2>{group?.user_group_name || "Group"}</h2><p>{group?.user_group_email?.length ?? 0} members <span aria-hidden="true">·</span> Every shared moment, accounted for.</p></header>
+        <div className="page-topbar"><Link to="/groups" className="back-to-groups"><span aria-hidden="true">←</span> Groups</Link></div>
+        <header className="group-page-heading"><p className="eyebrow">Shared expenses</p><h1>{group?.user_group_name || "Group"}</h1><p>{group?.user_group_email?.length ?? 0} members <span aria-hidden="true">·</span> Every shared moment, accounted for.</p></header>
         {balanceExpenses && <div className="group-contributions"><GroupContributionsCard groupName="Group contributions" contributions={contributions.map(data => ({ name: data.user_expense_name, amount: data.user_expense_amount }))} /></div>}
         <div className="mobile-balance-summary">
           <BalanceSummary />
