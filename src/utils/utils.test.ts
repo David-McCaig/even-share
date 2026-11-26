@@ -1,10 +1,18 @@
 import { strict as assert } from "node:assert";
 import { test } from "vitest";
-import { getPersonalBalance, createUserObject, calculateOwes, generateBalanceSummaryStatement } from "./utils";
+import { getPersonalBalance, createUserObject, calculateOwes, generateBalanceSummaryStatement, formatSettlementStatement } from "./utils";
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import BalanceGroup from '../features/balancesummary/Component/BalanceGroup';
 import type { UserGroup } from '../types';
+
+test('settlement labels preserve full payer and recipient names', () => {
+  for (const [from, to] of [['Mary Jane', 'You'], ['You', 'Mary Jane'], ['Mary Jane', 'John Smith'], ['Lisa', 'You']]) {
+    const [statement] = generateBalanceSummaryStatement([{ from, to, amount: 12.75 }]);
+    assert.equal(formatSettlementStatement(statement.userString), `${from} paid ${to}`);
+  }
+  assert.equal(formatSettlementStatement('All people are settled up'), 'All people are settled up');
+});
 
 test("personal balance combines money owed to you and money you owe", () => {
   assert.deepEqual(getPersonalBalance([

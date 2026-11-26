@@ -8,6 +8,7 @@ import { useSettleGroupExpensesMutation } from "../groupexpenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { useCalculateBalanceSummary } from "../../balancesummary/hooks/useCalculateBalanceSummary";
 import { toast } from "react-hot-toast";
+import { formatSettlementStatement } from "../../../utils/utils";
 import { Avatar, AvatarFallback } from "../../../Components/ui/avatar";
 import { Button } from "../../../Components/ui/button";
 import {
@@ -47,15 +48,6 @@ function SettleUpExpenseModal() {
     }
   };
 
-  const changeOweToPaied = (string: string) => {
-    const array = string.split(" ");
-
-    if (array[1] === "owes" || array[1] === "owe") {
-      array[1] = "paid";
-      return array.join(" ");
-    }
-  };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -83,12 +75,12 @@ function SettleUpExpenseModal() {
                     <ArrowRight size={16} />
                     <Avatar className="w-9 h-9">
                       <AvatarFallback>
-                        {statement?.userString?.split(" ")[2]?.charAt(0)}
+                        {statement.userString.split(/ owes? /)[1]?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                   </div>
                   <span className="settlement-payment-name">
-                    {changeOweToPaied(statement.userString)}
+                    {formatSettlementStatement(statement.userString)}
                   </span>
                   <strong>${statement.userNumber.toFixed(2)}</strong>
                 </div>

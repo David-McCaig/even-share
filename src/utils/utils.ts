@@ -104,6 +104,9 @@ export const generateBalanceSummaryStatement = <T extends Transaction>(
   groupName:currentName}];
 };
 
+export const formatSettlementStatement = (statement: string) =>
+  statement.replace(/ owes? /, " paid ");
+
 export const generateBalanceSettleUpStatement = <T extends Transaction>(
   transactions: T[]
 ): BalanceSummary[] => {
