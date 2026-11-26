@@ -33,6 +33,7 @@ function Index() {
 
   const {
     currentData: groupExpensesData,
+    fulfilledTimeStamp,
     isLoading,
     isError: expensesIsError,
     error: expensesError,
@@ -40,7 +41,7 @@ function Index() {
 
   const [fetchNextPage] = useLazyFetchPaginatedExpensesForGroupQuery();
   const { expenses: groupExpenses, hasMore, isFetching, error: pageError, showMore } = usePagination(
-    id ?? "", groupExpensesData, request => fetchNextPage(request).unwrap()
+    id ?? "", groupExpensesData, request => fetchNextPage(request).unwrap(), fulfilledTimeStamp
   );
 
   if (expensesIsError) {

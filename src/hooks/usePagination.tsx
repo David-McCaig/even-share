@@ -4,11 +4,13 @@ import { ExpensePageRequest, UserGroup } from "../types";
 export const usePagination = (
   scope: string,
   firstPage: UserGroup[] | undefined,
-  fetchPage: (request: ExpensePageRequest) => Promise<UserGroup[]>
+  fetchPage: (request: ExpensePageRequest) => Promise<UserGroup[]>,
+  fulfilledTimeStamp?: number,
 ) => {
   const initialState = () => ({
     scope,
     firstPage,
+    fulfilledTimeStamp,
     revision: 0,
     expenses: firstPage?.slice(0, 9) ?? [],
     hasMore: (firstPage?.length ?? 0) > 9,
@@ -18,8 +20,8 @@ export const usePagination = (
   const [state, setState] = useState(initialState);
   const pending = useRef<number | null>(null);
 
-  // Reset before rendering another group or a refreshed first page.
-  if (state.scope !== scope || state.firstPage !== firstPage) {
+  // Refetches can preserve the first-page reference when only a later page changed.
+  if (state.scope !== scope || state.firstPage !== firstPage || state.fulfilledTimeStamp !== fulfilledTimeStamp) {
     setState({ ...initialState(), revision: state.revision + 1 });
   }
 

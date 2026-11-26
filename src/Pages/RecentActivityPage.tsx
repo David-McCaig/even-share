@@ -17,6 +17,7 @@ function RecentActivityPage() {
 
   const {
     currentData: recentActivity,
+    fulfilledTimeStamp,
     isLoading,
     isError: recentActivityisError,
     error: recentActivityError,
@@ -24,7 +25,7 @@ function RecentActivityPage() {
 
   const [fetchNextPage] = useLazyFetchRecentActivityPaginationQuery();
   const { expenses: expensesArray, hasMore, isFetching, error: pageError, showMore } = usePagination(
-    email, recentActivity, request => fetchNextPage(request).unwrap()
+    email, recentActivity, request => fetchNextPage(request).unwrap(), fulfilledTimeStamp
   );
 
   //error handling

@@ -145,3 +145,34 @@ test('a stale response is ignored even after navigating away and back to the sam
   await old;
   assert.deepEqual(ids(render('A', first, async () => [])), expenses(1, 9).map(x => x.id));
 });
+
+test('deleting a later-page expense resets the list even when the first page is unchanged', async () => {
+  const render = createPagination();
+  const first = expenses(1, 10);
+  let remaining = expenses(10, 5);
+  const fetch = async () => remaining;
+  await render('A', first, fetch, 1).showMore();
+  assert.ok(ids(render('A', first, fetch, 1)).includes('12'));
+
+  remaining = remaining.filter(expense => expense.id !== '12');
+  // RTK Query preserves the first-page array reference when its data is unchanged.
+  const refreshed = render('A', first, fetch, 2);
+  assert.deepEqual(ids(refreshed), expenses(1, 9).map(x => x.id));
+  assert.equal(refreshed.hasMore, true);
+  await refreshed.showMore();
+  assert.deepEqual(ids(render('A', first, fetch, 2)), ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '13', '14']);
+});
+
+test('a refresh ignores an in-flight response from before the expense change', async () => {
+  const render = createPagination();
+  const first = expenses(1, 10);
+  let resolveOld!: (expenses: UserGroup[]) => void;
+  const fetch = () => new Promise<UserGroup[]>(resolve => { resolveOld = resolve; });
+  const pending = render('A', first, fetch, 1).showMore();
+  render('A', first, fetch, 2);
+  resolveOld(expenses(10, 5));
+  await pending;
+  const refreshed = render('A', first, fetch, 2);
+  assert.deepEqual(ids(refreshed), expenses(1, 9).map(x => x.id));
+  assert.equal(refreshed.isFetching, false);
+});
