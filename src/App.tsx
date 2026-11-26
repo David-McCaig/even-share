@@ -1,5 +1,4 @@
 import "./App.css";
-import { useState } from "react";
 import { useLocation } from "react-router";
 import { Routes, Route } from "react-router";
 import { useAppSelector } from "./hooks/reduxTypeScriptHooks.tsx";
@@ -14,7 +13,6 @@ import { useSignedinDispatchUserInfo } from "./features/authentication/hooks/use
 
 function App() {
   const isInitializing = useSignedinDispatchUserInfo();
-  const [showNavBar, setShowNavBar] = useState<boolean>(true);
 
   const userInfo = useAppSelector(selectUser);
 
@@ -28,7 +26,7 @@ function App() {
   return (
     <div className={userInfo ? "app-shell" : "w-full h-full text-primary-font-color"}>
       {userInfo && (
-        <AppHeader showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
+        <AppHeader />
       )}
 
       <div
@@ -39,7 +37,7 @@ function App() {
         }
       >
         {userInfo && (
-          <AppNavigation showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
+          <AppNavigation />
         )}
         <Routes>
           {routesObject.map((route) => (

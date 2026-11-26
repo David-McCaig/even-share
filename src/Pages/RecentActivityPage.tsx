@@ -41,9 +41,6 @@ function RecentActivityPage() {
   return (
     <section className="w-full recent-activity-page">
       <PageHeader currentPage={"Recent Activity"} />
-      <div className="mobile-balance-summary">
-        <BalanceSummary />
-      </div>
       <header className="activity-page-heading"><p className="eyebrow">Your shared story</p><h2>Recent Activity</h2><p>A clear view of what’s been shared.</p></header>
       <ExpenseList expenses={expensesArray} showGroupName isLoading={isLoading} emptyMessage="Your shared expenses will appear here." />
       {pageError && <p role="alert">Unable to load more activity. Please try again.</p>}
@@ -56,6 +53,9 @@ function RecentActivityPage() {
           {isFetching ? "Loading..." : "Show more"}
         </Button>
       </div>}
+      <div className="mobile-balance-summary mt-7">
+        <BalanceSummary />
+      </div>
       <div className="h-4"></div>
     </section>
   );

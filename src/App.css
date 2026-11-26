@@ -75,7 +75,7 @@ body {
   justify-content: flex-end;
   gap: 16px;
 }
-.topnav-brand, .mobile-navigation, .sidebar-close, .sidebar-scrim { display: none; }
+.topnav-brand, .mobile-navigation { display: none; }
 .app-brand { display: flex; align-items: center; gap: 8px; color: #1e5f52; font-size: 24px; font-weight: 600; letter-spacing: -.06em; }
 .app-brand svg { color: #6b9f8e; }
 .app-shell .user-initial { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; background: #007e72; color: white; font-size: 12px; font-weight: 600; }
@@ -233,12 +233,7 @@ body {
   .app-topnav { margin-left: 0; padding: 16px 20px; height: auto; flex-wrap: wrap; gap: 16px; }
   .topnav-brand { display: flex; align-items: center; gap: 10px; width: 100%; }
     .app-brand { font-size: 22px; }
-  .mobile-menu-button { display: flex; padding: 6px; margin-left: -6px; border-radius: 8px; color: #45534e; }
-  .app-sidebar { transform: translateX(-100%); transition: transform .2s ease; width: min(320px, 85vw); padding-top: 28px; padding-bottom: 96px; z-index: 45; }
-  .app-sidebar.is-open { transform: translateX(0); }
-  .sidebar-close { display: flex; position: absolute; top: 30px; right: 14px; padding: 6px; }
-  .sidebar-scrim { display: block; position: fixed; inset: 0; z-index: 44; background: rgb(15 23 42 / 25%); }
-  .app-sidebar:not(.is-open) { visibility: hidden; }
+  .app-sidebar { display: none; }
   .mobile-navigation { display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 46; background: var(--soft); border-top: 1px solid rgb(15 23 42 / 5%); padding: 10px 12px max(10px, env(safe-area-inset-bottom)); gap: 8px; }
   .mobile-navigation > :is(a, button) { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; flex: 1; padding: 4px 0; min-width: 0; border-radius: 10px; color: #58635f; font-size: 10px; }
   .mobile-navigation > .active { color: #00796f; font-weight: 600; }
