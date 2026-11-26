@@ -10,14 +10,20 @@ import BalanceSummary from "./features/balancesummary/index.tsx";
 import BalanceSummaryColumn from "./features/balancesummary/Component/BalanceSummaryColumn.tsx";
 import routeObject from "./routesObject.tsx";
 
+import { useSignedinDispatchUserInfo } from "./features/authentication/hooks/useSignedinDispatchUserInfo";
+
 function App() {
+  const isInitializing = useSignedinDispatchUserInfo();
   const [showNavBar, setShowNavBar] = useState<boolean>(true);
 
   const userInfo = useAppSelector(selectUser);
 
-  const routesObject = routeObject(userInfo);
-
   const location = useLocation();
+
+  // Preserve the requested URL until Firebase resolves the saved session.
+  if (isInitializing) return <div className="min-h-screen flex items-center justify-center" role="status">Loading your session…</div>;
+
+  const routesObject = routeObject(userInfo);
 
   return (
     <div className={userInfo ? "app-shell" : "w-full h-full text-primary-font-color"}>

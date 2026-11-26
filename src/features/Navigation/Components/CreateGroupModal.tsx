@@ -22,26 +22,21 @@ import { Label } from "../../../Components/ui/label";
 function CreateGroupModal() {
   const userInfo = useAppSelector(selectUser);
 
-  const [groupMemberEmails, setGroupMemberEmails] = useState([""]);
   const [open, setOpen] = useState(false);
 
   const [setAddGroup] = useSetAddGroupMutation();
 
   const openModalClick = () => {
     setOpen(true);
-    formik.values.groupName = "";
-    formik.values.emails = [""];
-    setGroupMemberEmails([""]);
+    formik.resetForm();
   };
 
   const addGroupMember = () => {
-    setGroupMemberEmails([...groupMemberEmails, ""]);
+    formik.setFieldValue("emails", [...formik.values.emails, ""]);
   };
 
   const removeGroupMember = (index: number) => {
-    const updatedEmails = [...groupMemberEmails];
-    updatedEmails.splice(index, 1);
-    setGroupMemberEmails(updatedEmails);
+    formik.setFieldValue("emails", formik.values.emails.filter((_, memberIndex) => memberIndex !== index));
   };
 
   const validationSchema = Yup.object().shape({
@@ -54,13 +49,12 @@ function CreateGroupModal() {
 
   const formik = useFormik({
     initialValues: {
-      emails: groupMemberEmails,
+      emails: [""],
       groupName: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      const emailArray = values.emails;
-      emailArray.push(userInfo.email);
+      const emailArray = [...values.emails, userInfo.email];
       const groupName = values.groupName;
       addGroup(emailArray, groupName);
     },
@@ -73,7 +67,6 @@ function CreateGroupModal() {
       user_group_email: emailArray,
       user_group_name: groupName,
     });
-    setGroupMemberEmails([""]);
     setOpen(false);
   };
 
@@ -112,7 +105,7 @@ function CreateGroupModal() {
           <div className="modal-member-list">
             <p className="modal-field-heading">Invite members</p>
             <p className="modal-hint">You’re automatically included in this group.</p>
-            {groupMemberEmails.map((email, index) => (
+            {formik.values.emails.map((email, index) => (
               <div key={index}>
                 <div className="modal-member-row">
                   <Label className="sr-only" htmlFor={`member-email-${index}`}>Member {index + 1} email</Label>
@@ -123,7 +116,7 @@ function CreateGroupModal() {
                     name={`emails[${index}]`}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.emails[index]}
+                    value={email}
                     className="col-span-3"
                   />
 
