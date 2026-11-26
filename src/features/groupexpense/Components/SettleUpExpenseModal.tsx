@@ -1,20 +1,14 @@
+import { Link } from "react-router-dom";
+import { selectUser } from "../../authentication/userSlice";
+import { useFetchUserGroupsQuery } from "../groupexpenseTableSlice";
+import { CheckCircle2, ArrowRight, Users } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "react-router";
-import { useFetchExpensesForGroupQuery } from "../groupexpenseTableSlice";
-import { useFetchExpensesForBalanceSummaryGroupQuery } from "../../balancesummary/balanceSummarySlice";
+import { useSettleGroupExpensesMutation } from "../groupexpenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { useCalculateBalanceSummary } from "../../balancesummary/hooks/useCalculateBalanceSummary";
-import { db } from "../../../firebase/firebaseconfig";
-import {
-  collection,
-  query,
-  where,
-  doc,
-  updateDoc,
-  getDocs,
-} from "firebase/firestore";
 import { toast } from "react-hot-toast";
-import arrowRight from "../../../assets/icons/expenseicons/arrow-forward-outline.svg";
+import { formatSettlementStatement } from "../../../utils/utils";
 import { Avatar, AvatarFallback } from "../../../Components/ui/avatar";
 import { Button } from "../../../Components/ui/button";
 import {
@@ -25,113 +19,98 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "../../../Components/ui/dialog";
 
 function SettleUpExpenseModal() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const user = useAppSelector(selectUser);
+  const { data: groups, isLoading: groupsLoading, isError: groupsError } = useFetchUserGroupsQuery(user.email);
 
   const { groupId } = useAppSelector((state) => state.groupId.groupId);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { refetch: refetchExpensesForGroup } =
-    useFetchExpensesForGroupQuery(groupId);
-  const { refetch: refetchBalanceSummary } =
-    useFetchExpensesForBalanceSummaryGroupQuery(groupId);
+  const [settleGroup, { isLoading: isSettling }] = useSettleGroupExpensesMutation();
 
-  const { balanceArray } = useCalculateBalanceSummary(groupId);
+  const { balanceArray, balanceError, isLoading } = useCalculateBalanceSummary(groupId);
 
   const settleUpClick = async () => {
-    const userGroupsRef = collection(db, "userGroups");
-    const expensesRef = collection(userGroupsRef, groupId, "expenses");
-    // Create the query to find documents with settled_up as false
-    const queryExpenses = query(expensesRef, where("settled_up", "==", false));
+    const group = groups?.find(group => group.id === groupId);
+    if (balanceError || isLoading || isSettling || !group) return;
+    const loadingToast = toast.loading("Settling up expenses");
     try {
-      const loadingToast = toast.loading("Settling up expenses");
-      // Get the documents that match the query
-      const querySnapshot = await getDocs(queryExpenses);
-      // Iterate over the documents in the query snapshot and update settled_up to true
-      querySnapshot.forEach(async (docSnapshot) => {
-        const docRef = doc(expensesRef, docSnapshot.id);
-        await updateDoc(docRef, {
-          settled_up: true,
-        });
-      });
-      refetchExpensesForGroup();
-      refetchBalanceSummary();
-      toast.dismiss(loadingToast);
+      await settleGroup({ groupId, memberEmails: group.user_group_email }).unwrap();
       toast.success("Expenses settled up");
       setOpen(false);
-    } catch (error) {
-      console.error("Error updating settled_up:", error);
-    }
-  };
-
-  const changeOweToPaied = (string: string) => {
-    const array = string.split(" ");
-
-    if (array[1] === "owes" || array[1] === "owe") {
-      array[1] = "paid";
-      return array.join(" ");
+    } catch {
+      toast.error("Unable to settle expenses. Please try again.");
+    } finally {
+      toast.dismiss(loadingToast);
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="ml-2">Settle up</Button>
+        <Button variant="outline" className="settle-expense-trigger"><CheckCircle2 size={16} aria-hidden="true" /><span>Settle Up</span></Button>
       </DialogTrigger>
       {location.pathname == `/group/${groupId}` ? (
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
+            <span className="modal-icon"><CheckCircle2 size={22} aria-hidden="true" /></span>
             <DialogTitle>Settle Up</DialogTitle>
             <DialogDescription>
-              If you have settled up outside of EvenShare, you can record it
-              here
+              Already paid outside EvenShare? Record the payments below to settle this group’s expenses.
             </DialogDescription>
-            {balanceArray[0]?.userString !== "All people are settled up" ? (
+          </DialogHeader>
+          <div className="settlement-payments">
+            {balanceError ? <p role="alert">{balanceError}</p> : isLoading ? <p role="status">Loading balances…</p> : balanceArray[0]?.userString !== "All people are settled up" ? (
               balanceArray?.map((statement, i) => (
-                <div key={i} className="flex flex-col items-center mt-4">
-                  <div className="flex justify-center items-center gap-3 mt-4">
-                    <Avatar className="w-20 h-20">
+                <div key={i} className="settlement-payment">
+                  <div className="settlement-avatars" aria-hidden="true">
+                    <Avatar className="w-9 h-9">
                       <AvatarFallback>
-                        {statement?.userString?.split(" ")[0]}
+                        {statement?.userString?.split(" ")[0]?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <img src={arrowRight} className="w-8" />
-                    <Avatar className="w-20 h-20">
+                    <ArrowRight size={16} />
+                    <Avatar className="w-9 h-9">
                       <AvatarFallback>
-                        {statement?.userString?.split(" ")[2]}
+                        {statement.userString.split(/ owes? /)[1]?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                   </div>
-                  <h2 className="text-xl mt-4">
-                    {changeOweToPaied(statement.userString)}
-                  </h2>
-                  <h2 className="text-xl mt-1">{"$" + statement.userNumber}</h2>
+                  <span className="settlement-payment-name">
+                    {formatSettlementStatement(statement.userString)}
+                  </span>
+                  <strong>${statement.userNumber.toFixed(2)}</strong>
                 </div>
               ))
             ) : (
-              <div className="flex flex-col items-center mt-4">
-                <h2 className="text-xl my-8 ">{balanceArray[0]?.userString}</h2>
+              <div className="settlement-empty">
+                <CheckCircle2 size={28} aria-hidden="true" />
+                <p>{balanceArray[0]?.userString}</p>
               </div>
             )}
-          </DialogHeader>
+          </div>
 
-          <DialogFooter style={{ justifyContent: "center", width: "100%" }}>
-            <Button style={{ width: "100%" }} onClick={settleUpClick}>
-              Settle up expenses
+          <DialogFooter>
+            <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
+            <Button className="modal-primary" disabled={!!balanceError || isLoading || isSettling} onClick={settleUpClick}>
+              {isSettling ? "Saving…" : "Record settlement"}
             </Button>
           </DialogFooter>
         </DialogContent>
       ) : (
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
-            <div className="mx-3">
-              <DialogDescription className="text-lg">
-                Please navigate to the group you would like to settle up with.
-              </DialogDescription>
-            </div>
+            <span className="modal-icon"><CheckCircle2 size={22} aria-hidden="true" /></span>
+            <DialogTitle>Settle Up</DialogTitle>
+            <DialogDescription>Choose a group to review its balances before recording a settlement.</DialogDescription>
           </DialogHeader>
+          <div className="settlement-group-list">
+            {groupsLoading ? <p role="status">Loading your groups…</p> : groupsError ? <p role="alert">Unable to load your groups. Please try again later.</p> : !groups?.length ? <p>Create a group and add shared expenses to get started.</p> : groups.map(group => <Link className="settlement-group-option" key={group.id} to={`/group/${group.id}`}><Users size={20} aria-hidden="true" /><span>{group.user_group_name}<small>{group.user_group_email?.length ?? 0} members</small></span><ArrowRight size={18} aria-hidden="true" /></Link>)}
+          </div>
+          <DialogFooter><DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose></DialogFooter>
         </DialogContent>
       )}
     </Dialog>

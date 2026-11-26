@@ -1,55 +1,33 @@
-import { useState, useEffect } from "react";
 import { useAppSelector } from "../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../features/authentication/userSlice";
 import { useFetchUserGroupsQuery } from "../features/groupexpense/groupexpenseTableSlice";
 import { useFetchRecentActivityQuery } from "../features/recentactivity/recentActivitySlice";
-import { useFetchRecentActivityPaginationQuery } from "../features/recentactivity/recentActivitySlice";
+import { useLazyFetchRecentActivityPaginationQuery } from "../features/recentactivity/recentActivitySlice";
 import { usePagination } from "../hooks/usePagination";
-import { selectExpenseIcon } from "../utils/selectExpenseIcon";
-import { getFormattedDate } from "../utils/utils";
-import { UserGroup } from "../types";
-import ExpenseTableRow from "../features/groupexpense/Components/ExpenseTableRow";
+import ExpenseList from "../Components/ExpenseList";
 import BalanceSummary from "../features/balancesummary/index";
-import TopBar from "../Components/TopBar";
 import { Button } from "../Components/ui/button";
 
 function RecentActivityPage() {
-  const { email, displayName } = useAppSelector(selectUser);
+  const { email } = useAppSelector(selectUser);
   const { data: expenseGroup } = useFetchUserGroupsQuery(email);
 
-  const [expensesArray, setExpensesArray] = useState<UserGroup[]>([]);
-
   const {
-    data: recentActivity,
-    refetch: refetchRecentActivity,
+    currentData: recentActivity,
+    fulfilledTimeStamp,
+    isLoading,
     isError: recentActivityisError,
     error: recentActivityError,
   } = useFetchRecentActivityQuery(email);
 
-  const {
-    data: recentActivityPagination,
-    refetch: paginationFetch,
-    isFetching,
-    isError: paginationisError,
-    error: paginationError,
-  } = useFetchRecentActivityPaginationQuery(email);
+  const [fetchNextPage] = useLazyFetchRecentActivityPaginationQuery();
+  const { expenses: expensesArray, hasMore, isFetching, error: pageError, showMore } = usePagination(
+    email, recentActivity, request => fetchNextPage(request).unwrap(), fulfilledTimeStamp
+  );
 
-  useEffect(() => {
-    if (recentActivity) {
-      setExpensesArray(recentActivity);
-    }
-  }, [expenseGroup, recentActivity, refetchRecentActivity]);
-
-  const nextPageClick = async () => {
-    paginationFetch();
-  };
-
-  //custom hook for pagination
-  usePagination(recentActivityPagination || [], setExpensesArray);
-  
   //error handling
   if (recentActivityisError && expenseGroup?.length !== 0) {
-    console.error(recentActivityError || paginationError);
+    console.error(recentActivityError);
     return (
       <div className="w-full h-screen flex justify-center items-center">
         <div className="text-red-500 text-2xl">
@@ -58,52 +36,23 @@ function RecentActivityPage() {
       </div>
     );
   }
-
-  if (paginationisError && expenseGroup?.length !== 0) {
-    console.error(recentActivityError || paginationError);
-    return (
-      <div className="w-full h-screen flex justify-center items-center">
-        <div className="text-red-500 text-2xl">
-          <p>"Server Error, Please try again later"</p>
-        </div>
-      </div>
-    );
-  }
-
-
 
   return (
-    <section className="w-full">
-      <TopBar currentPage={"Recent Activity"} />
-      <div className="lg:hidden">
-        <BalanceSummary />
-      </div>
-      {expensesArray?.map((expense) => (
-        <div key={expense?.id}>
-          <ExpenseTableRow
-            expenseIcon={selectExpenseIcon(expense?.user_expense_description)}
-            expenseDescription={expense?.user_expense_description}
-            expenseDate={getFormattedDate(
-              expense?.created_at?.seconds,
-              expense?.created_at?.nanoseconds
-            )}
-            expenseAmount={`$${expense?.user_expense_amount}`}
-            expenseId={expense?.id}
-            billPaidBy={
-              displayName === expense?.user_expense_name
-                ? "You paid"
-                : expense?.user_expense_name?.split(" ")?.slice(0, 1) + " paid"
-            }
-          />
-        </div>
-      ))}
-      <div className="w-full flex justify-center mt-4">
+    <section className="w-full recent-activity-page">
+      <header className="activity-page-heading"><p className="eyebrow">Your shared story</p><h1>Recent Activity</h1><p>A clear view of what’s been shared.</p></header>
+      <ExpenseList expenses={expensesArray} showGroupName isLoading={isLoading} emptyMessage="Your shared expenses will appear here." />
+      {pageError && <p role="alert">Unable to load more activity. Please try again.</p>}
+      {hasMore && <div className="pagination-actions">
         <Button
-          className="bg-gray-200 w-40 text-black hover:bg-gray-300"
-          onClick={nextPageClick}
+          variant="ghost"
+          onClick={showMore}
+          disabled={isFetching}
         >
           {isFetching ? "Loading..." : "Show more"}
         </Button>
+      </div>}
+      <div className="mobile-balance-summary mt-7">
+        <BalanceSummary />
       </div>
       <div className="h-4"></div>
     </section>

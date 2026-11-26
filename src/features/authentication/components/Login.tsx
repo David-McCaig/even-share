@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useGoogleSignIn } from "../hooks/useGoogleSignIn.js";
 import { useGoogleGetSignInResult } from "../hooks/useGoogleGetSignInResult.js";
 import { useSignInEmailPassword } from "../hooks/useSignInEmailPassword.js";
-import { useSignedinDispatchUserInfo } from "../hooks/useSignedinDispatchUserInfo.js";
 import { useScrollToTop } from "../../../hooks/useScrollToTop.tsx";
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
@@ -43,7 +42,6 @@ function LoginPage() {
   useGoogleGetSignInResult(setAuthenticating);
   const { passwordErrorMessage, signInWithEmailPassword } =
     useSignInEmailPassword(setAuthenticating);
-  useSignedinDispatchUserInfo();
 
   if (authenticating) {
     return (

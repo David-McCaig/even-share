@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../hooks/reduxTypeScriptHooks";
-import { login } from "../userSlice";
+import { login, logout } from "../userSlice";
 import { auth } from "../../../firebase/firebaseconfig";
 
 export const useSignedinDispatchUserInfo = () => {
   const dispatch = useAppDispatch();
+  const [isInitializing, setIsInitializing] = useState(true);
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -16,8 +17,12 @@ export const useSignedinDispatchUserInfo = () => {
             userId: user?.uid,
           })
         );
+      } else {
+        dispatch(logout());
       }
+      setIsInitializing(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [dispatch]);
+  return isInitializing;
 };

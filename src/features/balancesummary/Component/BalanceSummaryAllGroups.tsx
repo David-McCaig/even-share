@@ -1,40 +1,27 @@
 import { useCalculateAllBalanceSummary } from "../hooks/useCalculateAllBalanceSummary";
-import BalanceSummaryCard from "./BalanceSummaryCard";
-import { GroupExpenses } from "../../../types";
+import type { BalanceSummary } from "../../../types";
+import BalanceGroup from "./BalanceGroup";
 
-function BalanceSummaryAllGroups() {
-  const { allBalanceSummary } = useCalculateAllBalanceSummary();
-  const groupedExpenses = groupExpensesByGroupName(allBalanceSummary);
-
-  function groupExpensesByGroupName(expenses) {
-    return expenses.reduce((acc, expense) => {
-      if (!acc[expense.groupName]) {
-        acc[expense.groupName] = [];
-      }
-      acc[expense.groupName].push(expense);
-      return acc;
-    }, {});
-  }
+function BalanceSummaryAllGroups({ overview = false }: { overview?: boolean }) {
+  const { allBalanceSummary, balanceErrors } = useCalculateAllBalanceSummary();
+  const grouped = allBalanceSummary.reduce<Record<string, BalanceSummary[]>>((groups, balance) => {
+    const key = balance.sourceGroupId || balance.groupName || "Shared balances";
+    (groups[key] ??= []).push(balance);
+    return groups;
+  }, {});
 
   return (
-    <article>
-      {Object.keys(groupedExpenses).map((groupName) => (
-        <div key={groupName}>
-          <h3 className="mt-2 ml-4 text-neutral-500 font-semibold text-lg mb-2">
-            {groupName}
-          </h3>
-          {groupedExpenses[groupName].map((expense: GroupExpenses) => (
-            <div className="mb-2" key={expense?.groupId}>
-            <BalanceSummaryCard
-              userName={expense?.userString}
-              userAmount={expense?.userNumber || 0}
-            />
-            </div>
-          ))}
+    <div className={overview ? "balance-overview" : "balance-groups"}>
+      <section className="net-balance-card">
+        <div className="section-heading"><h2>Your Balance</h2></div>
+        <p className="balance-breakdown-description">By group &amp; friend</p>
+        <div className="balance-breakdown-list">
+          {Object.entries(grouped).map(([id, balances]) => <BalanceGroup key={id} name={balances[0].groupName || "Shared balances"} balances={balances} />)}
+          {Object.entries(balanceErrors).map(([id, error]) => <p key={id} role="alert">{error}</p>)}
+          {!allBalanceSummary.length && !Object.keys(balanceErrors).length && <p className="balance-neutral">No shared balances yet.</p>}
         </div>
-      ))}
-    </article>
+      </section>
+    </div>
   );
 }
-
 export default BalanceSummaryAllGroups;

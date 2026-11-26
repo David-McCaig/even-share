@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useFetchUserGroupsQuery } from "../groupexpenseTableSlice";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
@@ -10,7 +11,8 @@ import { v4 as uuid } from "uuid"
 import DropDownMenu from "../../../Components/DropDownMenu";
 import { Button } from "../../../Components/ui/button";
 import { Input } from "../../../Components/ui/input";
-import { Label } from "@radix-ui/react-dropdown-menu";
+import { Label } from "../../../Components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../Components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -19,32 +21,23 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "../../../Components/ui/dialog";
 
 
 function AddExpenseModal() {
-  const recentActivityId = uuid()
-  // Create a timestamp for the current date and time
-  const createdAt = {
-    seconds: Timestamp.now().seconds,
-    nanoseconds: Timestamp.now().nanoseconds,
-  };
-
   const userInfo = useAppSelector(selectUser);
   const userEmail = userInfo?.email;
   const {data:userExpenseGroups} = useFetchUserGroupsQuery(userEmail);
  
 
-  const [userExpenseName] = useState(userInfo.displayName);
 
   const [setAddExpenseToGroup] = useSetAddExpenseToGroupMutation();
   const [open, setOpen] = useState(false);
 
   const OpenModalClick = () => {
     setOpen(true);
-    formik.values.groupId = "";
-    formik.values.userExpenseDescription = "";
-    formik.values.userExpenseAmount = "";
+    formik.resetForm();
   };
 
   // Define a validation schema using Yup
@@ -55,6 +48,7 @@ function AddExpenseModal() {
       .positive("Price must be greater than zero")
       .required("Price is required"),
     groupId: Yup.string().required("Group is required"),
+    paidBy: Yup.string().email().required("Select who paid"),
   });
 
   // Initialize Formik
@@ -63,23 +57,35 @@ function AddExpenseModal() {
       userExpenseDescription: "",
       userExpenseAmount: "",
       groupId: "",
+      paidBy: String(userEmail || ""),
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      const expenseGroupsArray = userExpenseGroups?.find((group) => group.id === values.groupId)?.user_group_email
-      
-      const userExpenseAmountNumber = parseFloat(values.userExpenseAmount);
-      setAddExpenseToGroup({
-        groupId: values.groupId,
-        userExpenseAmountNumber,
-        userExpenseDescription: values.userExpenseDescription,
-        userExpenseName,
-        settledUp: false,
-        createdAt,
-        expenseGroupsArray,
-        recentActivityId
-      });
-      setOpen(false); // Close the modal after submission
+      const expenseGroupsArray = userExpenseGroups?.find(group => group.id === values.groupId)?.user_group_email;
+      if (!expenseGroupsArray?.includes(values.paidBy)) {
+        formik.setFieldError("paidBy", "Choose a member of this group");
+        return;
+      }
+      const localName = values.paidBy.split("@")[0];
+      const userExpenseName = values.paidBy === userEmail
+        ? userInfo.displayName || userEmail
+        : localName.charAt(0).toUpperCase() + localName.slice(1);
+      try {
+        await setAddExpenseToGroup({
+          groupId: values.groupId,
+          userExpenseAmountNumber: Number(values.userExpenseAmount),
+          userExpenseDescription: values.userExpenseDescription,
+          userExpenseName,
+          userExpenseEmail: values.paidBy,
+          settledUp: false,
+          createdAt: Timestamp.now(),
+          expenseGroupsArray,
+          recentActivityId: uuid(),
+        }).unwrap();
+        setOpen(false);
+      } catch {
+        formik.setStatus("Unable to save this expense. Please try again.");
+      }
     },
     validateOnChange: false,
     validateOnBlur: false,
@@ -88,24 +94,28 @@ function AddExpenseModal() {
   // Handler for selecting a group from the dropdown menu
   const handleGroupChange = (selectedData: { id: string }) => {
     formik.setFieldValue("groupId", selectedData.id);
+    formik.setFieldValue("paidBy", userEmail);
   };
+
+  const selectedGroup = userExpenseGroups?.find(group => group.id === formik.values.groupId);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={OpenModalClick}>Add Expense</Button>
+        <Button className="add-expense-trigger" onClick={OpenModalClick}><Plus size={16} aria-hidden="true" /><span>Add Expense</span></Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[480px]">
         <form onSubmit={formik.handleSubmit}>
           <DialogHeader>
+            <span className="modal-icon"><Plus size={22} aria-hidden="true" /></span>
             <DialogTitle>Add Expense</DialogTitle>
             <DialogDescription>
-              You can add an expense to the group here.
+              Add a shared expense. We’ll work out who owes what.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Description</Label>
+          <div className="modal-fields">
+            <div className="modal-field">
+              <Label htmlFor="userExpenseDescription">Description</Label>
               <Input
                 id="userExpenseDescription"
                 name="userExpenseDescription"
@@ -113,7 +123,7 @@ function AddExpenseModal() {
                 type="text"
                 onChange={formik.handleChange}
                 value={formik.values.userExpenseDescription}
-                placeholder="Enter a Description"
+                placeholder="e.g. Dinner, groceries, or a taxi"
                 className="col-span-3"
               />
             </div>
@@ -123,12 +133,13 @@ function AddExpenseModal() {
                 {formik.errors.userExpenseDescription}
               </div>
             ) : null}
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Price</Label>
+            <div className="modal-field">
+              <Label htmlFor="userExpenseAmount">Amount</Label>
               <Input
                 id="userExpenseAmount"
                 name="userExpenseAmount"
                 type="number"
+                inputMode="decimal"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.userExpenseAmount}
@@ -143,13 +154,29 @@ function AddExpenseModal() {
               </div>
             ) : null}
             <DropDownMenu groupOnChange={handleGroupChange} />
+            <div className="modal-field">
+              <Label htmlFor="paidBy">Paid by</Label>
+              <Select value={formik.values.paidBy} onValueChange={value => formik.setFieldValue("paidBy", value)} disabled={!selectedGroup || formik.isSubmitting}>
+                <SelectTrigger id="paidBy" aria-invalid={!!formik.errors.paidBy} aria-describedby={formik.errors.paidBy ? "paidBy-error" : undefined}>
+                  <SelectValue placeholder="Select who paid" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[...new Set(selectedGroup?.user_group_email || [])].map(email => (
+                    <SelectItem key={email} value={email}>{email === userEmail ? `You (${email})` : email}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {formik.touched.paidBy && formik.errors.paidBy && <p id="paidBy-error" role="alert" className="text-red-500">{formik.errors.paidBy}</p>}
+            </div>
           </div>
           {formik.touched.groupId && formik.errors.groupId ? (
             <div className="text-red-500 w-full">{formik.errors.groupId}</div>
           ) : null}
 
+          {formik.status && <p role="alert" className="text-red-500">{formik.status}</p>}
           <DialogFooter>
-            <Button type="submit">Add Expense</Button>
+            <DialogClose asChild><Button type="button" variant="outline">Cancel</Button></DialogClose>
+            <Button className="modal-primary" type="submit" disabled={formik.isSubmitting}>{formik.isSubmitting ? "Saving…" : "Add Expense"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

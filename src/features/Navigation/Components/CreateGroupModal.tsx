@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Users, Plus, X } from "lucide-react";
 import { useAppSelector } from "../../../hooks/reduxTypeScriptHooks";
 import { selectUser } from "../../authentication/userSlice";
 import { useSetAddGroupMutation } from "../../groupexpense/groupexpenseTableSlice";
@@ -12,34 +13,30 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "../../../Components/ui/dialog";
 import { Button } from "../../../Components/ui/button";
 import { Input } from "../../../Components/ui/input";
-import { Label } from "@radix-ui/react-dropdown-menu";
+import { Label } from "../../../Components/ui/label";
 
 function CreateGroupModal() {
   const userInfo = useAppSelector(selectUser);
 
-  const [groupMemberEmails, setGroupMemberEmails] = useState([""]);
   const [open, setOpen] = useState(false);
 
   const [setAddGroup] = useSetAddGroupMutation();
 
   const openModalClick = () => {
     setOpen(true);
-    formik.values.groupName = "";
-    formik.values.emails = [""];
-    setGroupMemberEmails([""]);
+    formik.resetForm();
   };
 
   const addGroupMember = () => {
-    setGroupMemberEmails([...groupMemberEmails, ""]);
+    formik.setFieldValue("emails", [...formik.values.emails, ""]);
   };
 
   const removeGroupMember = (index: number) => {
-    const updatedEmails = [...groupMemberEmails];
-    updatedEmails.splice(index, 1);
-    setGroupMemberEmails(updatedEmails);
+    formik.setFieldValue("emails", formik.values.emails.filter((_, memberIndex) => memberIndex !== index));
   };
 
   const validationSchema = Yup.object().shape({
@@ -52,13 +49,12 @@ function CreateGroupModal() {
 
   const formik = useFormik({
     initialValues: {
-      emails: groupMemberEmails,
+      emails: [""],
       groupName: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      const emailArray = values.emails;
-      emailArray.push(userInfo.email);
+      const emailArray = [...values.emails, userInfo.email];
       const groupName = values.groupName;
       addGroup(emailArray, groupName);
     },
@@ -71,28 +67,30 @@ function CreateGroupModal() {
       user_group_email: emailArray,
       user_group_name: groupName,
     });
-    setGroupMemberEmails([""]);
     setOpen(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger onClick={openModalClick} asChild>
-        <div className="cursor-pointer"> Create Group +</div>
+        <button type="button" className="create-group-trigger">+ <span>New Group</span></button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[480px]">
         <form onSubmit={formik.handleSubmit}>
           <DialogHeader>
+            <span className="modal-icon"><Users size={22} aria-hidden="true" /></span>
             <DialogTitle>Create a new group</DialogTitle>
             <DialogDescription>
-              Add emails down below for people that you would like to share
-              expenses with
+              A shared space for trips, home, and everyday expenses.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex mt-6  items-center">
-            <Label className="text-left mr-3">Group</Label>
+          <div className="modal-fields">
+          <div className="modal-field">
+            <Label htmlFor="groupName">Group name</Label>
             <Input
+              id="groupName"
+              placeholder="e.g. Summer in Italy"
               name={`groupName`}
               autoComplete="off"
               onChange={formik.handleChange}
@@ -104,25 +102,32 @@ function CreateGroupModal() {
           {formik.touched.groupName && formik.errors.groupName ? (
             <div className="text-red-500">{formik.errors.groupName}</div>
           ) : null}
-          <div className="grid gap-4 py-4">
-            {groupMemberEmails.map((email, index) => (
+          <div className="modal-member-list">
+            <p className="modal-field-heading">Invite members</p>
+            <p className="modal-hint">You’re automatically included in this group.</p>
+            {formik.values.emails.map((email, index) => (
               <div key={index}>
-                <div className="flex items-center gap-4">
-                  <Label className="text-right">Email</Label>
+                <div className="modal-member-row">
+                  <Label className="sr-only" htmlFor={`member-email-${index}`}>Member {index + 1} email</Label>
                   <Input
+                    id={`member-email-${index}`}
+                    type="email"
+                    placeholder="name@example.com"
                     name={`emails[${index}]`}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.emails[index]}
+                    value={email}
                     className="col-span-3"
                   />
 
                   <Button
-                    className="bg-slate-800"
+                    variant="ghost"
+                    size="icon"
+                    aria-label={`Remove member ${index + 1}`}
                     type="button"
                     onClick={() => removeGroupMember(index)}
                   >
-                    Remove
+                    <X size={16} aria-hidden="true" />
                   </Button>
                 </div>
                 {formik.touched.emails &&
@@ -136,11 +141,11 @@ function CreateGroupModal() {
               </div>
             ))}
           </div>
+          <Button type="button" variant="ghost" className="modal-add-member" onClick={addGroupMember}><Plus size={16} aria-hidden="true" />Add another member</Button>
+          </div>
           <DialogFooter>
-            <Button type="button" className="mt-2 sm:mt-0" onClick={addGroupMember}>
-              Add Group Member
-            </Button>
-            <Button type="submit">Create Group</Button>
+            <DialogClose asChild><Button type="button" variant="outline">Cancel</Button></DialogClose>
+            <Button className="modal-primary" type="submit">Create Group</Button>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -12,6 +12,8 @@ export interface AuthValues {
 export interface BalanceSummary {
   userString: string;
   userNumber: number;
+  groupName?: string;
+  sourceGroupId?: string;
   groupId?: any;
 }
 
@@ -22,6 +24,7 @@ export interface UserGroup {
   user_expense_description: string;
   user_expense_amount: number;
   user_expense_name: string;
+  user_expense_email?: string;
   settled_up: boolean;
   expenseGroupsArray:string[]
   user_group_email:string[]
@@ -64,4 +67,9 @@ export interface Transaction {
   from: string;
   to: string;
   amount: number;
+}
+
+export interface ExpensePageRequest {
+  id: string;
+  after: Pick<UserGroup, "id" | "created_at">;
 }

@@ -1,22 +1,21 @@
 import { firestoreApi } from "../../firestoreApi";
-import { UserGroups, UserGroup } from "../../types";
+import { UserGroups, UserGroup, ExpensePageRequest } from "../../types";
 import {
   addDoc,
   collection,
   getDocs,
-  deleteDoc,
+  getDoc,
   doc,
   limit,
   orderBy,
   startAfter,
+  documentId,
   setDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
 import { query, where, Timestamp } from "firebase/firestore";
-import { DocumentData, DocumentSnapshot } from "firebase/firestore";
 import { toast } from "react-hot-toast";
-
-let groupSnapshotArray: DocumentSnapshot<DocumentData> | null = null;
 
 export const scoresApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -45,17 +44,15 @@ export const scoresApi = firestoreApi.injectEndpoints({
 
     fetchExpensesForGroup: builder.query<UserGroups, void | string>({
       async queryFn(urlId) {
-        groupSnapshotArray = null;
         try {
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("created_at", "desc"),
-            limit(9),
+            orderBy(documentId(), "desc"),
+            limit(10),
             where("settled_up", "==", false)
           );
           const querySnapshot = await getDocs(billQuery);
-          groupSnapshotArray =
-            querySnapshot.docs[querySnapshot.docs.length - 1];
           const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
             const data = doc.data();
@@ -79,22 +76,19 @@ export const scoresApi = firestoreApi.injectEndpoints({
       },
       providesTags: ["groupExpense"],
     }),
-    fetchPaginatedExpensesForGroup: builder.query<UserGroups, void | string>({
-      async queryFn(urlId) {
+    fetchPaginatedExpensesForGroup: builder.query<UserGroups, ExpensePageRequest>({
+      async queryFn({ id: urlId, after }) {
         try {
-          if (!groupSnapshotArray) return { data: [] };
-
           const billQuery = query(
             collection(db, `userGroups/${urlId}/expenses`),
             orderBy("created_at", "desc"),
-            limit(4),
+            orderBy(documentId(), "desc"),
+            limit(5),
             where("settled_up", "==", false),
-            startAfter(groupSnapshotArray)
+            startAfter(new Timestamp(after.created_at.seconds, after.created_at.nanoseconds), after.id)
           );
 
           const querySnapshot = await getDocs(billQuery);
-          groupSnapshotArray =
-            querySnapshot.docs[querySnapshot.docs.length - 1];
           const userGroups: UserGroups = [];
           querySnapshot?.forEach((doc) => {
             const data = doc.data();
@@ -176,6 +170,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
         userExpenseAmountNumber,
         userExpenseDescription,
         userExpenseName,
+        userExpenseEmail,
         settledUp,
         createdAt,
         expenseGroupsArray,
@@ -189,6 +184,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
             user_expense_amount: userExpenseAmountNumber,
             user_expense_description: userExpenseDescription,
             user_expense_name: userExpenseName,
+            user_expense_email: userExpenseEmail,
             settled_up: settledUp,
             created_at: createdTimestamp,
             delete_expense: false,
@@ -238,9 +234,7 @@ export const scoresApi = firestoreApi.injectEndpoints({
               });
             }
           };
-          expenseGroupsArray.forEach((email: string) => {
-            postRecentExpenses(email);
-          });
+          await Promise.all(expenseGroupsArray.map((email: string) => postRecentExpenses(email)));
           toast.dismiss(loadingToast);
           toast.success("Expense added");
           return { data: null };
@@ -250,45 +244,64 @@ export const scoresApi = firestoreApi.injectEndpoints({
           return { error: error.message };
         }
       },
-      invalidatesTags: ["groupExpense"],
+      invalidatesTags: ["groupExpense", "recentActivity"],
     }),
-    deleteExpenseGroup: builder.mutation({
-      async queryFn({ groupId, expenseId, expenseGroupsArray }) {
+    settleGroupExpenses: builder.mutation<null, { groupId: string; memberEmails: string[] }>({
+      async queryFn({ groupId, memberEmails }) {
         try {
-          const loadingToast = toast.loading("Deleting expense...");
-          await deleteDoc(
-            doc(db, `userGroups/${groupId}/expenses/${expenseId}`)
-          );
-          const deleteDocFromRecentExpenses = async (userEmail: string) => {
-            const userRef = collection(db, "recentExpenses");
-            const queryUser = query(
-              userRef,
-              where("user_email", "==", userEmail)
-            );
-            const userDocs = await getDocs(queryUser);
-
-            await deleteDoc(
-              doc(
-                db,
-                `recentExpenses/${userDocs.docs[0].id}/expenses/${expenseId}`
-              )
-            );
-          };
-
-          expenseGroupsArray.forEach((email: string) => {
-            deleteDocFromRecentExpenses(email);
-          });
-
-          toast.dismiss(loadingToast);
-          toast.success("Expense deleted");
+          const expenses = await getDocs(query(collection(db, `userGroups/${groupId}/expenses`), where("settled_up", "==", false)));
+          const recentUsers = await Promise.all([...new Set(memberEmails)].map(email =>
+            getDocs(query(collection(db, "recentExpenses"), where("user_email", "==", email)))));
+          const batch = writeBatch(db);
+          for (const expense of expenses.docs) {
+            batch.update(expense.ref, { settled_up: true });
+          }
+          // These copies back Recent Activity; update them in the same atomic commit.
+          for (const users of recentUsers) {
+            for (const user of users.docs) {
+              const copies = await Promise.all(expenses.docs.map(expense =>
+                getDoc(doc(user.ref, "expenses", expense.id))));
+              for (const copy of copies) {
+                if (copy.exists()) batch.update(copy.ref, { settled_up: true });
+              }
+            }
+          }
+          await batch.commit();
           return { data: null };
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          console.error(error.message);
-          return { error: error.message };
+        } catch (error) {
+          return { error: (error as Error).message };
         }
       },
-      invalidatesTags: ["groupExpense"],
+      invalidatesTags: (_result, error) => error ? [] : ["groupExpense", "balanceSummary", "recentActivity"],
+    }),
+    deleteExpenseGroup: builder.mutation<null, { groupId: string; expenseId: string; expenseGroupsArray: string[] }>({
+      async queryFn({ groupId, expenseId, expenseGroupsArray }) {
+        const loadingToast = toast.loading("Deleting expense...");
+        try {
+          if (!groupId || !expenseId || !expenseGroupsArray?.length) throw new Error("Unable to identify this expense’s group.");
+          const expenseRef = doc(db, `userGroups/${groupId}/expenses/${expenseId}`);
+          const expense = await getDoc(expenseRef);
+          if (!expense.exists()) throw new Error("This expense no longer exists.");
+          if (expense.data().settled_up !== false) throw new Error("Settled expenses cannot be deleted.");
+          const recentUsers = await Promise.all([...new Set(expenseGroupsArray)].map(email =>
+            getDocs(query(collection(db, "recentExpenses"), where("user_email", "==", email)))));
+          const batch = writeBatch(db);
+          batch.delete(expenseRef);
+          for (const users of recentUsers) {
+            for (const user of users.docs) batch.delete(doc(user.ref, "expenses", expenseId));
+          }
+          await batch.commit();
+          toast.success("Expense deleted");
+          return { data: null };
+        } catch (error) {
+          const message = (error as Error).message;
+          toast.error(message);
+          return { error: message };
+        } finally {
+          toast.dismiss(loadingToast);
+        }
+      },
+      invalidatesTags: ["groupExpense", "recentActivity"],
     }),
   }),
 });
@@ -296,9 +309,10 @@ export const scoresApi = firestoreApi.injectEndpoints({
 export const {
   useFetchUserGroupsQuery,
   useFetchExpensesForGroupQuery,
-  useFetchPaginatedExpensesForGroupQuery,
+  useLazyFetchPaginatedExpensesForGroupQuery,
   useFetchUserExpensesQuery,
   useSetAddExpenseToGroupMutation,
   useSetAddGroupMutation,
   useDeleteExpenseGroupMutation,
+  useSettleGroupExpensesMutation,
 } = scoresApi;

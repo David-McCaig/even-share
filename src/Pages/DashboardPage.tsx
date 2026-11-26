@@ -1,11 +1,11 @@
-import TopBar from "../Components/TopBar";
+import PageHeader from "../Components/PageHeader";
 import Dashboard from "../features/dashboard/index"
 
 function DashboardPage() {
   
   return (
     <main className="w-full bg-primary">
-      <TopBar currentPage="Dashboard" />
+      <PageHeader currentPage="Dashboard" />
       <Dashboard/>
     </main>
   );

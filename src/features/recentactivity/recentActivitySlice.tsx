@@ -1,25 +1,40 @@
 import { firestoreApi } from "../../firestoreApi";
 import {
   query,
+  documentId,
   collection,
   getDocs,
   orderBy,
   limit,
   startAfter,
   where,
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
-import { UserGroups, UserGroup } from "../../types";
-import { DocumentData, DocumentSnapshot } from "firebase/firestore";
+import { UserGroups, UserGroup, ExpensePageRequest } from "../../types";
 
-let pagination: DocumentSnapshot<DocumentData> | null = null;
+// Recent activity stores the same expense ID as its source group, but no group metadata.
+async function attachExpenseGroups(expenses: UserGroups, email: string): Promise<UserGroups> {
+  if (!expenses.length) return expenses;
+  try {
+    const groups = await getDocs(query(collection(db, "userGroups"), where("user_group_email", "array-contains", email)));
+    const matches = await Promise.all(groups.docs.map(async group => {
+      const groupExpenses = await getDocs(query(collection(db, `userGroups/${group.id}/expenses`), where(documentId(), "in", expenses.map(expense => expense.id))));
+      return groupExpenses.docs.map(expense => [expense.id, { user_group_id: group.id, user_group_name: group.data().user_group_name, settled_up: expense.data().settled_up }] as const);
+    }));
+    const groupByExpense = new Map(matches.flat());
+    return expenses.map(expense => ({ ...expense, ...groupByExpense.get(expense.id) }));
+  } catch (error) {
+    console.error("Unable to load activity group names:", error);
+    return expenses;
+  }
+}
+
 
 export const recentActivityApi = firestoreApi.injectEndpoints({
   endpoints: (builder) => ({
-    fetchRecentActivity: builder.query<UserGroups, UserGroups | void>({
+    fetchRecentActivity: builder.query<UserGroups, string>({
       async queryFn(email) {
-        pagination = null;
-
         const q = query(
           collection(db, "recentExpenses"),
           where("user_email", "==", email)
@@ -27,14 +42,15 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
         
         try {
           const querySnap = await getDocs(q);
+          if (!querySnap.docs.length) return { data: [] };
           const first = query(
             collection(db, `recentExpenses/${querySnap.docs[0].id}/expenses`),
             orderBy("created_at", "desc"),
-            limit(9)
+            orderBy(documentId(), "desc"),
+            limit(10)
           );
           const querySnapshot = await getDocs(first);
          
-          pagination = querySnapshot.docs[querySnapshot.docs.length - 1];
           const expenseArray: UserGroups = [];
           querySnapshot?.forEach((doc) => {
             const data = doc.data();
@@ -49,7 +65,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
             } as UserGroup);
           });
 
-          return { data: expenseArray };
+          return { data: await attachExpenseGroups(expenseArray, email) };
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           console.error(error.message);
@@ -59,16 +75,16 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
       providesTags: ["recentActivity"],
     }),
 
-    fetchRecentActivityPagination: builder.query<UserGroups, UserGroups | void>(
+    fetchRecentActivityPagination: builder.query<UserGroups, ExpensePageRequest>(
       {
-        async queryFn(email) {
+        async queryFn({ id: email, after }) {
           const q = query(
             collection(db, "recentExpenses"),
             where("user_email", "==", email)
           );
           try {
-            if (!pagination) return { data: [] };
             const querySnap = await getDocs(q);
+            if (!querySnap.docs.length) return { data: [] };
             
             const next = query(
               collection(
@@ -76,12 +92,12 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
                 `recentExpenses/${querySnap.docs[0].id}/expenses`
               ),
               orderBy("created_at", "desc"),
-              startAfter(pagination),
-              limit(4)
+              orderBy(documentId(), "desc"),
+              startAfter(new Timestamp(after.created_at.seconds, after.created_at.nanoseconds), after.id),
+              limit(5)
             );
             const querySnapshot = await getDocs(next);
       
-            pagination = querySnapshot.docs[querySnapshot.docs.length - 1];
             const expenseArray: UserGroups = [];
             querySnapshot?.forEach((doc) => {
               const data = doc.data();
@@ -95,7 +111,7 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
                 },
               } as UserGroup);
             });
-            return { data: expenseArray };
+            return { data: await attachExpenseGroups(expenseArray, email) };
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
@@ -111,5 +127,5 @@ export const recentActivityApi = firestoreApi.injectEndpoints({
 
 export const {
   useFetchRecentActivityQuery,
-  useFetchRecentActivityPaginationQuery,
+  useLazyFetchRecentActivityPaginationQuery,
 } = recentActivityApi;
